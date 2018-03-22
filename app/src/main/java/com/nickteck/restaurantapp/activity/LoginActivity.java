@@ -40,7 +40,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     EditText edtPhone, edtName, edtMailId;
     String strName, strMailId;
     boolean isNetworkConnected;
-    ScrollView sclMainView;
+    ScrollView sclMainView   ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
