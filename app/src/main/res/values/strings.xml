@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">RestaurantApp</string>
+
+    //Login
+    <string name="phno">Phone Number:</string>
+    <string name="name">Name:</string>
+    <string name="e_mail">EMail:</string>
+    <string name="submit">Submit</string>
+    <string name="advanced">Advanced</string>
+
+    <string name="Phone_num_hint"><font size="12">Phone No</font></string>
+    <string name="name_hint"><font size="12">Name</font></string>
+    <string name="e_mail_hint"><font size="12">E Mail id</font></string>
+
+</resources>
