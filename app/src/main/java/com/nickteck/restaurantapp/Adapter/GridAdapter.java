@@ -41,8 +41,8 @@ public class GridAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        view = inflter.inflate(R.layout.grid_layout, null); // inflate the layout
-        ImageView icon = (ImageView) view.findViewById(R.id.imageView); // get the reference of ImageView
+        view = inflter.inflate(R.layout.grid_layout, null);
+        ImageView icon = (ImageView) view.findViewById(R.id.imageView);
         icon.setImageResource(cook[i]); // set logo images
         return view;
 

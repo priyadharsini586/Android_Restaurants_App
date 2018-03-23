@@ -13,8 +13,13 @@ import android.widget.LinearLayout;
 import com.nickteck.restaurantapp.Adapter.GridAdapter;
 import com.nickteck.restaurantapp.Adapter.ViewPagerAdapter;
 import com.nickteck.restaurantapp.R;
+import com.nickteck.restaurantapp.api.ApiClient;
+import com.nickteck.restaurantapp.api.ApiInterface;
 import com.nickteck.restaurantapp.model.ImageModel;
 import com.viewpagerindicator.CirclePageIndicator;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -32,7 +37,7 @@ public class MenuActivity extends AppCompatActivity {
 
     int cook[] = {R.drawable.cook1, R.drawable.cook2, R.drawable.cook3, R.drawable.cook4,
             R.drawable.cook5, R.drawable.cook6, R.drawable.cook7, R.drawable.cook8, R.drawable.cook9};
-
+    ApiInterface apiInterface;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,7 +96,7 @@ public class MenuActivity extends AppCompatActivity {
             }
         }, 3000, 3000);
 
-        // Pager listener over indicator
+
         indicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
             @Override
@@ -113,4 +118,15 @@ public class MenuActivity extends AppCompatActivity {
 
     }
 
+
+    public void getCategoryData()
+    {
+        apiInterface = ApiClient.getClient().create(ApiInterface.class);
+        JSONObject getJsonObject = new JSONObject();
+        try {
+            getJsonObject.put("from","1");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 }
