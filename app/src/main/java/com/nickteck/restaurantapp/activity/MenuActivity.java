@@ -6,9 +6,11 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.nickteck.restaurantapp.Adapter.GridAdapter;
 import com.nickteck.restaurantapp.Adapter.ViewPagerAdapter;
 import com.nickteck.restaurantapp.R;
 import com.nickteck.restaurantapp.model.ImageModel;
@@ -25,20 +27,22 @@ public class MenuActivity extends AppCompatActivity {
     private static int currentPage = 0;
     private static int NUM_PAGES = 0;
     private ArrayList<ImageModel> imageModelArrayList;
-    private int [] myImageList = {R.drawable.images,R.drawable.images1,R.drawable.images2,R.drawable.images3};
+    private int [] myImageList = {R.drawable.cook2,R.drawable.cook3,R.drawable.cook4,R.drawable.cook5};
+    GridView simpleGrid;
 
-
+    int cook[] = {R.drawable.cook1, R.drawable.cook2, R.drawable.cook3, R.drawable.cook4,
+            R.drawable.cook5, R.drawable.cook6, R.drawable.cook7, R.drawable.cook8, R.drawable.cook9};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
-
+        simpleGrid = (GridView) findViewById(R.id.simpleGridView);
         imageModelArrayList = new ArrayList<>();
         imageModelArrayList = populateList();
-
         init();
-
+        GridAdapter gridAdapter=new GridAdapter(getApplicationContext(),cook);
+        simpleGrid.setAdapter(gridAdapter);
     }
     private ArrayList<ImageModel> populateList(){
 
