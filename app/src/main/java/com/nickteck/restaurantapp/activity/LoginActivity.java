@@ -1,5 +1,6 @@
 package com.nickteck.restaurantapp.activity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -40,7 +41,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     EditText edtPhone, edtName, edtMailId;
     String strName, strMailId;
     boolean isNetworkConnected;
-    ScrollView sclMainView   ;
+    ScrollView sclMainView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +57,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         btnSubmitLogin = (Button) findViewById(R.id.btnSubmitLogin);
         btnSubmitLogin.setOnClickListener(this);
+        btnSubmitLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(LoginActivity.this,MenuActivity.class);
+                startActivity(intent);
+            }
+        });
 
         edtPhone = (EditText) findViewById(R.id.edtPhone);
         edtName = (EditText) findViewById(R.id.edtName);
