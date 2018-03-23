@@ -6,10 +6,18 @@
     android:orientation="vertical">
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/grid_item_height"
         android:adjustViewBounds="true"
         android:layout_gravity="center"
         android:src="@drawable/cook3"
         android:scaleType="centerCrop" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="TextView"
+        android:textColor="@color/black_color" />
 </LinearLayout>

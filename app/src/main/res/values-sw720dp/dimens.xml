@@ -4,5 +4,6 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
 
     <dimen name="login_text_size">13sp</dimen>
-
+    <dimen name="menu_layout">200dp</dimen>
+    <dimen name="grid_item_height">150dp</dimen>
 </resources>
