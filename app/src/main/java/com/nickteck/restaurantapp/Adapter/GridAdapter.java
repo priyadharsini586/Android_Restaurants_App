@@ -24,7 +24,7 @@ import java.util.ArrayList;
 
 public class GridAdapter extends BaseAdapter {
     Context context;
-   ArrayList<ItemListRequestAndResponseModel.list> grigImageList;
+    ArrayList<ItemListRequestAndResponseModel.list> grigImageList;
     LayoutInflater inflter;
     public GridAdapter(Context context, ArrayList<ItemListRequestAndResponseModel.list> grid) {
         this.context = context;

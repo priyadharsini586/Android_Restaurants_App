@@ -1,6 +1,7 @@
 package com.nickteck.restaurantapp.activity;
 
 ;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Handler;
 import android.provider.SyncStateContract;
@@ -16,6 +17,7 @@ import android.transition.TransitionInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.animation.AnticipateOvershootInterpolator;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -67,6 +69,7 @@ public class MenuActivity extends AppCompatActivity {
         init();
         getCategoryData();
         animatePage();
+        goAnotheActivity();
 
     }
     private ArrayList<ItemListRequestAndResponseModel> populateList(){
@@ -142,6 +145,18 @@ public class MenuActivity extends AppCompatActivity {
 
             }
         });
+
+    }
+    public void goAnotheActivity(){
+
+          simpleGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+              @Override
+              public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                  Intent intent=new Intent(MenuActivity.this,ItemActivity.class);
+                  startActivity(intent);
+
+              }
+          });
 
     }
 
