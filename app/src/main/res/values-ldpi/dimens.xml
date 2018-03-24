@@ -8,4 +8,5 @@
     <dimen name="advanced_text">13sp</dimen>
     <dimen name="menu_layout">150dp</dimen>
     <dimen name="grid_item_height">100dp</dimen>
+    <dimen name="grid_text_size">20sp</dimen>
 </resources>

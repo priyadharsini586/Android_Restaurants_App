@@ -7,8 +7,15 @@ package com.nickteck.restaurantapp.model;
 public class Constants {
     public static String CHAT_SERVER_URL = "192.168.1.7";
 
+    public static String Success = "1";
+    public static String Failure = "0";
+
     public static String NETWORK_CONNECTED = "network connected";
     public static String NETWORK_NOT_CONNECTED = "network not connected";
     public static String MESSAGE = "message";
     public static String BROADCAST = "broadCastName";
+
+    public static String CATEGORY_BASE_URL = "http://192.168.1.2/prawnandcrab/webservice/images/category/";
+    public static String ITEM_BASE_URL = "http://192.168.1.2/prawnandcrab/webservice/images/item/";
+
 }

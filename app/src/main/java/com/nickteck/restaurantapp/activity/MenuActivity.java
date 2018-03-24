@@ -2,20 +2,18 @@ package com.nickteck.restaurantapp.activity;
 
 ;
 import android.os.Handler;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.nickteck.restaurantapp.Adapter.GridAdapter;
 import com.nickteck.restaurantapp.Adapter.ViewPagerAdapter;
 import com.nickteck.restaurantapp.R;
 import com.nickteck.restaurantapp.api.ApiClient;
 import com.nickteck.restaurantapp.api.ApiInterface;
-import com.nickteck.restaurantapp.model.ImageModel;
+import com.nickteck.restaurantapp.model.Constants;
+import com.nickteck.restaurantapp.model.ItemListRequestAndResponseModel;
 import com.viewpagerindicator.CirclePageIndicator;
 
 import org.json.JSONException;
@@ -25,18 +23,20 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import me.relex.circleindicator.CircleIndicator;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MenuActivity extends AppCompatActivity {
     private static ViewPager mPager;
     private static int currentPage = 0;
     private static int NUM_PAGES = 0;
-    private ArrayList<ImageModel> imageModelArrayList;
-    private int [] myImageList = {R.drawable.cook2,R.drawable.cook3,R.drawable.cook4,R.drawable.cook5};
+    private ArrayList<ItemListRequestAndResponseModel> imageModelArrayList;
+    ArrayList<ItemListRequestAndResponseModel.list> gridImageList;
+    private int [] sliderList = {R.drawable.cook2,R.drawable.cook3,R.drawable.cook4,R.drawable.cook5};
     GridView simpleGrid;
 
-    int cook[] = {R.drawable.cook1, R.drawable.cook2, R.drawable.cook3, R.drawable.cook4,
-            R.drawable.cook5, R.drawable.cook6, R.drawable.cook7, R.drawable.cook8, R.drawable.cook9};
+
     ApiInterface apiInterface;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,17 +45,17 @@ public class MenuActivity extends AppCompatActivity {
         simpleGrid = (GridView) findViewById(R.id.simpleGridView);
         imageModelArrayList = new ArrayList<>();
         imageModelArrayList = populateList();
+        getCategoryData();
         init();
-        GridAdapter gridAdapter=new GridAdapter(getApplicationContext(),cook);
-        simpleGrid.setAdapter(gridAdapter);
+
     }
-    private ArrayList<ImageModel> populateList(){
+    private ArrayList<ItemListRequestAndResponseModel> populateList(){
 
-        ArrayList<ImageModel> list = new ArrayList<>();
+        ArrayList<ItemListRequestAndResponseModel> list = new ArrayList<>();
 
-        for(int i = 0; i <myImageList.length; i++){
-            ImageModel imageModel = new ImageModel();
-            imageModel.setImage_drawable(myImageList[i]);
+        for(int i = 0; i <sliderList.length; i++){
+            ItemListRequestAndResponseModel imageModel = new ItemListRequestAndResponseModel();
+            imageModel.setImage_drawable(sliderList[i]);
             list.add(imageModel);
         }
 
@@ -124,9 +124,35 @@ public class MenuActivity extends AppCompatActivity {
         apiInterface = ApiClient.getClient().create(ApiInterface.class);
         JSONObject getJsonObject = new JSONObject();
         try {
-            getJsonObject.put("from","1");
+            getJsonObject.put("from",1);
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        Call<ItemListRequestAndResponseModel> getCatageoryList = apiInterface.getCatagoryList(getJsonObject);
+        getCatageoryList.enqueue(new Callback<ItemListRequestAndResponseModel>() {
+            @Override
+            public void onResponse(Call<ItemListRequestAndResponseModel> call, Response<ItemListRequestAndResponseModel> response) {
+                if (response.isSuccessful())
+                {
+                    ItemListRequestAndResponseModel itemListRequestAndResponseModel = response.body();
+                    if (itemListRequestAndResponseModel.getStatus_code().equals(Constants.Success))
+                    {
+                        gridImageList = new ArrayList<>();
+                        ArrayList getItemDetils = itemListRequestAndResponseModel.getList();
+                        for (int i = 0; i < getItemDetils.size(); i++) {
+                            ItemListRequestAndResponseModel.list  categoryList = (ItemListRequestAndResponseModel.list) getItemDetils.get(i);
+                            gridImageList.add(categoryList);
+                        }
+                        GridAdapter gridAdapter=new GridAdapter(getApplicationContext(),gridImageList);
+                        simpleGrid.setAdapter(gridAdapter);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ItemListRequestAndResponseModel> call, Throwable t) {
+
+            }
+        });
     }
 }
