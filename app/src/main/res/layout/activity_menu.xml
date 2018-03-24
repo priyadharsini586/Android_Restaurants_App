@@ -39,9 +39,14 @@
         </LinearLayout>
 
     </LinearLayout>
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+        <ProgressBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:id="@+id/progressCategoryList"/>
         <GridView
             android:id="@+id/simpleGridView"
             android:layout_width="fill_parent"
@@ -52,6 +57,6 @@
             android:footerDividersEnabled="false"
             android:numColumns="3">
         </GridView>
-    </LinearLayout>
+    </RelativeLayout>
 
 </LinearLayout>

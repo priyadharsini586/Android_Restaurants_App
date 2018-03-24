@@ -1,13 +1,22 @@
 package com.nickteck.restaurantapp.Adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.nickteck.restaurantapp.R;
+import com.nickteck.restaurantapp.activity.LoginActivity;
+import com.nickteck.restaurantapp.model.Constants;
+import com.nickteck.restaurantapp.model.ItemListRequestAndResponseModel;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 
 /**
  * Created by admin on 3/23/2018.
@@ -15,18 +24,17 @@ import com.nickteck.restaurantapp.R;
 
 public class GridAdapter extends BaseAdapter {
     Context context;
-    int cook[];
+   ArrayList<ItemListRequestAndResponseModel.list> grigImageList;
     LayoutInflater inflter;
-
-    public GridAdapter(Context context, int[] cook) {
+    public GridAdapter(Context context, ArrayList<ItemListRequestAndResponseModel.list> grid) {
         this.context = context;
-        this.cook = cook;
+        this.grigImageList = grid;
         inflter = (LayoutInflater.from(context));
     }
 
     @Override
     public int getCount() {
-        return cook.length;
+        return grigImageList.size();
     }
 
     @Override
@@ -41,10 +49,40 @@ public class GridAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        view = inflter.inflate(R.layout.grid_layout, null);
-        ImageView icon = (ImageView) view.findViewById(R.id.imageView);
-        icon.setImageResource(cook[i]); // set logo images
+        final ItemListRequestAndResponseModel.list item_list = grigImageList.get(i);
+
+        if (view == null) {
+            final LayoutInflater layoutInflater = LayoutInflater.from(context);
+            view = layoutInflater.inflate(R.layout.grid_layout, null);
+
+        }
+        final ImageView gridImageView = (ImageView) view.findViewById(R.id.gridImageView);
+        TextView txtCatName = (TextView) view.findViewById(R.id.gridCatTextView);
+        txtCatName.setText(item_list.getName());
+        final String listImage = Constants.CATEGORY_BASE_URL + item_list.getImage();
+        Log.e("image loader url",listImage);
+
+        Picasso.with(context)
+                .load(listImage) // thumbnail url goes here
+                .placeholder(R.mipmap.ic_default_image)
+                .into(gridImageView, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        Picasso.with(context)
+                                .load(listImage) // image url goes here
+                                .placeholder(R.mipmap.ic_default_image)
+                                .into(gridImageView);
+                    }
+
+                    @Override
+                    public void onError() {
+                    }
+                });
+//        Picasso.with(context).load(listImage).into(gridImageView);
+
         return view;
 
     }
+
+
 }

@@ -1,8 +1,11 @@
 package com.nickteck.restaurantapp.activity;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.ActivityOptions;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
@@ -63,13 +66,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         btnSubmitLogin = (Button) findViewById(R.id.btnSubmitLogin);
         btnSubmitLogin.setOnClickListener(this);
-//        btnSubmitLogin.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent=new Intent(LoginActivity.this,MenuActivity.class);
-//                startActivity(intent);
-//            }
-//        });
+        btnSubmitLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(LoginActivity.this,MenuActivity.class);
+                startActivity(intent);
+            }
+        });
 
         edtPhone = (EditText) findViewById(R.id.edtPhone);
         edtName = (EditText) findViewById(R.id.edtName);
@@ -79,7 +82,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         checkConnection();
         MyApplication.getInstance().setConnectivityListener(this);
+
+
     }
+
+
 
     private void checkConnection() {
         boolean isConnected = ConnectivityReceiver.isConnected();
@@ -98,12 +105,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 break;
 
             case R.id.btnSubmitLogin:
-
-                      ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(LoginActivity.this);
-                      Intent intent=new Intent(LoginActivity.this,MenuActivity.class);
-                      startActivity(intent, options.toBundle());
-
-
                 if (isNetworkConnected)
                     checkLogin();
                 else

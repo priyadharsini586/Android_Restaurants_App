@@ -1,6 +1,6 @@
 package com.nickteck.restaurantapp.api;
 
-import com.nickteck.restaurantapp.model.Item;
+import com.nickteck.restaurantapp.model.ItemListRequestAndResponseModel;
 import com.nickteck.restaurantapp.model.LoginRequestAndResponse;
 
 import org.json.JSONObject;
@@ -19,8 +19,9 @@ public interface ApiInterface {
     @FormUrlEncoded
     @POST("check_client_details.php")
      Call<LoginRequestAndResponse> getLoginResponse(@Field("x") JSONObject jsonObject);
+
     @FormUrlEncoded
-    @POST("item_view.php")
-    Call<Item> getItemcheck(@Field("x") JSONObject Itemobject);
+    @POST("category_view.php")
+    Call<ItemListRequestAndResponseModel> getCatagoryList(@Field("x") JSONObject Itemobject);
 
 }
