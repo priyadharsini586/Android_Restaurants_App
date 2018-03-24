@@ -66,13 +66,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         btnSubmitLogin = (Button) findViewById(R.id.btnSubmitLogin);
         btnSubmitLogin.setOnClickListener(this);
-        btnSubmitLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent=new Intent(LoginActivity.this,MenuActivity.class);
-                startActivity(intent);
-            }
-        });
 
         edtPhone = (EditText) findViewById(R.id.edtPhone);
         edtName = (EditText) findViewById(R.id.edtName);
@@ -105,6 +98,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 break;
 
             case R.id.btnSubmitLogin:
+                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(LoginActivity.this);
+                Intent intent=new Intent(LoginActivity.this,MenuActivity.class);
+                startActivity(intent, options.toBundle());
                 if (isNetworkConnected)
                     checkLogin();
                 else

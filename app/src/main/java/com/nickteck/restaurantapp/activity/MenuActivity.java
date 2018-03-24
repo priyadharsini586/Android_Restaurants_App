@@ -66,6 +66,7 @@ public class MenuActivity extends AppCompatActivity {
         progressCategoryList.setVisibility(View.VISIBLE);
         init();
         getCategoryData();
+        animatePage();
 
     }
     private ArrayList<ItemListRequestAndResponseModel> populateList(){
@@ -85,9 +86,7 @@ public class MenuActivity extends AppCompatActivity {
              //Transition transition= TransitionInflater.from(this).inflateTransition(R.transition.explode);
               Explode transition=new Explode();
               transition.setDuration(getResources().getInteger(R.integer.anim_duration));
-             getWindow().setEnterTransition(transition);
-
-
+              getWindow().setEnterTransition(transition);
             }
     private void init() {
 
