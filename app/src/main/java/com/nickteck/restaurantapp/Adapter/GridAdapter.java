@@ -10,9 +10,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nickteck.restaurantapp.R;
-import com.nickteck.restaurantapp.image_cache.ImageLoader;
+import com.nickteck.restaurantapp.activity.LoginActivity;
 import com.nickteck.restaurantapp.model.Constants;
 import com.nickteck.restaurantapp.model.ItemListRequestAndResponseModel;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -24,12 +26,10 @@ public class GridAdapter extends BaseAdapter {
     Context context;
    ArrayList<ItemListRequestAndResponseModel.list> grigImageList;
     LayoutInflater inflter;
-    ImageLoader imageLoader;
     public GridAdapter(Context context, ArrayList<ItemListRequestAndResponseModel.list> grid) {
         this.context = context;
         this.grigImageList = grid;
         inflter = (LayoutInflater.from(context));
-        imageLoader=new ImageLoader(context.getApplicationContext());
     }
 
     @Override
@@ -56,11 +56,29 @@ public class GridAdapter extends BaseAdapter {
             view = layoutInflater.inflate(R.layout.grid_layout, null);
 
         }
-        ImageView gridImageView = (ImageView) view.findViewById(R.id.gridImageView);
+        final ImageView gridImageView = (ImageView) view.findViewById(R.id.gridImageView);
         TextView txtCatName = (TextView) view.findViewById(R.id.gridCatTextView);
         txtCatName.setText(item_list.getName());
-        String listImage = Constants.CATEGORY_BASE_URL + item_list.getImage();
-        imageLoader.DisplayImage(listImage,gridImageView,R.mipmap.ic_default_image);
+        final String listImage = Constants.CATEGORY_BASE_URL + item_list.getImage();
+        Log.e("image loader url",listImage);
+
+        Picasso.with(context)
+                .load(listImage) // thumbnail url goes here
+                .placeholder(R.mipmap.ic_default_image)
+                .into(gridImageView, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        Picasso.with(context)
+                                .load(listImage) // image url goes here
+                                .placeholder(R.mipmap.ic_default_image)
+                                .into(gridImageView);
+                    }
+
+                    @Override
+                    public void onError() {
+                    }
+                });
+//        Picasso.with(context).load(listImage).into(gridImageView);
 
         return view;
 
