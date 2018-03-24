@@ -19,7 +19,7 @@
         android:largeHeap="true"
         >
         <activity
-            android:name=".activity.LoginActivity"
+            android:name=".activity.SplashActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -51,7 +51,7 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".activity.SplashActivity"></activity>
+        <activity android:name=".activity.LoginActivity"></activity>
     </application>
 
 </manifest>

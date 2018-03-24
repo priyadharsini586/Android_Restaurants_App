@@ -1,6 +1,8 @@
 package com.nickteck.restaurantapp.activity;
 
 import android.Manifest;
+import android.annotation.TargetApi;
+import android.app.ActivityOptions;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -8,11 +10,10 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.transition.Slide;
+import android.transition.Transition;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -28,14 +29,13 @@ import com.nickteck.restaurantapp.R;
 import com.nickteck.restaurantapp.additional_class.AdditionalClass;
 import com.nickteck.restaurantapp.api.ApiClient;
 import com.nickteck.restaurantapp.api.ApiInterface;
+import com.nickteck.restaurantapp.model.Constants;
 import com.nickteck.restaurantapp.model.LoginRequestAndResponse;
 import com.nickteck.restaurantapp.network.ConnectivityReceiver;
 import com.nickteck.restaurantapp.network.MyApplication;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -95,8 +95,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-
-
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onClick(View v) {
 

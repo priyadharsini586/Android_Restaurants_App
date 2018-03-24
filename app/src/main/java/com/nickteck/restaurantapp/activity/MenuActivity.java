@@ -1,11 +1,25 @@
 package com.nickteck.restaurantapp.activity;
 
 ;
+import android.os.Build;
 import android.os.Handler;
+import android.provider.SyncStateContract;
+import android.support.annotation.RequiresApi;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.transition.Explode;
+import android.transition.Fade;
+import android.transition.Transition;
+import android.transition.TransitionInflater;
+import android.view.View;
+import android.view.Window;
+import android.view.animation.AnticipateOvershootInterpolator;
 import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
 import com.nickteck.restaurantapp.Adapter.GridAdapter;
 import com.nickteck.restaurantapp.Adapter.ViewPagerAdapter;
@@ -23,6 +37,7 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import me.relex.circleindicator.CircleIndicator;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -35,18 +50,22 @@ public class MenuActivity extends AppCompatActivity {
     ArrayList<ItemListRequestAndResponseModel.list> gridImageList;
     private int [] sliderList = {R.drawable.cook2,R.drawable.cook3,R.drawable.cook4,R.drawable.cook5};
     GridView simpleGrid;
-
-
+    ProgressBar progressCategoryList;
     ApiInterface apiInterface;
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
         simpleGrid = (GridView) findViewById(R.id.simpleGridView);
         imageModelArrayList = new ArrayList<>();
         imageModelArrayList = populateList();
-        getCategoryData();
+        progressCategoryList = (ProgressBar) findViewById(R.id.progressCategoryList);
+        progressCategoryList.setVisibility(View.VISIBLE);
         init();
+        getCategoryData();
 
     }
     private ArrayList<ItemListRequestAndResponseModel> populateList(){
@@ -61,6 +80,7 @@ public class MenuActivity extends AppCompatActivity {
 
         return list;
     }
+
     private void init() {
 
         mPager = (ViewPager) findViewById(R.id.viewPager);
@@ -134,6 +154,7 @@ public class MenuActivity extends AppCompatActivity {
             public void onResponse(Call<ItemListRequestAndResponseModel> call, Response<ItemListRequestAndResponseModel> response) {
                 if (response.isSuccessful())
                 {
+                    progressCategoryList.setVisibility(View.GONE);
                     ItemListRequestAndResponseModel itemListRequestAndResponseModel = response.body();
                     if (itemListRequestAndResponseModel.getStatus_code().equals(Constants.Success))
                     {
