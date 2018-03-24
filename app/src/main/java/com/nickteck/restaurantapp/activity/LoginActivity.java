@@ -104,7 +104,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             } else {
 //                Toast.makeText(getApplicationContext(),"Permissions already granted.", Toast.LENGTH_LONG).show();
-                isPermission = true;
+                isPermission  = true;
             }
 
 
