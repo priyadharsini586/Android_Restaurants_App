@@ -1,11 +1,16 @@
 package com.nickteck.restaurantapp.activity;
 
+import android.annotation.TargetApi;
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.transition.Slide;
+import android.transition.Transition;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -21,6 +26,7 @@ import com.nickteck.restaurantapp.R;
 import com.nickteck.restaurantapp.additional_class.AdditionalClass;
 import com.nickteck.restaurantapp.api.ApiClient;
 import com.nickteck.restaurantapp.api.ApiInterface;
+import com.nickteck.restaurantapp.model.Constants;
 import com.nickteck.restaurantapp.model.LoginRequestAndResponse;
 import com.nickteck.restaurantapp.network.ConnectivityReceiver;
 import com.nickteck.restaurantapp.network.MyApplication;
@@ -57,13 +63,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         btnSubmitLogin = (Button) findViewById(R.id.btnSubmitLogin);
         btnSubmitLogin.setOnClickListener(this);
-        btnSubmitLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent=new Intent(LoginActivity.this,MenuActivity.class);
-                startActivity(intent);
-            }
-        });
+//        btnSubmitLogin.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent=new Intent(LoginActivity.this,MenuActivity.class);
+//                startActivity(intent);
+//            }
+//        });
 
         edtPhone = (EditText) findViewById(R.id.edtPhone);
         edtName = (EditText) findViewById(R.id.edtName);
@@ -82,6 +88,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onClick(View v) {
 
@@ -91,6 +98,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 break;
 
             case R.id.btnSubmitLogin:
+
+                      ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(LoginActivity.this);
+                      Intent intent=new Intent(LoginActivity.this,MenuActivity.class);
+                      startActivity(intent, options.toBundle());
+
+
                 if (isNetworkConnected)
                     checkLogin();
                 else

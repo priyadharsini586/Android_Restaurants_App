@@ -11,4 +11,9 @@ public class Constants {
     public static String NETWORK_NOT_CONNECTED = "network not connected";
     public static String MESSAGE = "message";
     public static String BROADCAST = "broadCastName";
+    public static final String KEY_ANIM_TYPE="anim_type";
+    public static final String KEY_TITLE="anim_type";
+    public enum TransitionType{
+        Explode;
+    }
 }

@@ -1,11 +1,20 @@
 package com.nickteck.restaurantapp.activity;
 
 ;
+import android.os.Build;
 import android.os.Handler;
+import android.provider.SyncStateContract;
+import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.transition.Explode;
+import android.transition.Fade;
+import android.transition.Transition;
+import android.transition.TransitionInflater;
+import android.view.Window;
+import android.view.animation.AnticipateOvershootInterpolator;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -15,6 +24,7 @@ import com.nickteck.restaurantapp.Adapter.ViewPagerAdapter;
 import com.nickteck.restaurantapp.R;
 import com.nickteck.restaurantapp.api.ApiClient;
 import com.nickteck.restaurantapp.api.ApiInterface;
+import com.nickteck.restaurantapp.model.Constants;
 import com.nickteck.restaurantapp.model.ImageModel;
 import com.viewpagerindicator.CirclePageIndicator;
 
@@ -34,18 +44,21 @@ public class MenuActivity extends AppCompatActivity {
     private ArrayList<ImageModel> imageModelArrayList;
     private int [] myImageList = {R.drawable.cook2,R.drawable.cook3,R.drawable.cook4,R.drawable.cook5};
     GridView simpleGrid;
-
     int cook[] = {R.drawable.cook1, R.drawable.cook2, R.drawable.cook3, R.drawable.cook4,
             R.drawable.cook5, R.drawable.cook6, R.drawable.cook7, R.drawable.cook8, R.drawable.cook9};
     ApiInterface apiInterface;
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
         simpleGrid = (GridView) findViewById(R.id.simpleGridView);
         imageModelArrayList = new ArrayList<>();
         imageModelArrayList = populateList();
         init();
+        animatePage();
         GridAdapter gridAdapter=new GridAdapter(getApplicationContext(),cook);
         simpleGrid.setAdapter(gridAdapter);
     }
@@ -61,6 +74,15 @@ public class MenuActivity extends AppCompatActivity {
 
         return list;
     }
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+      private void animatePage(){
+             //Transition transition= TransitionInflater.from(this).inflateTransition(R.transition.explode);
+              Explode transition=new Explode();
+              transition.setDuration(getResources().getInteger(R.integer.anim_duration));
+             getWindow().setEnterTransition(transition);
+
+
+            }
     private void init() {
 
         mPager = (ViewPager) findViewById(R.id.viewPager);
