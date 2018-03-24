@@ -78,7 +78,8 @@ public class MenuActivity extends AppCompatActivity {
       private void animatePage(){
              //Transition transition= TransitionInflater.from(this).inflateTransition(R.transition.explode);
               Explode transition=new Explode();
-              transition.setDuration(getResources().getInteger(R.integer.anim_duration));
+            //  transition.setDuration(getResources().getInteger(R.integer.anim_duration));
+             transition.setDuration(300);
              getWindow().setEnterTransition(transition);
 
 
