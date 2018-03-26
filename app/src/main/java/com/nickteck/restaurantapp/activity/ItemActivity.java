@@ -2,12 +2,15 @@ package com.nickteck.restaurantapp.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.GridView;
 import android.widget.Toast;
 
 import com.nickteck.restaurantapp.Adapter.GridAdapter;
+import com.nickteck.restaurantapp.Adapter.ItemAdapter;
 import com.nickteck.restaurantapp.R;
 import com.nickteck.restaurantapp.additional_class.AdditionalClass;
 import com.nickteck.restaurantapp.api.ApiClient;
@@ -21,26 +24,33 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.nickteck.restaurantapp.model.Constants.CATEGORY_BASE_URL;
+import static com.nickteck.restaurantapp.model.Constants.ITEM_BASE_URL;
+
 public class ItemActivity extends AppCompatActivity implements ConnectivityReceiver.ConnectivityReceiverListener {
-    GridView gridView;
+    RecyclerView recyclerView;
     boolean isNetworkConnected;
     ApiInterface apiInterface;
-    ArrayList<ItemListRequestAndResponseModel.list> gridImageList;
+    ItemAdapter itemAdapter;
+    private  ArrayList<ItemListRequestAndResponseModel.item_list> gridImageList=new ArrayList<>();
     String itemId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item);
-        gridView=(GridView)findViewById(R.id.simpleGridView);
+        recyclerView=(RecyclerView)findViewById(R.id.recycler_view);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(linearLayoutManager);
 
-        itemId= getIntent().getStringExtra("itemId");
-        Log.e("item id",itemId);
+//        itemId= getIntent().getStringExtra("itemId");
+//        Log.e("item id",itemId);
 
         checkConnection();
         MyApplication.getInstance().setConnectivityListener(this);
@@ -85,7 +95,7 @@ public class ItemActivity extends AppCompatActivity implements ConnectivityRecei
             apiInterface = ApiClient.getClient().create(ApiInterface.class);
             JSONObject getJsonObject = new JSONObject();
             try {
-                getJsonObject.put("cat_id",itemId);
+                getJsonObject.put("cat_id",45);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -98,14 +108,24 @@ public class ItemActivity extends AppCompatActivity implements ConnectivityRecei
                         ItemListRequestAndResponseModel itemListRequestAndResponseModel = response.body();
                         if (itemListRequestAndResponseModel.getStatus_code().equals(Constants.Success))
                         {
-                            gridImageList = new ArrayList<>();
-                            ArrayList getItemDetils = itemListRequestAndResponseModel.getItem_list();
-                          /*  for (int i = 0; i < getItemDetils.size(); i++) {
-                                ItemListRequestAndResponseModel.item_list  categoryList = (ItemListRequestAndResponseModel.list) getItemDetils.get(i);
-                                gridImageList.add(categoryList);
+                            gridImageList = new ArrayList<ItemListRequestAndResponseModel.item_list>();
+                            List<ItemListRequestAndResponseModel.item_list> getItemDetils = itemListRequestAndResponseModel.getItem_list();
+                            for (int i = 0; i < getItemDetils.size(); i++) {
+                                ItemListRequestAndResponseModel.item_list items=getItemDetils.get(i);
+                                items.setItem_name(items.getItem_name());
+                                items.setDescription(items.getDescription());
+                                items.setPrice(items.getPrice());
+                                items.setImage(items.getImage());
+                                String url=ITEM_BASE_URL+items.getImage();
+                                Log.e("url",url);
+                                items.setImage(url);
+                                gridImageList.add(items);
+
                             }
-                            GridAdapter gridAdapter=new GridAdapter(getApplicationContext(),gridImageList);
-                            gridView.setAdapter(gridAdapter);*/
+                            itemAdapter=new ItemAdapter(gridImageList,getApplicationContext());
+                            recyclerView.setAdapter(itemAdapter);
+                            itemAdapter.notifyDataSetChanged();
+
                         }else if (itemListRequestAndResponseModel.getStatus_code().equals(Constants.Failure))
                         {
                             Toast.makeText(getApplicationContext(),itemListRequestAndResponseModel.getStatus_message(),Toast.LENGTH_LONG).show();

@@ -105,7 +105,7 @@ public class MenuActivity extends AppCompatActivity {
         final float density = getResources().getDisplayMetrics().density;
 
 //Set circle indicator radius
-        indicator.setRadius(5 * density);
+        indicator.setRadius(3 * density);
 
         NUM_PAGES =imageModelArrayList.size();
 

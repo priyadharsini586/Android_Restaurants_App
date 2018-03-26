@@ -11,7 +11,7 @@ public class ItemListRequestAndResponseModel {
 
     String status_code,itemId,itemName,itemDescription,itemImage,itemPrice,itemShortCode,id,name,status,value,combine,status_message,comboList;
     int tot_items,tot_taxes;
-    ArrayList<item_list> item_list = new ArrayList<>();
+    public ArrayList<item_list> item_list = new ArrayList<>();
     ArrayList<list>list = new ArrayList<>();
     String itemCategoryList,Status_code,Success ;
     int image_drawable;

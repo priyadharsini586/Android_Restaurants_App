@@ -33,7 +33,7 @@
                 android:padding="10dip"
                 app:centered="true"
                 app:fillColor="#ff0099cc"
-                app:pageColor="#fff"
+                app:pageColor="#BDC3C7"
                 app:snap="false" />
             </RelativeLayout>
         </LinearLayout>

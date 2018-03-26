@@ -30,12 +30,10 @@ public class SplashActivity extends AppCompatActivity implements ConnectivityRec
 
             @Override
             public void run() {
-                // This method will be executed once the timer is over
-                // Start your app main activity
+
                 Intent i = new Intent(SplashActivity.this, LoginActivity.class);
                 startActivity(i);
-
-                // close this activity
+                
                 finish();
             }
         }, SPLASH_TIME_OUT);
