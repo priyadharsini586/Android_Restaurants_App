@@ -54,8 +54,7 @@
         <activity android:name=".activity.ItemActivity" />
         <activity
             android:name=".activity.MenuNavigationActivity"
-            android:label="@string/title_activity_menu_navigation"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>
