@@ -18,7 +18,7 @@ public class ConnectivityReceiver
         extends BroadcastReceiver {
 
     public static ConnectivityReceiverListener connectivityReceiverListener;
-    boolean checkConnection = false;
+   public static boolean checkConnection = false;
     String networkConnection = null;
     public ConnectivityReceiver() {
         super();
@@ -38,13 +38,14 @@ public class ConnectivityReceiver
 
             if (currentNetworkInfo.isConnected()) {
                 networkConnection = Constants.NETWORK_CONNECTED;
+
                 checkConnection = true;
-            } else {
-                if (networkConnection != Constants.NETWORK_CONNECTED) {
+            } else if (!currentNetworkInfo.isConnected()){
+//                if (networkConnection != Constants.NETWORK_CONNECTED) {
                     networkConnection = Constants.NETWORK_NOT_CONNECTED;
                     checkConnection = false;
 
-                }
+//                }
 
             }
             if (connectivityReceiverListener != null)
@@ -68,8 +69,7 @@ public class ConnectivityReceiver
                 cm = (ConnectivityManager) MyApplication.getInstance().getApplicationContext()
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        return activeNetwork != null
-                && activeNetwork.isConnectedOrConnecting();
+        return activeNetwork.isConnected();
     }
 
 

@@ -9,12 +9,20 @@ import java.util.List;
 
 public class ItemListRequestAndResponseModel {
 
-    String status_code,itemId,itemName,itemDescription,itemImage,itemPrice,itemShortCode,id,name,status,value,combine,comboList;
+    String status_code,itemId,itemName,itemDescription,itemImage,itemPrice,itemShortCode,id,name,status,value,combine,status_message,comboList;
     int tot_items,tot_taxes;
     ArrayList<item_list> item_list = new ArrayList<>();
     ArrayList<list>list = new ArrayList<>();
     String itemCategoryList,Status_code,Success ;
     int image_drawable;
+
+    public String getStatus_message() {
+        return status_message;
+    }
+
+    public void setStatus_message(String status_message) {
+        this.status_message = status_message;
+    }
 
     public int getImage_drawable() {
         return image_drawable;

@@ -11,5 +11,11 @@
     <string name="Phone_num_hint"><font size="12">Phone No</font></string>
     <string name="name_hint"><font size="12">Name</font></string>
     <string name="e_mail_hint"><font size="12">E Mail id</font></string>
+    <string name="title_activity_menu_navigation">MenuNavigationActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
 
 </resources>

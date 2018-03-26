@@ -98,13 +98,20 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 break;
 
             case R.id.btnSubmitLogin:
-                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(LoginActivity.this);
-                Intent intent=new Intent(LoginActivity.this,MenuActivity.class);
-                startActivity(intent, options.toBundle());
-                if (isNetworkConnected)
+               /* int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+                if (currentapiVersion >= android.os.Build.VERSION_CODES.LOLLIPOP){
+                    ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(MenuNavigationActivity.this);
+                    Intent intent=new Intent(LoginActivity.this,MenuActivity.class);
+                    startActivity(intent, options.toBundle());
+                }else{*/
+                    Intent intent=new Intent(LoginActivity.this,MenuNavigationActivity.class);
+                    startActivity(intent);
+//                }
+
+              /*  if (isNetworkConnected)
                     checkLogin();
                 else
-                    showSnackBar();
+                    AdditionalClass.showSnackBar(LoginActivity.this);*/
                 break;
         }
     }
@@ -176,10 +183,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             } else {
                 Toast.makeText(getApplicationContext(), "Network not available", Toast.LENGTH_LONG).show();
-                showSnackBar();
+                AdditionalClass.showSnackBar(LoginActivity.this);
+
             }
         }
-
         isNetworkConnected = isConnected;
 
     }
@@ -189,27 +196,5 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onPause();
     }
 
-    public  void showSnackBar()
-    {
-        TSnackbar snackbar = TSnackbar
-                .make(findViewById(android.R.id.content), "Network Not Connected", TSnackbar.LENGTH_LONG)
-                .setAction("Retry", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Log.e("Action Button", "onClick triggered");
-                    }
-                });
-        snackbar.setActionTextColor(Color.parseColor("#00628f"));
 
-//        snackbar.addIcon(R.mipmap.ic_core, 200); <<-- replace me!
-        View snackbarView = snackbar.getView();
-        snackbarView.setBackgroundColor(Color.parseColor("#f48220"));
-        TextView textView = (TextView) snackbarView.findViewById(com.androidadvance.topsnackbar.R.id.snackbar_text);
-        textView.setTextColor(Color.WHITE);
-        textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
-        snackbar.setDuration(60000);
-
-        snackbar.show();
-
-    }
 }

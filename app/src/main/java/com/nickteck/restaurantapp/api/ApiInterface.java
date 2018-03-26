@@ -24,4 +24,8 @@ public interface ApiInterface {
     @POST("category_view.php")
     Call<ItemListRequestAndResponseModel> getCatagoryList(@Field("x") JSONObject Itemobject);
 
+    @FormUrlEncoded
+    @POST("cat_item_list.php")
+    Call<ItemListRequestAndResponseModel> getItemList(@Field("x") JSONObject Itemobject);
+
 }

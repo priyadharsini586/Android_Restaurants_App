@@ -14,6 +14,7 @@ import android.transition.Explode;
 import android.transition.Fade;
 import android.transition.Transition;
 import android.transition.TransitionInflater;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.animation.AnticipateOvershootInterpolator;
@@ -146,13 +147,23 @@ public class MenuActivity extends AppCompatActivity {
             }
         });
 
+
+        simpleGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.e("item view",imageModelArrayList.get(position).getName());
+            }
+        });
+
     }
     public void goAnotheActivity(){
 
           simpleGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
               @Override
               public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                  ItemListRequestAndResponseModel.list list = gridImageList.get(i);
                   Intent intent=new Intent(MenuActivity.this,ItemActivity.class);
+                  intent.putExtra("itemId",list.getId() );
                   startActivity(intent);
 
               }
