@@ -104,7 +104,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     Intent intent=new Intent(LoginActivity.this,MenuActivity.class);
                     startActivity(intent, options.toBundle());
                 }else{*/
-                    Intent intent=new Intent(LoginActivity.this,ItemActivity.class);
+                    Intent intent=new Intent(LoginActivity.this,MenuNavigationActivity.class);
                     startActivity(intent);
 //                }
 
