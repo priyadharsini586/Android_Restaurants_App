@@ -36,90 +36,169 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/ldtSlideShow">
+        android:layout_below="@+id/ldtSlideShow"
+        android:id="@+id/ldtStatus"
+        android:orientation="horizontal">
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:background="@color/white_color"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_below="@+id/ldtStatus"
+        android:paddingTop="60dp">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:weightSum="4">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:padding="20dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_weight="1">
             <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:src="@drawable/ic_menu"
-                />
+                android:layout_width="@dimen/menu_image_dimen"
+                android:layout_height="@dimen/menu_image_dimen"
+                android:src="@drawable/menunew"
+               android:layout_gravity="center" />
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/menu_icon"
-                android:layout_gravity="center"
-                android:textColor="@color/white_color"
-                android:padding="5dp"
-                android:textSize="15dp"
-                android:textStyle="bold"/>
+                style="@style/menu_text_style"/>
         </LinearLayout>
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:padding="20dp"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:layout_weight="1">
                 <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:src="@drawable/ic_favourite"
-                    />
+                    android:layout_width="@dimen/menu_image_dimen"
+                    android:layout_height="@dimen/menu_image_dimen"
+                    android:src="@drawable/favoritenew"
+                    android:layout_gravity="center" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/menu_icon"
-                    android:layout_gravity="center"
-                    android:textColor="@color/white_color"
-                    android:padding="5dp"
-                    android:textSize="15dp"
-                    android:textStyle="bold"/>
+                    android:text="@string/favourite_icon"
+                    style="@style/menu_text_style"/>
             </LinearLayout>
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:padding="20dp"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:layout_weight="1">
                 <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:src="@drawable/ic_myorder"
+                    android:layout_width="@dimen/menu_image_dimen"
+                    android:layout_height="@dimen/menu_image_dimen"
+                    android:src="@drawable/ordernew"
+                    android:layout_gravity="center"
                     />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/menu_icon"
-                    android:layout_gravity="center"
-                    android:textColor="@color/white_color"
-                    android:padding="5dp"
-                    android:textSize="15dp"
-                    android:textStyle="bold"/>
+                    android:text="@string/my_order_icon"
+                    style="@style/menu_text_style"/>
             </LinearLayout>
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:padding="20dp"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:layout_weight="1">
                 <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:src="@drawable/ic_feedback"
-                    />
+                    android:layout_width="@dimen/menu_image_dimen"
+                    android:layout_height="@dimen/menu_image_dimen"
+                    android:src="@drawable/historynew"
+                    android:layout_gravity="center"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/menu_icon"
-                    android:layout_gravity="center"
-                    android:textColor="@color/white_color"
-                    android:padding="5dp"
-                    android:textSize="15dp"
-                    android:textStyle="bold"/>
+                    android:text="@string/history_icon"
+                    style="@style/menu_text_style"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingTop="25dp"
+            android:weightSum="4">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:padding="20dp"
+                android:orientation="vertical"
+                android:layout_weight="1">
+                <ImageView
+                    android:layout_width="@dimen/menu_image_dimen"
+                    android:layout_height="@dimen/menu_image_dimen"
+                    android:src="@drawable/todaynew"
+                    android:layout_gravity="center"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/today_spl_icon"
+                    style="@style/menu_text_style"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:padding="20dp"
+                android:orientation="vertical"
+                android:layout_weight="1">
+                <ImageView
+                    android:layout_width="@dimen/menu_image_dimen"
+                    android:layout_height="@dimen/menu_image_dimen"
+                    android:src="@drawable/offernew"
+                    android:layout_gravity="center"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/offer_icon"
+                    style="@style/menu_text_style"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:padding="20dp"
+                android:orientation="vertical"
+                android:layout_weight="1">
+                <ImageView
+                    android:layout_width="@dimen/menu_image_dimen"
+                    android:layout_height="@dimen/menu_image_dimen"
+                    android:src="@drawable/feedbacknew"
+                    android:layout_gravity="center"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/feedback_icon"
+                    style="@style/menu_text_style"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:padding="20dp"
+                android:orientation="vertical"
+                android:layout_weight="1">
+                <ImageView
+                    android:layout_width="@dimen/menu_image_dimen"
+                    android:layout_height="@dimen/menu_image_dimen"
+                    android:src="@drawable/aboutnew"
+                    android:layout_gravity="center"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/about_us_icon"
+                    style="@style/menu_text_style"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.nickteck.restaurantapp.additional_class.FontsOverride;
 import com.nickteck.restaurantapp.model.Constants;
 
 /**
@@ -26,10 +27,9 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
         mInstance = this;
-
-
+        FontsOverride.setDefaultFont(this, "MONOSPACE", "Cabin-SemiBold.ttf");
+        FontsOverride.setDefaultFont(this, "SERIF", "OpenSans-Regular.ttf");
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             networkChangeReceiver = new ConnectivityReceiver()
@@ -45,7 +45,6 @@ public class MyApplication extends Application {
                 }
             };
 
-            Log.e("noguet","noguet");
             IntentFilter intentFilter = new IntentFilter();
             intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
             intentFilter.addAction(Constants.BROADCAST);

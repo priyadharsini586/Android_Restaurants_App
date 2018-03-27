@@ -9,4 +9,6 @@
     <dimen name="grid_text_size">20sp</dimen>
     <integer name="anim_duration">300</integer>
     <dimen name="nav_header_width">200dp</dimen>
+    <dimen name="menu_image_dimen">50dp</dimen>
+    <dimen name="menu_home_text_size">15sp</dimen>
 </resources>
