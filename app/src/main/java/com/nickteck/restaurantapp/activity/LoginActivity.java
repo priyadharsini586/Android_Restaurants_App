@@ -98,14 +98,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 break;
 
             case R.id.btnSubmitLogin:
-//                int currentapiVersion = android.os.Build.VERSION.SDK_INT;
-//                if (currentapiVersion >= android.os.Build.VERSION_CODES.LOLLIPOP){
-//                    ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(MenuNavigationActivity.this);
+               /* int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+                if (currentapiVersion >= android.os.Build.VERSION_CODES.LOLLIPOP){
+                    ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(MenuNavigationActivity.this);
+                    Intent intent=new Intent(LoginActivity.this,MenuActivity.class);
+                    startActivity(intent, options.toBundle());
+                }else{*/
                     Intent intent=new Intent(LoginActivity.this,MenuNavigationActivity.class);
                     startActivity(intent);
-//                }else{
-                  /*  Intent intent=new Intent(LoginActivity.this,ItemActivity.class);
-                    startActivity(intent);*/
 //                }
 
               /*  if (isNetworkConnected)
