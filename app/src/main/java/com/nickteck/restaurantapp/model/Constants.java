@@ -15,7 +15,7 @@ public class Constants {
     public static String MESSAGE = "message";
     public static String BROADCAST = "broadCastName";
 
-    public static String CATEGORY_BASE_URL = "http://192.168.1.4/prawnandcrab/webservice/images/category/";
-    public static String ITEM_BASE_URL = "http://192.168.1.4/prawnandcrab/webservice/images/item/";
+    public static String CATEGORY_BASE_URL = "http://192.168.1.2/prawnandcrab/webservice/images/category/";
+    public static String ITEM_BASE_URL = "http://192.168.1.2/prawnandcrab/webservice/images/item/";
 
 }

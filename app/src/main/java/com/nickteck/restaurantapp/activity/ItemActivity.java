@@ -1,24 +1,33 @@
 package com.nickteck.restaurantapp.activity;
 
+import android.app.Dialog;
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.nickteck.restaurantapp.Adapter.GridAdapter;
 import com.nickteck.restaurantapp.Adapter.ItemAdapter;
 import com.nickteck.restaurantapp.R;
 import com.nickteck.restaurantapp.additional_class.AdditionalClass;
+import com.nickteck.restaurantapp.additional_class.RecyclerTouchListener;
 import com.nickteck.restaurantapp.api.ApiClient;
 import com.nickteck.restaurantapp.api.ApiInterface;
 import com.nickteck.restaurantapp.model.Constants;
 import com.nickteck.restaurantapp.model.ItemListRequestAndResponseModel;
 import com.nickteck.restaurantapp.network.ConnectivityReceiver;
 import com.nickteck.restaurantapp.network.MyApplication;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,6 +47,8 @@ public class ItemActivity extends AppCompatActivity implements ConnectivityRecei
     boolean isNetworkConnected;
     ApiInterface apiInterface;
     ItemAdapter itemAdapter;
+    ImageView image;
+    TextView name,description,price;
     private  ArrayList<ItemListRequestAndResponseModel.item_list> gridImageList=new ArrayList<>();
     String itemId;
 
@@ -48,6 +59,20 @@ public class ItemActivity extends AppCompatActivity implements ConnectivityRecei
         recyclerView=(RecyclerView)findViewById(R.id.recycler_view);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new RecyclerTouchListener.ClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+
+
+
+             openDialognotification(position);
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
+        }));
 
 //        itemId= getIntent().getStringExtra("itemId");
 //        Log.e("item id",itemId);
@@ -57,6 +82,9 @@ public class ItemActivity extends AppCompatActivity implements ConnectivityRecei
 
 
     }
+
+
+
     private void checkConnection() {
         boolean isConnected = ConnectivityReceiver.isConnected();
         if (!isConnected) {
@@ -139,5 +167,44 @@ public class ItemActivity extends AppCompatActivity implements ConnectivityRecei
                 }
             });
         }
+    }
+    private void openDialognotification(int position) {
+        final ItemListRequestAndResponseModel.item_list popitem=gridImageList.get(position);
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.popup_layout);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.getWindow().setLayout(700, ViewGroup.LayoutParams.WRAP_CONTENT);
+         name=(TextView)dialog.findViewById(R.id.name) ;
+         description=(TextView)dialog.findViewById(R.id.description) ;
+         price=(TextView)dialog.findViewById(R.id.price) ;
+         name.setText(popitem.getItem_name());
+         description.setText(popitem.getDescription());
+         price.setText("$"+popitem.getPrice());
+         image=(ImageView)dialog.findViewById(R.id.image);
+         Picasso.with(getApplicationContext())
+                .load(popitem.getImage()) // thumbnail url goes here
+                .placeholder(R.drawable.cook8)
+                .into(image, new com.squareup.picasso.Callback() {
+                    @Override
+                    public void onSuccess() {
+                        Picasso.with(getApplicationContext())
+                                .load(popitem.getImage()) // image url goes here
+                                .placeholder(R.drawable.cook8)
+                                .into(image);
+                    }
+
+                    @Override
+                    public void onError() {
+                    }
+                });
+         ImageView imageClose = (ImageView) dialog.findViewById(R.id.imgClose);
+         imageClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
+            }
+        });
+        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation_2;
+        dialog.show();
     }
 }

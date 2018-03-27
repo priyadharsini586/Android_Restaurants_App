@@ -15,7 +15,10 @@
         <item name="colorControlHighlight">@color/orange_color</item>
         <item name="colorAccent">@color/orange_color</item>
     </style>
-
+    <style name="DialogAnimation_2">
+        <item name="android:windowEnterAnimation">@transition/fade_in</item>
+        <item name="android:windowExitAnimation">@transition/fade_out</item>
+    </style>
 
     <style name="TextLabel" parent="TextAppearance.AppCompat">
         <!-- Hint color and label color in FALSE state -->
