@@ -8,4 +8,11 @@
     tools:context="com.nickteck.restaurantapp.activity.MenuNavigationActivity"
     tools:showIn="@layout/app_bar_menu_navigation">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:id="@+id/rldMainContainer">
+
+    </RelativeLayout>
 </android.support.constraint.ConstraintLayout>

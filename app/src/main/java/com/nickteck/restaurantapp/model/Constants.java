@@ -18,4 +18,8 @@ public class Constants {
     public static String CATEGORY_BASE_URL = "http://192.168.1.2/prawnandcrab/webservice/images/category/";
     public static String ITEM_BASE_URL = "http://192.168.1.2/prawnandcrab/webservice/images/item/";
 
+
+    //fragment
+    public static String CONTENTFRAGMENT = "CONTENT_FRAGMENT";
+
 }

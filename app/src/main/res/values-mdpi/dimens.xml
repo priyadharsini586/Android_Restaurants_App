@@ -8,4 +8,5 @@
     <dimen name="grid_item_height">100dp</dimen>
     <dimen name="grid_text_size">20sp</dimen>
     <integer name="anim_duration">300</integer>
+    <dimen name="nav_header_width">200dp</dimen>
 </resources>
