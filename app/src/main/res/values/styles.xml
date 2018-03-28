@@ -21,8 +21,8 @@
         <item name="colorAccent">@color/orange_color</item>
     </style>
     <style name="DialogAnimation_2">
-        <item name="android:windowEnterAnimation">@transition/fade_in</item>
-        <item name="android:windowExitAnimation">@transition/fade_out</item>
+        <item name="android:windowEnterAnimation">@anim/popup_show</item>
+        <item name="android:windowExitAnimation">@anim/popup_hide</item>
     </style>
 
     <style name="TextLabel" parent="TextAppearance.AppCompat">

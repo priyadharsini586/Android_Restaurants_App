@@ -57,6 +57,7 @@ public class CatagoryFragment extends Fragment {
                 Bundle bundle=new Bundle();
                 bundle.putString("listData", list.getId());
                 ItemFragment itemFragment = new ItemFragment();
+                itemFragment.setArguments(bundle);
                 AdditionalClass.replaceFragment(itemFragment,Constants.ITEM_FRAGMENT,(AppCompatActivity)getActivity());
             }
 

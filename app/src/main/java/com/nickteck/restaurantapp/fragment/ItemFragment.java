@@ -9,9 +9,12 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,6 +34,7 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,15 +49,20 @@ public class ItemFragment extends Fragment implements ConnectivityReceiver.Conne
     boolean isNetworkConnected;
     ApiInterface apiInterface;
     ItemAdapter itemAdapter;
-    ImageView image;
+    ImageView image,imgClose;
     TextView name,description,price;
     private  ArrayList<ItemListRequestAndResponseModel.item_list> gridImageList=new ArrayList<>();
     View mainView;
-
+    String itemId  ;
+    int itemCount = 1;
+    TextView txtNumQty,txtTotalPrice;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mainView =  inflater.inflate(R.layout.activity_item, container, false);
+
+        itemId=getArguments().getString("listData");
+        Log.e("item id",itemId);
 
         recyclerView=(RecyclerView)mainView.findViewById(R.id.recycler_view);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
@@ -116,7 +125,7 @@ public class ItemFragment extends Fragment implements ConnectivityReceiver.Conne
             apiInterface = ApiClient.getClient().create(ApiInterface.class);
             JSONObject getJsonObject = new JSONObject();
             try {
-                getJsonObject.put("cat_id",45);
+                getJsonObject.put("cat_id",itemId);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -164,9 +173,10 @@ public class ItemFragment extends Fragment implements ConnectivityReceiver.Conne
     private void openDialognotification(int position) {
         final ItemListRequestAndResponseModel.item_list popitem=gridImageList.get(position);
         final Dialog dialog = new Dialog(getActivity());
+        dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.popup_layout);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.getWindow().setLayout(600, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.getWindow().setGravity(Gravity.BOTTOM);
          name=(TextView)dialog.findViewById(R.id.name) ;
          description=(TextView)dialog.findViewById(R.id.description) ;
          price=(TextView)dialog.findViewById(R.id.price) ;
@@ -190,14 +200,77 @@ public class ItemFragment extends Fragment implements ConnectivityReceiver.Conne
                     public void onError() {
                     }
                 });
-         ImageView imageClose = (ImageView) dialog.findViewById(R.id.imgClose);
-         imageClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.cancel();
+        imgClose = (ImageView) dialog.findViewById(R.id.imgClose);
+        imgClose.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+                 dialog.cancel();
+             }
+         });
+        txtNumQty = (TextView) dialog.findViewById(R.id.txtNumQty);
+        txtTotalPrice = (TextView) dialog.findViewById(R.id.txtTotalPrice);
+        ImageView imgAdd = (ImageView) dialog.findViewById(R.id.imgAdd);
+
+        boolean isInteger = AdditionalClass.isInteger(popitem.getPrice());
+        final int priceList ;
+        if (isInteger) {
+            Log.e("check integer",popitem.getPrice()+" is an integer");
+            priceList = Integer.parseInt(popitem.getPrice().trim());
+        } else {
+            Log.e("check integer",popitem.getPrice()+" is not an integer");
+
+            priceList = (int) Double.parseDouble(popitem.getPrice().trim());
+        }
+         imgAdd.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+                  itemCount = itemCount + 1;
+                 if (itemCount >= 1)
+                 {
+                     txtNumQty.setText(String.valueOf(itemCount));
+//                     int price = Integer.parseInt(popitem.getPrice().trim());
+                     int totalPrice = priceList * itemCount;
+                     txtTotalPrice.setText("$"+String.valueOf(totalPrice));
+                 }
+             }
+         });
+         ImageView imgMinus = (ImageView) dialog.findViewById(R.id.imgMinus);
+         imgMinus.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+                 itemCount = itemCount - 1;
+                 if (itemCount >= 1)
+                 {
+                     txtNumQty.setText(String.valueOf(itemCount));
+//                     int price = Integer.parseInt(popitem.getPrice().trim());
+                     int totalPrice =priceList * itemCount;
+                     txtTotalPrice.setText("$"+String.valueOf(totalPrice));
+                 }
+
+             }
+         });
+         txtNumQty.setText(String.valueOf(itemCount));
+         txtTotalPrice.setText("$"+popitem.getPrice());
+
+         description.measure(0,0);
+        image.measure(0,0);
+
+        float density =getContext().getResources().getDisplayMetrics().density;
+        float densityHeight = image.getMeasuredHeight() / density;
+
+        ViewTreeObserver vto = description.getViewTreeObserver();
+        vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            public boolean onPreDraw() {
+                description.getViewTreeObserver().removeOnPreDrawListener(this);
+               int  finalHeight = description.getMeasuredHeight() + 200 + 300;
+                int finalWidth = description.getMeasuredWidth();
+                Log.e("height", String.valueOf( "Height: " + finalHeight +  " Width: " + finalWidth));
+                dialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, finalHeight  );
+
+                return true;
             }
         });
-//        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation_2;
+        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation_2;
         dialog.show();
     }
 }
