@@ -84,11 +84,8 @@ public class MenuNavigationActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            CatagoryFragment catagory=new CatagoryFragment();
-            fragmentTransaction.add(R.id.rldMainContainer,catagory);
-            fragmentTransaction.commit();
+            CatagoryFragment catagoryFragment = new CatagoryFragment();
+            replaceFragment(catagoryFragment,Constants.CATEGORY_FRAGMENT);
 
         } else if (id == R.id.nav_gallery) {
 

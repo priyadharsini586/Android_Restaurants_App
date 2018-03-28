@@ -21,5 +21,6 @@ public class Constants {
 
     //fragment
     public static String CONTENTFRAGMENT = "CONTENT_FRAGMENT";
+    public static String CATEGORY_FRAGMENT = "CATEGORY_FRAGMENT";
 
 }

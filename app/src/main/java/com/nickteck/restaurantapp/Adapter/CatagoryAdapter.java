@@ -3,6 +3,7 @@ package com.nickteck.restaurantapp.Adapter;
 import android.content.Context;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,16 +41,17 @@ public class CatagoryAdapter extends RecyclerView.Adapter<CatagoryAdapter.ViewHo
     @Override
     public void onBindViewHolder(final CatagoryAdapter.ViewHolder holder, int position) {
 
-        holder.list =catList.get(position);
-        holder.mName.setText(holder.list.getName());
+        final ItemListRequestAndResponseModel.list list =catList.get(position);
+        Log.e("item size", String.valueOf(position));
+        holder.mName.setText(list.getName());
         Picasso.with(context)
-                .load(holder.list.getImage())
+                .load(list.getImage())
                 .placeholder(R.mipmap.ic_default_image)
                 .into(holder.img, new Callback() {
                     @Override
                     public void onSuccess() {
                         Picasso.with(context)
-                                .load(holder.list.getImage()) // image url goes here
+                                .load(list.getImage()) // image url goes here
                                 .placeholder(R.mipmap.ic_default_image)
                                 .into(holder.img);
                     }
@@ -58,6 +60,7 @@ public class CatagoryAdapter extends RecyclerView.Adapter<CatagoryAdapter.ViewHo
                     public void onError() {
                     }
                 });
+        holder.setIsRecyclable(false);
 
     }
 
@@ -68,14 +71,13 @@ public class CatagoryAdapter extends RecyclerView.Adapter<CatagoryAdapter.ViewHo
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         public TextView mName;
-        ItemListRequestAndResponseModel.list list;
         ImageView img;
 
 
         ViewHolder(View view) {
             super(view);
-            mName=(TextView)view.findViewById(R.id.name);
-            img=(ImageView)view.findViewById(R.id.image);
+            mName=(TextView)view.findViewById(R.id.cat_name);
+            img=(ImageView)view.findViewById(R.id.cat_image);
 
         }
 

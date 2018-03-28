@@ -45,8 +45,6 @@ public class CatagoryFragment extends Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_cat, container, false);
         catagory=(RecyclerView)view.findViewById(R.id.recycler_view);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-        catagory.setLayoutManager(linearLayoutManager);
         getCategoryData();
         return view;
     }
@@ -80,6 +78,10 @@ public class CatagoryFragment extends Fragment {
                         }
                         CatagoryAdapter gridAdapter=new CatagoryAdapter(getActivity(),catList);
                         catagory.setAdapter(gridAdapter);
+                        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+                        catagory.setLayoutManager(linearLayoutManager);
+                        gridAdapter.notifyDataSetChanged();
+
                     }
                 }
             }
