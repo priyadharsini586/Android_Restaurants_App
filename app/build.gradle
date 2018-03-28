@@ -35,5 +35,6 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.4.0'
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.0.0'
     compile 'com.androidadvance:topsnackbar:1.1.1'
+    compile 'com.android.support:recyclerview-v7:26.1.0'
 
 }

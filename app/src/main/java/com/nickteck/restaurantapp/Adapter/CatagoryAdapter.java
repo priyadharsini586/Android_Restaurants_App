@@ -42,24 +42,12 @@ public class CatagoryAdapter extends RecyclerView.Adapter<CatagoryAdapter.ViewHo
     public void onBindViewHolder(final CatagoryAdapter.ViewHolder holder, int position) {
 
         final ItemListRequestAndResponseModel.list list =catList.get(position);
-        Log.e("item size", String.valueOf(position));
+        Log.e("item size", String.valueOf(list.getImage()));
         holder.mName.setText(list.getName());
         Picasso.with(context)
                 .load(list.getImage())
                 .placeholder(R.mipmap.ic_default_image)
-                .into(holder.img, new Callback() {
-                    @Override
-                    public void onSuccess() {
-                        Picasso.with(context)
-                                .load(list.getImage()) // image url goes here
-                                .placeholder(R.mipmap.ic_default_image)
-                                .into(holder.img);
-                    }
-
-                    @Override
-                    public void onError() {
-                    }
-                });
+                .into(holder.img);
         holder.setIsRecyclable(false);
 
     }
