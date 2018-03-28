@@ -8,9 +8,7 @@ import android.content.Context;
 import android.graphics.Typeface;
 import java.lang.reflect.Field;
 
-/**
- * Created by vamsi on 06-05-2017 for Android custom font article
- */
+
 public class FontsOverride {
     public static void setDefaultFont(Context context,
                                       String staticTypefaceFieldName, String fontAssetName) {
