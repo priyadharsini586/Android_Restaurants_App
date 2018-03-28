@@ -94,7 +94,7 @@ public class ContentFragment extends Fragment {
         indicator.setViewPager(mPager);
 
         final float density = getResources().getDisplayMetrics().density;
-        indicator.setRadius(5 * density);
+        indicator.setRadius(3 * density);
         NUM_PAGES =imageModelArrayList.size();
         // Auto start of viewpager
         final Handler handler = new Handler();

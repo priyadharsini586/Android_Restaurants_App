@@ -41,8 +41,8 @@ public class MenuNavigationActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        ContentFragment contentFragment = new ContentFragment();
-        replaceFragment(contentFragment, Constants.CONTENTFRAGMENT);
+       ContentFragment contentFragment = new ContentFragment();
+       replaceFragment(contentFragment, Constants.CONTENTFRAGMENT);
     }
 
     @Override
@@ -87,7 +87,7 @@ public class MenuNavigationActivity extends AppCompatActivity
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             CatagoryFragment catagory=new CatagoryFragment();
-            fragmentTransaction.add(R.id.rldMainContainer,catagory);
+            fragmentTransaction.replace(R.id.rldMainContainer,catagory);
             fragmentTransaction.commit();
 
         } else if (id == R.id.nav_gallery) {
