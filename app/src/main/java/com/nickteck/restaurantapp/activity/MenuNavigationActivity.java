@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.nickteck.restaurantapp.R;
+import com.nickteck.restaurantapp.additional_class.AdditionalClass;
 import com.nickteck.restaurantapp.fragment.CatagoryFragment;
 import com.nickteck.restaurantapp.fragment.ContentFragment;
 import com.nickteck.restaurantapp.model.Constants;
@@ -42,7 +43,7 @@ public class MenuNavigationActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         ContentFragment contentFragment = new ContentFragment();
-        replaceFragment(contentFragment, Constants.CONTENTFRAGMENT);
+        AdditionalClass.replaceFragment(contentFragment, Constants.CONTENTFRAGMENT,MenuNavigationActivity.this);
     }
 
     @Override
@@ -83,9 +84,9 @@ public class MenuNavigationActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_menu) {
             CatagoryFragment catagoryFragment = new CatagoryFragment();
-            replaceFragment(catagoryFragment,Constants.CATEGORY_FRAGMENT);
+            AdditionalClass.replaceFragment(catagoryFragment,Constants.CATEGORY_FRAGMENT,MenuNavigationActivity.this);
 
         } else if (id == R.id.nav_gallery) {
 
@@ -104,12 +105,12 @@ public class MenuNavigationActivity extends AppCompatActivity
         return true;
     }
 
-    public void replaceFragment(Fragment fragment, String fragmentTag) {
+  /*  public void replaceFragment(Fragment fragment, String fragmentTag) {
         android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.setCustomAnimations(R.anim.enter_from_left,R.anim.exit_to_right);
         fragmentTransaction.addToBackStack(fragmentTag);
         fragmentTransaction.replace(R.id.rldMainContainer, fragment, fragmentTag);
         fragmentTransaction.commit();
 
-    }
+    }*/
 }

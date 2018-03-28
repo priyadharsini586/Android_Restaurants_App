@@ -7,11 +7,15 @@ import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.androidadvance.topsnackbar.TSnackbar;
+import com.nickteck.restaurantapp.R;
 import com.nickteck.restaurantapp.activity.LoginActivity;
 import com.nickteck.restaurantapp.network.MyApplication;
 
@@ -51,5 +55,12 @@ public class AdditionalClass {
 
     }
 
+    public static void replaceFragment(Fragment fragment, String fragmentTag,AppCompatActivity context) {
+        android.support.v4.app.FragmentTransaction fragmentTransaction = context.getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.setCustomAnimations(R.anim.enter_from_left,R.anim.exit_to_right);
+        fragmentTransaction.addToBackStack(fragmentTag);
+        fragmentTransaction.replace(R.id.rldMainContainer, fragment, fragmentTag);
+        fragmentTransaction.commit();
 
+    }
 }

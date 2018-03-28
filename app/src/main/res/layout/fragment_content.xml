@@ -62,7 +62,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:id="@+id/ldtMenuList">
             <ImageView
                 android:layout_width="@dimen/menu_image_dimen"
                 android:layout_height="@dimen/menu_image_dimen"

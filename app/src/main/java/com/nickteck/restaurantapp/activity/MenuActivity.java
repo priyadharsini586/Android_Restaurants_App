@@ -4,24 +4,16 @@ package com.nickteck.restaurantapp.activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Handler;
-import android.provider.SyncStateContract;
 import android.support.annotation.RequiresApi;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.transition.Explode;
-import android.transition.Fade;
-import android.transition.Transition;
-import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
-import android.view.animation.AnticipateOvershootInterpolator;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.nickteck.restaurantapp.Adapter.GridAdapter;
@@ -29,6 +21,7 @@ import com.nickteck.restaurantapp.Adapter.ViewPagerAdapter;
 import com.nickteck.restaurantapp.R;
 import com.nickteck.restaurantapp.api.ApiClient;
 import com.nickteck.restaurantapp.api.ApiInterface;
+import com.nickteck.restaurantapp.fragment.ItemFragment;
 import com.nickteck.restaurantapp.model.Constants;
 import com.nickteck.restaurantapp.model.ItemListRequestAndResponseModel;
 import com.viewpagerindicator.CirclePageIndicator;
@@ -40,7 +33,6 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import me.relex.circleindicator.CircleIndicator;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -162,7 +154,7 @@ public class MenuActivity extends AppCompatActivity {
               @Override
               public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                   ItemListRequestAndResponseModel.list list = gridImageList.get(i);
-                  Intent intent=new Intent(MenuActivity.this,ItemActivity.class);
+                  Intent intent=new Intent(MenuActivity.this,ItemFragment.class);
                   intent.putExtra("itemId",list.getId() );
                   startActivity(intent);
 

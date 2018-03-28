@@ -1,22 +1,21 @@
-package com.nickteck.restaurantapp.activity;
+package com.nickteck.restaurantapp.fragment;
 
 import android.app.Dialog;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.support.v7.app.AppCompatActivity;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.nickteck.restaurantapp.Adapter.GridAdapter;
 import com.nickteck.restaurantapp.Adapter.ItemAdapter;
 import com.nickteck.restaurantapp.R;
 import com.nickteck.restaurantapp.additional_class.AdditionalClass;
@@ -39,10 +38,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.nickteck.restaurantapp.model.Constants.CATEGORY_BASE_URL;
 import static com.nickteck.restaurantapp.model.Constants.ITEM_BASE_URL;
 
-public class ItemActivity extends AppCompatActivity implements ConnectivityReceiver.ConnectivityReceiverListener {
+public class ItemFragment extends Fragment implements ConnectivityReceiver.ConnectivityReceiverListener {
     RecyclerView recyclerView;
     boolean isNetworkConnected;
     ApiInterface apiInterface;
@@ -50,22 +48,23 @@ public class ItemActivity extends AppCompatActivity implements ConnectivityRecei
     ImageView image;
     TextView name,description,price;
     private  ArrayList<ItemListRequestAndResponseModel.item_list> gridImageList=new ArrayList<>();
-    String itemId;
+    View mainView;
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_item);
-        recyclerView=(RecyclerView)findViewById(R.id.recycler_view);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        mainView =  inflater.inflate(R.layout.activity_item, container, false);
+
+        recyclerView=(RecyclerView)mainView.findViewById(R.id.recycler_view);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new RecyclerTouchListener.ClickListener() {
+        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getActivity(), recyclerView, new RecyclerTouchListener.ClickListener() {
             @Override
             public void onClick(View view, int position) {
 
 
 
-             openDialognotification(position);
+                openDialognotification(position);
             }
 
             @Override
@@ -74,21 +73,15 @@ public class ItemActivity extends AppCompatActivity implements ConnectivityRecei
             }
         }));
 
-//        itemId= getIntent().getStringExtra("itemId");
-//        Log.e("item id",itemId);
-
         checkConnection();
         MyApplication.getInstance().setConnectivityListener(this);
-
-
+        return mainView;
     }
-
-
 
     private void checkConnection() {
         boolean isConnected = ConnectivityReceiver.isConnected();
         if (!isConnected) {
-            Toast.makeText(getApplicationContext(), "Network not available", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), "Network not available", Toast.LENGTH_LONG).show();
             isNetworkConnected = false;
         }else
         {
@@ -104,11 +97,11 @@ public class ItemActivity extends AppCompatActivity implements ConnectivityRecei
 
 //        if (isNetworkConnected != isConnected) {
             if (isConnected) {
-                Toast.makeText(getApplicationContext(), "Network Connected", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "Network Connected", Toast.LENGTH_LONG).show();
                 getItemView();
             } else {
-                Toast.makeText(getApplicationContext(), "Network not available", Toast.LENGTH_LONG).show();
-                AdditionalClass.showSnackBar(ItemActivity.this);
+                Toast.makeText(getActivity(), "Network not available", Toast.LENGTH_LONG).show();
+                AdditionalClass.showSnackBar(getActivity());
 
             }
 //        }
@@ -150,13 +143,13 @@ public class ItemActivity extends AppCompatActivity implements ConnectivityRecei
                                 gridImageList.add(items);
 
                             }
-                            itemAdapter=new ItemAdapter(gridImageList,getApplicationContext());
+                            itemAdapter=new ItemAdapter(gridImageList,getActivity());
                             recyclerView.setAdapter(itemAdapter);
                             itemAdapter.notifyDataSetChanged();
 
                         }else if (itemListRequestAndResponseModel.getStatus_code().equals(Constants.Failure))
                         {
-                            Toast.makeText(getApplicationContext(),itemListRequestAndResponseModel.getStatus_message(),Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(),itemListRequestAndResponseModel.getStatus_message(),Toast.LENGTH_LONG).show();
                         }
                     }
                 }
@@ -170,10 +163,10 @@ public class ItemActivity extends AppCompatActivity implements ConnectivityRecei
     }
     private void openDialognotification(int position) {
         final ItemListRequestAndResponseModel.item_list popitem=gridImageList.get(position);
-        final Dialog dialog = new Dialog(this);
+        final Dialog dialog = new Dialog(getActivity());
         dialog.setContentView(R.layout.popup_layout);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.getWindow().setLayout(700, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.getWindow().setLayout(600, ViewGroup.LayoutParams.WRAP_CONTENT);
          name=(TextView)dialog.findViewById(R.id.name) ;
          description=(TextView)dialog.findViewById(R.id.description) ;
          price=(TextView)dialog.findViewById(R.id.price) ;
@@ -181,13 +174,13 @@ public class ItemActivity extends AppCompatActivity implements ConnectivityRecei
          description.setText(popitem.getDescription());
          price.setText("$"+popitem.getPrice());
          image=(ImageView)dialog.findViewById(R.id.image);
-         Picasso.with(getApplicationContext())
+         Picasso.with(getActivity())
                 .load(popitem.getImage()) // thumbnail url goes here
                 .placeholder(R.drawable.cook8)
                 .into(image, new com.squareup.picasso.Callback() {
                     @Override
                     public void onSuccess() {
-                        Picasso.with(getApplicationContext())
+                        Picasso.with(getActivity())
                                 .load(popitem.getImage()) // image url goes here
                                 .placeholder(R.drawable.cook8)
                                 .into(image);
@@ -204,7 +197,7 @@ public class ItemActivity extends AppCompatActivity implements ConnectivityRecei
                 dialog.cancel();
             }
         });
-        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation_2;
+//        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation_2;
         dialog.show();
     }
 }

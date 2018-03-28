@@ -6,12 +6,16 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.nickteck.restaurantapp.Adapter.ViewPagerAdapter;
 import com.nickteck.restaurantapp.R;
+import com.nickteck.restaurantapp.additional_class.AdditionalClass;
+import com.nickteck.restaurantapp.model.Constants;
 import com.nickteck.restaurantapp.model.ItemListRequestAndResponseModel;
 import com.viewpagerindicator.CirclePageIndicator;
 
@@ -26,7 +30,7 @@ import java.util.TimerTask;
  * Use the {@link ContentFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ContentFragment extends Fragment {
+public class ContentFragment extends Fragment implements View.OnClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -42,6 +46,7 @@ public class ContentFragment extends Fragment {
     private int [] sliderList = {R.drawable.cook2,R.drawable.cook3,R.drawable.cook4,R.drawable.cook5};
     private ArrayList<ItemListRequestAndResponseModel> imageModelArrayList;
     View mainView;
+    LinearLayout ldtMenuList;
     public ContentFragment() {
         // Required empty public constructor
     }
@@ -134,6 +139,8 @@ public class ContentFragment extends Fragment {
             }
         });
 
+        ldtMenuList = (LinearLayout) mainView.findViewById(R.id.ldtMenuList);
+        ldtMenuList.setOnClickListener(this);
 
 
     }
@@ -151,6 +158,18 @@ public class ContentFragment extends Fragment {
         return list;
     }
 
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId())
+        {
+            case R.id.ldtMenuList:
+                CatagoryFragment catagoryFragment = new CatagoryFragment();
+                AdditionalClass.replaceFragment(catagoryFragment, Constants.CATEGORY_FRAGMENT,(AppCompatActivity) getActivity());
+
+                break;
+        }
+    }
 
 
 }

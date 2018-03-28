@@ -4,16 +4,20 @@ package com.nickteck.restaurantapp.fragment;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
+import android.widget.Toast;
 
 import com.nickteck.restaurantapp.Adapter.CatagoryAdapter;
 import com.nickteck.restaurantapp.Adapter.GridAdapter;
 import com.nickteck.restaurantapp.R;
+import com.nickteck.restaurantapp.additional_class.AdditionalClass;
+import com.nickteck.restaurantapp.additional_class.RecyclerTouchListener;
 import com.nickteck.restaurantapp.api.ApiClient;
 import com.nickteck.restaurantapp.api.ApiInterface;
 import com.nickteck.restaurantapp.model.Constants;
@@ -45,6 +49,22 @@ public class CatagoryFragment extends Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_cat, container, false);
         catagory=(RecyclerView)view.findViewById(R.id.recycler_view);
+        catagory.addOnItemTouchListener(new RecyclerTouchListener(getActivity(), catagory, new RecyclerTouchListener.ClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+
+                ItemListRequestAndResponseModel.list list = catList.get(position);
+                Bundle bundle=new Bundle();
+                bundle.putString("listData", list.getId());
+                ItemFragment itemFragment = new ItemFragment();
+                AdditionalClass.replaceFragment(itemFragment,Constants.ITEM_FRAGMENT,(AppCompatActivity)getActivity());
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
+        }));
         getCategoryData();
         return view;
     }
