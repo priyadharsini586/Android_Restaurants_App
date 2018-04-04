@@ -4,7 +4,10 @@
     android:layout_width="match_parent"
     android:orientation="vertical"
     android:layout_height="wrap_content"
-    android:id="@+id/rldMainMenu">
+    android:id="@+id/rldMainMenu"
+    android:paddingTop="10dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp">
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="180dp"

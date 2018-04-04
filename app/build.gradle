@@ -36,5 +36,6 @@ dependencies {
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.0.0'
     compile 'com.androidadvance:topsnackbar:1.1.1'
     compile 'com.android.support:recyclerview-v7:26.1.0'
+    compile 'com.github.kanytu:android-parallax-recyclerview:v1.7'
 
 }
