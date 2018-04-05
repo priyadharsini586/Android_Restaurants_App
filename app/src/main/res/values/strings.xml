@@ -7,6 +7,7 @@
     <string name="e_mail">EMail:</string>
     <string name="submit">Submit</string>
     <string name="advanced">Advanced</string>
+    <string name="catagory">CATAGORY</string>
 
     <string name="Phone_num_hint"><font size="12">Phone No</font></string>
     <string name="name_hint"><font size="12">Name</font></string>
@@ -26,7 +27,6 @@
     <string name="offer_icon">Offers</string>
     <string name="feedback_icon">Feedback</string>
     <string name="about_us_icon">Feedback</string>
-
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

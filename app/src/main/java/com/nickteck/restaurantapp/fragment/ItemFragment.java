@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +26,7 @@ import com.nickteck.restaurantapp.additional_class.AdditionalClass;
 import com.nickteck.restaurantapp.additional_class.RecyclerTouchListener;
 import com.nickteck.restaurantapp.api.ApiClient;
 import com.nickteck.restaurantapp.api.ApiInterface;
+import com.nickteck.restaurantapp.model.AddWhislist;
 import com.nickteck.restaurantapp.model.Constants;
 import com.nickteck.restaurantapp.model.ItemListRequestAndResponseModel;
 import com.nickteck.restaurantapp.network.ConnectivityReceiver;
@@ -34,7 +36,6 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,6 +46,8 @@ import retrofit2.Response;
 import static com.nickteck.restaurantapp.model.Constants.ITEM_BASE_URL;
 
 public class ItemFragment extends Fragment implements ConnectivityReceiver.ConnectivityReceiverListener {
+    AdditionalClass shrdPrfence;
+  //  ArrayList<AddWhislist> favorites=new ArrayList<AddWhislist>();
     RecyclerView recyclerView;
     boolean isNetworkConnected;
     ApiInterface apiInterface;
@@ -56,6 +59,8 @@ public class ItemFragment extends Fragment implements ConnectivityReceiver.Conne
     String itemId  ;
     int itemCount = 1;
     TextView txtNumQty,txtTotalPrice;
+    AddWhislist favorite;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -63,15 +68,17 @@ public class ItemFragment extends Fragment implements ConnectivityReceiver.Conne
 
         itemId=getArguments().getString("listData");
         Log.e("item id",itemId);
+        shrdPrfence = new AdditionalClass();
+       // favorites = shrdPrfence.getFavorites(getActivity());
 
         recyclerView=(RecyclerView)mainView.findViewById(R.id.recycler_view);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
+
+
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getActivity(), recyclerView, new RecyclerTouchListener.ClickListener() {
             @Override
             public void onClick(View view, int position) {
-
-
 
                 openDialognotification(position);
             }
@@ -152,7 +159,7 @@ public class ItemFragment extends Fragment implements ConnectivityReceiver.Conne
                                 gridImageList.add(items);
 
                             }
-                            itemAdapter=new ItemAdapter(gridImageList,getActivity());
+                            itemAdapter=new ItemAdapter(gridImageList,favorite,getActivity());
                             recyclerView.setAdapter(itemAdapter);
                             itemAdapter.notifyDataSetChanged();
 
@@ -170,7 +177,8 @@ public class ItemFragment extends Fragment implements ConnectivityReceiver.Conne
             });
         }
     }
-    private void openDialognotification(int position) {
+    private void openDialognotification(final int position) {
+
         final ItemListRequestAndResponseModel.item_list popitem=gridImageList.get(position);
         final Dialog dialog = new Dialog(getActivity());
         dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
@@ -210,6 +218,14 @@ public class ItemFragment extends Fragment implements ConnectivityReceiver.Conne
         txtNumQty = (TextView) dialog.findViewById(R.id.txtNumQty);
         txtTotalPrice = (TextView) dialog.findViewById(R.id.txtTotalPrice);
         ImageView imgAdd = (ImageView) dialog.findViewById(R.id.imgAdd);
+        LinearLayout wishlist=(LinearLayout)dialog.findViewById(R.id.add_wishlist);
+        wishlist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                popitem.getItem_id();
+                getWishList();
+            }
+        });
 
         boolean isInteger = AdditionalClass.isInteger(popitem.getPrice());
         final int priceList ;
@@ -262,7 +278,7 @@ public class ItemFragment extends Fragment implements ConnectivityReceiver.Conne
         vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             public boolean onPreDraw() {
                 description.getViewTreeObserver().removeOnPreDrawListener(this);
-               int  finalHeight = description.getMeasuredHeight() + 200 + 300;
+               int  finalHeight = description.getMeasuredHeight() + 200 + 800;
                 int finalWidth = description.getMeasuredWidth();
                 Log.e("height", String.valueOf( "Height: " + finalHeight +  " Width: " + finalWidth));
                 dialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, finalHeight  );
@@ -272,5 +288,53 @@ public class ItemFragment extends Fragment implements ConnectivityReceiver.Conne
         });
         dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation_2;
         dialog.show();
+    }
+    public void  getWishList()
+    {
+        if (isNetworkConnected)
+        {
+            apiInterface = ApiClient.getClient().create(ApiInterface.class);
+            JSONObject getJsonObject = new JSONObject();
+            try {
+                getJsonObject.put("customer_id",1);
+                getJsonObject.put("item_id",25);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            Call<AddWhislist> getCatageoryList = apiInterface.getWhishlist(getJsonObject);
+            getCatageoryList.enqueue(new Callback<AddWhislist>() {
+                @Override
+                public void onResponse(Call<AddWhislist> call, Response<AddWhislist> response) {
+                    if (response.isSuccessful())
+                    {
+                        AddWhislist addWhislist = response.body();
+
+                        if (addWhislist.getStatus_code().equals(Constants.Success))
+                        {
+                            //favorites=new ArrayList<AddWhislist>();
+                            addWhislist.setStatus_code(addWhislist.getStatus_code());
+                            favorite=addWhislist;
+
+                           // Toast.makeText(getActivity(),favorite,Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(),addWhislist.getStatus_message(),Toast.LENGTH_LONG).show();
+
+
+                        }else if (addWhislist.getStatus_code().equals(Constants.Failure))
+                        {
+                           // Toast.makeText(getActivity(),favorite,Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(),addWhislist.getStatus_message(),Toast.LENGTH_LONG).show();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<AddWhislist> call, Throwable t) {
+
+                }
+
+
+            });
+
+        }
     }
 }

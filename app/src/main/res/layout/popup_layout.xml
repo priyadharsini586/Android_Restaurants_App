@@ -13,7 +13,7 @@
         android:orientation="vertical"
         android:layout_margin="20dp"
         android:background="@drawable/rounded_corner"
-        android:padding="5dp">
+        android:padding="@dimen/pop_padding">
 
         <ImageView
             android:layout_width="match_parent"
@@ -32,7 +32,7 @@
             android:paddingLeft="10dp"/>
         <TextView
             android:id="@+id/description"
-            android:paddingTop="10dp"
+            android:paddingTop="@dimen/pop_padding_all"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="description descriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescription "
@@ -60,7 +60,7 @@
                 android:paddingRight="20dp"
                 android:text="Price:"
                 android:textColor="#008000"
-              android:textSize="20sp"
+                android:textSize="20sp"
                 android:textStyle="bold"/>
         </LinearLayout>
 
@@ -135,6 +135,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
                 android:orientation="horizontal"
+                android:id="@+id/add_wishlist"
                 android:background="@color/orange_color"
                 android:gravity="center">
             <ImageView

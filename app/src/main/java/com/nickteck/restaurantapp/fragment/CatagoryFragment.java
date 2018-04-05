@@ -3,7 +3,9 @@ package com.nickteck.restaurantapp.fragment;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.nickteck.restaurantapp.Adapter.CatagoryAdapter;
@@ -27,6 +30,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
+
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -43,12 +48,14 @@ public class CatagoryFragment extends Fragment {
     View view;
     ApiInterface apiInterface;
     RecyclerView catagory;
-    ArrayList<ItemListRequestAndResponseModel.list> catList;
+    SwipeRefreshLayout mSwipeRefreshLayout;
+    private  ArrayList<ItemListRequestAndResponseModel.list> catList=new ArrayList<>();
     @SuppressLint("ResourceType")
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_cat, container, false);
         catagory=(RecyclerView)view.findViewById(R.id.recycler_view);
+
         catagory.addOnItemTouchListener(new RecyclerTouchListener(getActivity(), catagory, new RecyclerTouchListener.ClickListener() {
             @Override
             public void onClick(View view, int position) {
@@ -67,10 +74,38 @@ public class CatagoryFragment extends Fragment {
             }
         }));
         getCategoryData();
+        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
+
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary,
+                android.R.color.holo_green_dark,
+                android.R.color.holo_orange_dark,
+                android.R.color.holo_blue_dark);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+                mSwipeRefreshLayout.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        // cancle the Visual indication of a refresh
+                        mSwipeRefreshLayout.setRefreshing(true);
+                        getCategoryData();
+                    }
+                }, 3000);
+
+
+
+            }
+        });
+
+
+
+
         return view;
     }
     public void getCategoryData()
     {
+
         apiInterface = ApiClient.getClient().create(ApiInterface.class);
         JSONObject getJsonObject = new JSONObject();
         try {
@@ -84,14 +119,14 @@ public class CatagoryFragment extends Fragment {
             public void onResponse(Call<ItemListRequestAndResponseModel> call, Response<ItemListRequestAndResponseModel> response) {
                 if (response.isSuccessful())
                 {
+                    mSwipeRefreshLayout.setRefreshing(false);
                     ItemListRequestAndResponseModel itemListRequestAndResponseModel = response.body();
                     if (itemListRequestAndResponseModel.getStatus_code().equals(Constants.Success))
                     {
-                        catList = new ArrayList<>();
-                        ArrayList getItemDetils = itemListRequestAndResponseModel.getList();
+                        catList = new ArrayList<ItemListRequestAndResponseModel.list>();
+                        List<ItemListRequestAndResponseModel.list> getItemDetils = itemListRequestAndResponseModel.getList();
                         for (int i = 0; i < getItemDetils.size(); i++) {
-                            ItemListRequestAndResponseModel.list  categoryList = (ItemListRequestAndResponseModel.list) getItemDetils.get(i);
-
+                            ItemListRequestAndResponseModel.list  categoryList = getItemDetils.get(i);
                             categoryList.setName(categoryList.getName());
                             String url=CATEGORY_BASE_URL+categoryList.getImage();
                             categoryList.setImage(url);

@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -17,7 +18,10 @@ import com.nickteck.restaurantapp.model.ItemListRequestAndResponseModel;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+
 import java.util.ArrayList;
+
+
 
 /**
  * Created by admin on 3/27/2018.
@@ -36,13 +40,13 @@ public class CatagoryAdapter extends RecyclerView.Adapter<CatagoryAdapter.ViewHo
     public CatagoryAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.catagory_layout, parent, false);
-
         return new ViewHolder(view);
     }
 
 
     @Override
     public void onBindViewHolder(final CatagoryAdapter.ViewHolder holder, int position) {
+
 
         final ItemListRequestAndResponseModel.list list =catList.get(position);
         Log.e("item size", String.valueOf(list.getImage()));
@@ -52,14 +56,10 @@ public class CatagoryAdapter extends RecyclerView.Adapter<CatagoryAdapter.ViewHo
                 .placeholder(R.mipmap.ic_default_image)
                 .into(holder.img);
         holder.setIsRecyclable(false);
-        holder.rldMainMenu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
 
     }
+
+
 
     @Override
     public int getItemCount() {
@@ -69,18 +69,14 @@ public class CatagoryAdapter extends RecyclerView.Adapter<CatagoryAdapter.ViewHo
 
         public TextView mName;
         ImageView img;
-        RelativeLayout rldMainMenu;
 
 
         ViewHolder(View view) {
             super(view);
             mName=(TextView)view.findViewById(R.id.cat_name);
             img=(ImageView)view.findViewById(R.id.cat_image);
-            rldMainMenu = (RelativeLayout)view.findViewById(R.id.rldMainMenu);
 
         }
 
     }
-
-
 }

@@ -8,6 +8,7 @@ public class LoginRequestAndResponse {
 
     public String status_code,status_message,no_of_visit,success;
 
+
     public String getStatus_code() {
         return status_code;
     }

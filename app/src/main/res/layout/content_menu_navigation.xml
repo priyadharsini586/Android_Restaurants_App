@@ -14,6 +14,12 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:id="@+id/rldMainContainer">
+        <View android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_centerInParent="true"
+            android:id="@+id/expansion_view"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"/>
 
     </RelativeLayout>
 </android.support.constraint.ConstraintLayout>

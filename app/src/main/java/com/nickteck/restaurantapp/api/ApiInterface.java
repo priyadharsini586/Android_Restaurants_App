@@ -1,5 +1,6 @@
 package com.nickteck.restaurantapp.api;
 
+import com.nickteck.restaurantapp.model.AddWhislist;
 import com.nickteck.restaurantapp.model.ItemListRequestAndResponseModel;
 import com.nickteck.restaurantapp.model.LoginRequestAndResponse;
 
@@ -27,5 +28,10 @@ public interface ApiInterface {
     @FormUrlEncoded
     @POST("cat_item_list.php")
     Call<ItemListRequestAndResponseModel> getItemList(@Field("x") JSONObject Itemobject);
+
+    @FormUrlEncoded
+    @POST("favourite_add.php")
+    Call<AddWhislist> getWhishlist(@Field("x") JSONObject Itemobject);
+
 
 }

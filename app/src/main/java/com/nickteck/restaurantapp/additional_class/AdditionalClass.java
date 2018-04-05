@@ -2,6 +2,7 @@ package com.nickteck.restaurantapp.additional_class;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
@@ -15,16 +16,23 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.androidadvance.topsnackbar.TSnackbar;
+import com.google.gson.Gson;
 import com.nickteck.restaurantapp.R;
 import com.nickteck.restaurantapp.activity.LoginActivity;
+import com.nickteck.restaurantapp.model.AddWhislist;
 import com.nickteck.restaurantapp.network.MyApplication;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by admin on 3/7/2018.
  */
 
 public class AdditionalClass {
-
+    public static final String PREFS_NAME = "MY_APP";
+    public static final String FAVORITES = "code_Favorite";
     public static boolean isNetworkAvailable(Context context) {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -81,4 +89,6 @@ public class AdditionalClass {
 
         return isValidInteger;
     }
+
+
 }

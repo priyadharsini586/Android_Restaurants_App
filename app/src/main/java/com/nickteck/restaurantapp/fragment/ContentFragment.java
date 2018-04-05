@@ -1,7 +1,6 @@
 package com.nickteck.restaurantapp.fragment;
 
-import android.content.Context;
-import android.net.Uri;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -165,8 +164,7 @@ public class ContentFragment extends Fragment implements View.OnClickListener {
         {
             case R.id.ldtMenuList:
                 CatagoryFragment catagoryFragment = new CatagoryFragment();
-                AdditionalClass.replaceFragment(catagoryFragment, Constants.CATEGORY_FRAGMENT,(AppCompatActivity) getActivity());
-
+               AdditionalClass.replaceFragment(catagoryFragment, Constants.ITEM_FRAGMENT,(AppCompatActivity)getActivity());
                 break;
         }
     }
