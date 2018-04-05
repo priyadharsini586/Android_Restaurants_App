@@ -7,16 +7,21 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.nickteck.restaurantapp.Adapter.ViewPagerAdapter;
 import com.nickteck.restaurantapp.R;
+import com.nickteck.restaurantapp.activity.MenuNavigationActivity;
 import com.nickteck.restaurantapp.additional_class.AdditionalClass;
 import com.nickteck.restaurantapp.model.Constants;
 import com.nickteck.restaurantapp.model.ItemListRequestAndResponseModel;
+import com.nickteck.restaurantapp.model.ItemModel;
 import com.viewpagerindicator.CirclePageIndicator;
 
 import java.util.ArrayList;
@@ -46,7 +51,8 @@ public class ContentFragment extends Fragment implements View.OnClickListener {
     private int [] sliderList = {R.drawable.cook2,R.drawable.cook3,R.drawable.cook4,R.drawable.cook5};
     private ArrayList<ItemListRequestAndResponseModel> imageModelArrayList;
     View mainView;
-    LinearLayout ldtMenuList;
+    LinearLayout ldtMenuList,ldtMyOrders;
+    TextView txtBrodgeIcon;
     public ContentFragment() {
         // Required empty public constructor
     }
@@ -83,6 +89,23 @@ public class ContentFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mainView = inflater.inflate(R.layout.fragment_content, container, false);
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+        TextView tootBarTextViewb = (TextView)toolbar.findViewById(R.id.txtHomeToolBar);
+        String content_text = getResources().getString(R.string.content_fragment);
+        tootBarTextViewb.setText(content_text);
+
+        txtBrodgeIcon = (TextView)toolbar.findViewById(R.id.txtBrodgeIcon);
+
+        ItemModel itemModel = ItemModel.getInstance();
+        if (itemModel.getListArrayList().size() == 0)
+        {
+            txtBrodgeIcon.setVisibility(View.GONE);
+        }else
+        {
+            txtBrodgeIcon.setVisibility(View.VISIBLE);
+            txtBrodgeIcon.setText(String.valueOf(itemModel.getListArrayList().size()));
+        }
+
         init();
         return mainView;
     }
@@ -142,7 +165,8 @@ public class ContentFragment extends Fragment implements View.OnClickListener {
         ldtMenuList = (LinearLayout) mainView.findViewById(R.id.ldtMenuList);
         ldtMenuList.setOnClickListener(this);
 
-
+        ldtMyOrders = (LinearLayout)mainView.findViewById(R.id.ldtMyOrders);
+        ldtMyOrders.setOnClickListener(this);
     }
 
     private ArrayList<ItemListRequestAndResponseModel> populateList(){
@@ -167,6 +191,11 @@ public class ContentFragment extends Fragment implements View.OnClickListener {
                 CatagoryFragment catagoryFragment = new CatagoryFragment();
                 AdditionalClass.replaceFragment(catagoryFragment, Constants.CATEGORY_FRAGMENT,(AppCompatActivity) getActivity());
 
+                break;
+
+            case R.id.ldtMyOrders:
+                MyOrdersFragment myOrdersFragment = new MyOrdersFragment();
+                AdditionalClass.replaceFragment(myOrdersFragment,Constants.MY_ORDERS_FRAGMENT,(AppCompatActivity) getActivity());
                 break;
         }
     }

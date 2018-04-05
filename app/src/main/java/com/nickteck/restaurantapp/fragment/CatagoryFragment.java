@@ -7,10 +7,12 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.nickteck.restaurantapp.Adapter.CatagoryAdapter;
@@ -22,6 +24,7 @@ import com.nickteck.restaurantapp.api.ApiClient;
 import com.nickteck.restaurantapp.api.ApiInterface;
 import com.nickteck.restaurantapp.model.Constants;
 import com.nickteck.restaurantapp.model.ItemListRequestAndResponseModel;
+import com.nickteck.restaurantapp.model.ItemModel;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,6 +47,8 @@ public class CatagoryFragment extends Fragment {
     ApiInterface apiInterface;
     RecyclerView catagory;
     ArrayList<ItemListRequestAndResponseModel.list> catList;
+    TextView txtBrodgeIcon;
+
     @SuppressLint("ResourceType")
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -66,6 +71,23 @@ public class CatagoryFragment extends Fragment {
 
             }
         }));
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+        TextView tootBarTextViewb = (TextView)toolbar.findViewById(R.id.txtHomeToolBar);
+        String content_text = getResources().getString(R.string.category_fragment);
+        tootBarTextViewb.setText(content_text);
+
+        txtBrodgeIcon = (TextView)toolbar.findViewById(R.id.txtBrodgeIcon);
+        txtBrodgeIcon.setVisibility(View.GONE);
+        ItemModel itemModel = ItemModel.getInstance();
+        if (itemModel.getListArrayList().size() == 0)
+        {
+            txtBrodgeIcon.setVisibility(View.GONE);
+        }else
+        {
+            txtBrodgeIcon.setVisibility(View.VISIBLE);
+            txtBrodgeIcon.setText(String.valueOf(itemModel.getListArrayList().size()));
+        }
+
         getCategoryData();
         return view;
     }

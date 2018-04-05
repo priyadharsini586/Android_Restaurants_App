@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +29,7 @@ import com.nickteck.restaurantapp.api.ApiClient;
 import com.nickteck.restaurantapp.api.ApiInterface;
 import com.nickteck.restaurantapp.model.Constants;
 import com.nickteck.restaurantapp.model.ItemListRequestAndResponseModel;
+import com.nickteck.restaurantapp.model.ItemModel;
 import com.nickteck.restaurantapp.network.ConnectivityReceiver;
 import com.nickteck.restaurantapp.network.MyApplication;
 import com.squareup.picasso.Picasso;
@@ -56,10 +59,31 @@ public class ItemFragment extends Fragment implements ConnectivityReceiver.Conne
     String itemId  ;
     int itemCount = 1;
     TextView txtNumQty,txtTotalPrice;
+    TextView txtBrodgeIcon;
+    public static ArrayList<ItemListRequestAndResponseModel.item_list> itemList = new ArrayList<>();
+    ItemModel itemModel = ItemModel.getInstance();
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mainView =  inflater.inflate(R.layout.activity_item, container, false);
+
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+        TextView tootBarTextViewb = (TextView)toolbar.findViewById(R.id.txtHomeToolBar);
+        String content_text = getResources().getString(R.string.item_fragment);
+        tootBarTextViewb.setText(content_text);
+
+        txtBrodgeIcon = (TextView)toolbar.findViewById(R.id.txtBrodgeIcon);
+        txtBrodgeIcon.setVisibility(View.GONE);
+
+        if (itemModel.getListArrayList().size() == 0)
+        {
+            txtBrodgeIcon.setVisibility(View.GONE);
+        }else
+        {
+            txtBrodgeIcon.setVisibility(View.VISIBLE);
+            txtBrodgeIcon.setText(String.valueOf(itemModel.getListArrayList().size()));
+        }
 
         itemId=getArguments().getString("listData");
         Log.e("item id",itemId);
@@ -252,6 +276,62 @@ public class ItemFragment extends Fragment implements ConnectivityReceiver.Conne
          txtNumQty.setText(String.valueOf(itemCount));
          txtTotalPrice.setText("$"+popitem.getPrice());
 
+
+
+        LinearLayout addToCart = (LinearLayout) dialog.findViewById(R.id.addToCart);
+        addToCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean isHave = false;
+                if (itemList.size()!=0) {
+                    for (int j = 0; j < itemList.size(); j++) {
+                        ItemListRequestAndResponseModel.item_list item_list = itemList.get(j);
+                        if (item_list.getItem_id().equals(popitem.getItem_id())) {
+                            Log.e("check already", "already have");
+                            isHave = true;
+
+                        } else {
+                            isHave = false;
+
+                        }
+                    }
+
+                    if (!isHave)
+                    {
+                        txtBrodgeIcon.setVisibility(View.VISIBLE);
+                        itemList.add(popitem);
+                        itemModel.setListArrayList(itemList);
+                        txtBrodgeIcon.setText(String.valueOf(itemModel.getListArrayList().size()));
+                    }else
+                    {
+                        Toast.makeText(getActivity(), "Already Added to Cart", Toast.LENGTH_LONG).show();
+
+                    }
+                }else
+                {
+                    txtBrodgeIcon.setVisibility(View.VISIBLE);
+                    itemList.add(popitem);
+                    itemModel.setListArrayList(itemList);
+                    txtBrodgeIcon.setText(String.valueOf(itemModel.getListArrayList().size()));
+                }
+
+
+               /* if (itemList.contains(popitem))
+                {
+                    Log.e("check already","already have a item");
+                    Toast.makeText(getActivity(), "Already Added to Cart", Toast.LENGTH_LONG).show();
+
+                }else {
+                    Log.e("check already", "already not have a item");
+                    txtBrodgeIcon.setVisibility(View.VISIBLE);
+                    itemList.add(popitem);
+                    itemModel.setListArrayList(itemList);
+                    txtBrodgeIcon.setText(String.valueOf(itemModel.getListArrayList().size()));
+                }*/
+
+            }
+        });
+
          description.measure(0,0);
         image.measure(0,0);
 
@@ -262,7 +342,7 @@ public class ItemFragment extends Fragment implements ConnectivityReceiver.Conne
         vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             public boolean onPreDraw() {
                 description.getViewTreeObserver().removeOnPreDrawListener(this);
-               int  finalHeight = description.getMeasuredHeight() + 200 + 300;
+               int  finalHeight = description.getMeasuredHeight() + 250 + 260;
                 int finalWidth = description.getMeasuredWidth();
                 Log.e("height", String.valueOf( "Height: " + finalHeight +  " Width: " + finalWidth));
                 dialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, finalHeight  );

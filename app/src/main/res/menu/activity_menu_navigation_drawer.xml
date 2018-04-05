@@ -16,7 +16,7 @@
             android:icon="@drawable/ic_favourite_menu"
             android:title="Favourite" />
         <item
-            android:id="@+id/nav_slideshow"
+            android:id="@+id/nav_my_orders"
             android:icon="@drawable/ic_my_order_menu"
             android:title="My Orders" />
         <item

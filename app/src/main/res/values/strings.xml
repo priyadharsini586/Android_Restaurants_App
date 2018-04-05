@@ -26,7 +26,14 @@
     <string name="offer_icon">Offers</string>
     <string name="feedback_icon">Feedback</string>
     <string name="about_us_icon">Feedback</string>
+    <string name="price">Price</string>
 
+
+    <!--toolbar text-->
+    <string name="content_fragment">Dashboard</string>
+    <string name="category_fragment">Category</string>
+    <string name="item_fragment">Item</string>
+    <string name="my_order">My Orders</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
