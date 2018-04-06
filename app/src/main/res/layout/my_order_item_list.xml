@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="15dp"
+    android:paddingTop="5dp"
     android:orientation="vertical"
 
     >
@@ -16,7 +16,8 @@
        android:layout_width="match_parent"
        android:layout_height="wrap_content"
        android:orientation="horizontal"
-       android:weightSum="2">
+       android:weightSum="2"
+       android:paddingTop="10dp">
        <LinearLayout
            android:layout_width="match_parent"
            android:layout_height="wrap_content"
@@ -26,7 +27,7 @@
            android:paddingRight="10dp">
            <ImageView
                android:layout_width="match_parent"
-               android:layout_height="130dp"
+               android:layout_height="100dp"
                android:src="@drawable/cook1"
                android:id="@+id/imgItem"
                android:scaleType="centerCrop"/>
@@ -39,10 +40,11 @@
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
                    android:src="@drawable/ic_plus_icon"
-                   android:paddingTop="10dp"
-                   android:paddingBottom="10dp"
+                   android:paddingTop="5dp"
+                   android:paddingBottom="5dp"
                    android:paddingRight="20dp"
-                   android:id="@+id/imgIncrease"/>
+                   android:id="@+id/imgIncrease"
+                   android:layout_gravity="center"/>
                <TextView
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
@@ -58,10 +60,11 @@
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
                    android:src="@drawable/ic_minus_icon"
-                   android:paddingTop="21dp"
-                   android:paddingBottom="10dp"
+                   android:paddingTop="5dp"
+                   android:paddingBottom="5dp"
                    android:paddingLeft="20dp"
-                   android:id="@+id/imgDecrease"/>
+                   android:id="@+id/imgDecrease"
+                   android:layout_gravity="center"/>
            </LinearLayout>
        </LinearLayout>
        <LinearLayout
@@ -134,25 +137,25 @@
          android:layout_width="match_parent"
          android:layout_height="wrap_content"
          android:gravity="center"
-         android:paddingTop="10dp"
+         android:paddingTop="5dp"
          android:paddingBottom="10dp">
          <LinearLayout
              android:layout_width="wrap_content"
              android:layout_height="wrap_content"
              android:background="@color/orange_color"
-             >
+             android:id="@+id/ldtRemoveItem">
              <ImageView
                  android:layout_width="wrap_content"
                  android:layout_height="wrap_content"
                  android:src="@drawable/ic_delete"
-                 android:padding="10dp"/>
+                 android:padding="5dp"/>
              <TextView
                  android:layout_width="wrap_content"
                  android:layout_height="wrap_content"
                  android:text="Remove"
                  android:layout_gravity="center"
                  android:textColor="@color/white_color"
-                 android:paddingRight="10dp"
+                 android:paddingRight="5dp"
                  android:textStyle="bold"
                  android:textSize="@dimen/item_price_text_size"/>
          </LinearLayout>

@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.nickteck.restaurantapp.Adapter.ItemAdapter;
+import com.nickteck.restaurantapp.Adapter.MyOrdersAdapter;
 import com.nickteck.restaurantapp.R;
 import com.nickteck.restaurantapp.additional_class.AdditionalClass;
 import com.nickteck.restaurantapp.additional_class.RecyclerTouchListener;
@@ -75,6 +76,7 @@ public class ItemFragment extends Fragment implements ConnectivityReceiver.Conne
 
         txtBrodgeIcon = (TextView)toolbar.findViewById(R.id.txtBrodgeIcon);
         txtBrodgeIcon.setVisibility(View.GONE);
+
 
         if (itemModel.getListArrayList().size() == 0)
         {
@@ -344,7 +346,7 @@ public class ItemFragment extends Fragment implements ConnectivityReceiver.Conne
         vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             public boolean onPreDraw() {
                 description.getViewTreeObserver().removeOnPreDrawListener(this);
-               int  finalHeight = description.getMeasuredHeight() + 250 + 260;
+               int  finalHeight = description.getMeasuredHeight() + 250 + 300;
                 int finalWidth = description.getMeasuredWidth();
                 Log.e("height", String.valueOf( "Height: " + finalHeight +  " Width: " + finalWidth));
                 dialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, finalHeight  );
@@ -355,4 +357,6 @@ public class ItemFragment extends Fragment implements ConnectivityReceiver.Conne
         dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation_2;
         dialog.show();
     }
+
+
 }

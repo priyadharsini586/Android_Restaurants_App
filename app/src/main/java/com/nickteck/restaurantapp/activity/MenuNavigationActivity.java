@@ -54,6 +54,8 @@ public class MenuNavigationActivity extends AppCompatActivity
         txtHomeToolBar.setText("Check");
         layBadge = (FrameLayout) findViewById(R.id.layBadge);
         layBadge.setOnClickListener(this);
+
+
     }
 
     @Override
