@@ -214,6 +214,15 @@ public class ItemListRequestAndResponseModel {
     {
         String item_id,item_name,description,price,image,short_code;
         List<cat_list> cat_list;
+        int qty;
+
+        public int getQty() {
+            return qty;
+        }
+
+        public void setQty(int qty) {
+            this.qty = qty;
+        }
 
         public String getShort_code() {
             return short_code;

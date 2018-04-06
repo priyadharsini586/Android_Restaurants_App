@@ -4,6 +4,8 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.nickteck.restaurantapp.Adapter.MyOrdersAdapter;
 import com.nickteck.restaurantapp.R;
 import com.nickteck.restaurantapp.model.ItemModel;
 
@@ -21,6 +24,7 @@ public class MyOrdersFragment extends Fragment {
     View mainView;
     TextView txtBrodgeIcon;
     ItemModel itemModel;
+    RecyclerView myOrderRecycleView;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -42,6 +46,15 @@ public class MyOrdersFragment extends Fragment {
         }
 
         Log.e("itemList", String.valueOf(itemModel.getListArrayList().size()));
+
+        myOrderRecycleView = (RecyclerView) mainView.findViewById(R.id.myOrderRecycleView);
+
+        MyOrdersAdapter gridAdapter=new MyOrdersAdapter(itemModel.getListArrayList(),getActivity());
+        myOrderRecycleView.setAdapter(gridAdapter);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+        myOrderRecycleView.setLayoutManager(linearLayoutManager);
+        gridAdapter.notifyDataSetChanged();
+
         return mainView;
     }
 

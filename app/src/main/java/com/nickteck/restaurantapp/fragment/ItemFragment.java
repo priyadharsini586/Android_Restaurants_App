@@ -245,6 +245,7 @@ public class ItemFragment extends Fragment implements ConnectivityReceiver.Conne
 
             priceList = (int) Double.parseDouble(popitem.getPrice().trim());
         }
+        itemCount = 1;
          imgAdd.setOnClickListener(new View.OnClickListener() {
              @Override
              public void onClick(View v) {
@@ -290,18 +291,17 @@ public class ItemFragment extends Fragment implements ConnectivityReceiver.Conne
                             Log.e("check already", "already have");
                             isHave = true;
 
-                        } else {
-                            isHave = false;
-
                         }
                     }
 
                     if (!isHave)
                     {
                         txtBrodgeIcon.setVisibility(View.VISIBLE);
+                        popitem.setQty(itemCount);
                         itemList.add(popitem);
                         itemModel.setListArrayList(itemList);
                         txtBrodgeIcon.setText(String.valueOf(itemModel.getListArrayList().size()));
+                        Toast.makeText(getActivity(), "Added to Cart", Toast.LENGTH_LONG).show();
                     }else
                     {
                         Toast.makeText(getActivity(), "Already Added to Cart", Toast.LENGTH_LONG).show();
@@ -310,9 +310,11 @@ public class ItemFragment extends Fragment implements ConnectivityReceiver.Conne
                 }else
                 {
                     txtBrodgeIcon.setVisibility(View.VISIBLE);
+                    popitem.setQty(itemCount);
                     itemList.add(popitem);
                     itemModel.setListArrayList(itemList);
                     txtBrodgeIcon.setText(String.valueOf(itemModel.getListArrayList().size()));
+                    Toast.makeText(getActivity(), "Added to Cart", Toast.LENGTH_LONG).show();
                 }
 
 
