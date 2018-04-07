@@ -7,10 +7,11 @@ package com.nickteck.restaurantapp.model;
 public class AddWhislist {
     public String Status_code,Status_message,Success;
 
+    private AddWhislist(){}
+
     public String getStatus_code() {
         return Status_code;
     }
-
     public void setStatus_code(String status_code) {
         Status_code = status_code;
     }

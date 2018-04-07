@@ -30,7 +30,7 @@ public interface ApiInterface {
     Call<ItemListRequestAndResponseModel> getItemList(@Field("x") JSONObject Itemobject);
 
     @FormUrlEncoded
-    @POST("favourite_add.php")
+    @POST("favourite_list.php")
     Call<AddWhislist> getWhishlist(@Field("x") JSONObject Itemobject);
 
 

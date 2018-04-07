@@ -212,7 +212,7 @@ public class ItemListRequestAndResponseModel {
 
     public class item_list
     {
-        String item_id,item_name,description,price,image,short_code;
+        String item_id,item_name,description,price,image,short_code,favourite;
         List<cat_list> cat_list;
         int qty;
 
@@ -222,6 +222,14 @@ public class ItemListRequestAndResponseModel {
 
         public void setQty(int qty) {
             this.qty = qty;
+        }
+
+        public String getFavourite() {
+            return favourite;
+        }
+
+        public void setFavourite(String favourite) {
+            this.favourite = favourite;
         }
 
         public String getShort_code() {

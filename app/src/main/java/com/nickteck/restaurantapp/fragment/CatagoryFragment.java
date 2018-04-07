@@ -52,7 +52,7 @@ public class CatagoryFragment extends Fragment {
     ApiInterface apiInterface;
     RecyclerView catagory;
     SwipeRefreshLayout mSwipeRefreshLayout;
-    private  ArrayList<ItemListRequestAndResponseModel.list> catList=new ArrayList<>();
+
     ArrayList<ItemListRequestAndResponseModel.list> catList;
     TextView txtBrodgeIcon;
 

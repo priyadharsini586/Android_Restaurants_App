@@ -177,6 +177,7 @@ public class ItemFragment extends Fragment implements ConnectivityReceiver.Conne
                                 items.setImage(items.getImage());
                                 String url=ITEM_BASE_URL+items.getImage();
                                 Log.e("url",url);
+                                items.setFavourite("0");
                                 items.setImage(url);
                                 gridImageList.add(items);
 
@@ -199,7 +200,7 @@ public class ItemFragment extends Fragment implements ConnectivityReceiver.Conne
             });
         }
     }
-    private void openDialognotification(int position) {
+    private void openDialognotification(final int position) {
         final ItemListRequestAndResponseModel.item_list popitem=gridImageList.get(position);
         final Dialog dialog = new Dialog(getActivity());
         dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
@@ -244,7 +245,7 @@ public class ItemFragment extends Fragment implements ConnectivityReceiver.Conne
             @Override
             public void onClick(View view) {
                 popitem.getItem_id();
-                getWishList();
+                getWishList(popitem,position);
             }
         });
 
@@ -266,7 +267,6 @@ public class ItemFragment extends Fragment implements ConnectivityReceiver.Conne
                  if (itemCount >= 1)
                  {
                      txtNumQty.setText(String.valueOf(itemCount));
-//                     int price = Integer.parseInt(popitem.getPrice().trim());
                      int totalPrice = priceList * itemCount;
                      txtTotalPrice.setText("$"+String.valueOf(totalPrice));
                  }
@@ -280,7 +280,6 @@ public class ItemFragment extends Fragment implements ConnectivityReceiver.Conne
                  if (itemCount >= 1)
                  {
                      txtNumQty.setText(String.valueOf(itemCount));
-//                     int price = Integer.parseInt(popitem.getPrice().trim());
                      int totalPrice =priceList * itemCount;
                      txtTotalPrice.setText("$"+String.valueOf(totalPrice));
                  }
@@ -331,18 +330,6 @@ public class ItemFragment extends Fragment implements ConnectivityReceiver.Conne
                 }
 
 
-               /* if (itemList.contains(popitem))
-                {
-                    Log.e("check already","already have a item");
-                    Toast.makeText(getActivity(), "Already Added to Cart", Toast.LENGTH_LONG).show();
-
-                }else {
-                    Log.e("check already", "already not have a item");
-                    txtBrodgeIcon.setVisibility(View.VISIBLE);
-                    itemList.add(popitem);
-                    itemModel.setListArrayList(itemList);
-                    txtBrodgeIcon.setText(String.valueOf(itemModel.getListArrayList().size()));
-                }*/
 
             }
         });
@@ -368,7 +355,7 @@ public class ItemFragment extends Fragment implements ConnectivityReceiver.Conne
         dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation_2;
         dialog.show();
     }
-    public void  getWishList()
+    public void  getWishList(final ItemListRequestAndResponseModel.item_list item_list, final int position)
     {
         if (isNetworkConnected)
         {
@@ -390,17 +377,14 @@ public class ItemFragment extends Fragment implements ConnectivityReceiver.Conne
 
                         if (addWhislist.getStatus_code().equals(Constants.Success))
                         {
-                            //favorites=new ArrayList<AddWhislist>();
-                            addWhislist.setStatus_code(addWhislist.getStatus_code());
-                            favorite=addWhislist;
-
-                           // Toast.makeText(getActivity(),favorite,Toast.LENGTH_LONG).show();
+                            item_list.setFavourite("1");
+                            gridImageList.set(position,item_list);
                             Toast.makeText(getActivity(),addWhislist.getStatus_message(),Toast.LENGTH_LONG).show();
-
+                            itemAdapter.notifyItemChanged(position);
 
                         }else if (addWhislist.getStatus_code().equals(Constants.Failure))
                         {
-                           // Toast.makeText(getActivity(),favorite,Toast.LENGTH_LONG).show();
+
                             Toast.makeText(getActivity(),addWhislist.getStatus_message(),Toast.LENGTH_LONG).show();
                         }
                     }

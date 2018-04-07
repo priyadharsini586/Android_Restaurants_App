@@ -40,6 +40,7 @@ public class AdditionalClass {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
+
     public static void showSnackBar(Activity context)
     {
         TSnackbar snackbar = TSnackbar
