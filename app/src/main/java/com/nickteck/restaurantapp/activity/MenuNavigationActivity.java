@@ -1,13 +1,11 @@
 package com.nickteck.restaurantapp.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.view.Display;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -17,23 +15,21 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.CheckBox;
-import android.widget.RelativeLayout;
+import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.nickteck.restaurantapp.R;
 import com.nickteck.restaurantapp.additional_class.AdditionalClass;
 import com.nickteck.restaurantapp.fragment.CatagoryFragment;
 import com.nickteck.restaurantapp.fragment.ContentFragment;
+import com.nickteck.restaurantapp.fragment.MyOrdersFragment;
 import com.nickteck.restaurantapp.model.Constants;
 
 public class MenuNavigationActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
-    public static final String ARG_USE_EXPANSION = "arg_use_expansion";
-    public static final String ARG_EXPANSION_LEFT_OFFSET = "arg_left_offset";
-    public static final String ARG_EXPANSION_TOP_OFFSET = "arg_top_offset";
-    public static final String ARG_EXPANSION_VIEW_WIDTH = "arg_view_width";
-    public static final String ARG_EXPANSION_VIEW_HEIGHT = "arg_view_height";
+        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
+    TextView txtHomeToolBar;
+    FrameLayout layBadge;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +49,11 @@ public class MenuNavigationActivity extends AppCompatActivity
 
         ContentFragment contentFragment = new ContentFragment();
         AdditionalClass.replaceFragment(contentFragment, Constants.CONTENTFRAGMENT,MenuNavigationActivity.this);
+
+        txtHomeToolBar = (TextView) findViewById(R.id.txtHomeToolBar);
+        txtHomeToolBar.setText("Check");
+        layBadge = (FrameLayout) findViewById(R.id.layBadge);
+        layBadge.setOnClickListener(this);
     }
 
     @Override
@@ -99,8 +100,9 @@ public class MenuNavigationActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_gallery) {
 
-        } else if (id == R.id.nav_slideshow) {
-
+        } else if (id == R.id.nav_my_orders) {
+            MyOrdersFragment myOrdersFragment = new MyOrdersFragment();
+            AdditionalClass.replaceFragment(myOrdersFragment,Constants.MY_ORDERS_FRAGMENT,MenuNavigationActivity.this);
         } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_share) {
@@ -112,6 +114,17 @@ public class MenuNavigationActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId())
+        {
+            case R.id.layBadge:
+                MyOrdersFragment myOrdersFragment = new MyOrdersFragment();
+                AdditionalClass.replaceFragment(myOrdersFragment,Constants.MY_ORDERS_FRAGMENT,MenuNavigationActivity.this);
+                break;
+        }
     }
 
   /*  public void replaceFragment(Fragment fragment, String fragmentTag) {

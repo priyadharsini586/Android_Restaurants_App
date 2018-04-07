@@ -10,4 +10,5 @@
     <dimen name="nav_header_width">400dp</dimen>
     <dimen name="menu_image_dimen">50dp</dimen>
     <dimen name="menu_home_text_size">15sp</dimen>
+    <dimen name="toolbar_text_size">15sp</dimen>
 </resources>
