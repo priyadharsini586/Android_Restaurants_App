@@ -13,6 +13,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.Adapter;
 import android.widget.TextView;
 import android.widget.ScrollView;
@@ -95,7 +97,7 @@ public class CatagoryFragment extends Fragment {
             txtBrodgeIcon.setText(String.valueOf(itemModel.getListArrayList().size()));
         }
 
-        getCategoryData();
+
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
 
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary,
@@ -121,8 +123,8 @@ public class CatagoryFragment extends Fragment {
         });
 
 
-
-
+        mSwipeRefreshLayout.setRefreshing(true);
+        getCategoryData();
         return view;
     }
     public void getCategoryData()
@@ -158,6 +160,12 @@ public class CatagoryFragment extends Fragment {
                         catagory.setAdapter(gridAdapter);
                         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
                         catagory.setLayoutManager(linearLayoutManager);
+                        final LayoutAnimationController controller =
+                                AnimationUtils.loadLayoutAnimation(getActivity(), R.anim.layout_animation_fall_down);
+
+                        catagory.setLayoutAnimation(controller);
+                        catagory.getAdapter().notifyDataSetChanged();
+                        catagory.scheduleLayoutAnimation();
                         gridAdapter.notifyDataSetChanged();
 
                     }

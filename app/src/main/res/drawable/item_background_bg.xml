@@ -3,7 +3,10 @@
     <!-- Drop Shadow Stack -->
     <item>
         <shape>
-            <padding android:top="1dp" android:right="1dp" android:bottom="1dp" android:left="1dp" />
+            <padding android:top="1dp"
+                android:right="1dp"
+                android:bottom="1dp"
+                android:left="1dp" />
             <solid android:color="#02000000" />
             <corners android:radius="8dp" />
         </shape>

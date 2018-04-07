@@ -8,6 +8,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -30,6 +32,7 @@ import java.util.ArrayList;
 public class CatagoryAdapter extends RecyclerView.Adapter<CatagoryAdapter.ViewHolder>{
     Context context;
     ArrayList<ItemListRequestAndResponseModel.list> catList;
+    private int lastPosition = -1;
 
     public CatagoryAdapter(Context context, ArrayList<ItemListRequestAndResponseModel.list> catList) {
         this.context = context;
@@ -57,8 +60,8 @@ public class CatagoryAdapter extends RecyclerView.Adapter<CatagoryAdapter.ViewHo
                 .into(holder.img);
         holder.setIsRecyclable(false);
 
-    }
 
+    }
 
 
     @Override
@@ -69,12 +72,13 @@ public class CatagoryAdapter extends RecyclerView.Adapter<CatagoryAdapter.ViewHo
 
         public TextView mName;
         ImageView img;
-
+        RelativeLayout rldMainMenu;
 
         ViewHolder(View view) {
             super(view);
             mName=(TextView)view.findViewById(R.id.cat_name);
             img=(ImageView)view.findViewById(R.id.cat_image);
+            rldMainMenu = (RelativeLayout) view.findViewById(R.id.rldMainMenu);
 
         }
 

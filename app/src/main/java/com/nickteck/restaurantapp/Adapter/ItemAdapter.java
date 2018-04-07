@@ -42,7 +42,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder>{
 
     @Override
     public void onBindViewHolder(final ItemAdapter.ViewHolder holder, int position) {
-        runEnterAnimation(holder.itemView, position);
+//        runEnterAnimation(holder.itemView, position);
 
 
 
@@ -77,6 +77,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder>{
         }
 
     }
+/*
     private void runEnterAnimation(View view, int position) {
         Animation animation = new TranslateAnimation(100, 0, 0, 0); // new TranslateAnimation (float fromXDelta,float toXDelta, float fromYDelta, float toYDelta)
         animation.setDuration(500);
@@ -84,6 +85,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder>{
 
 
     }
+*/
 
     @Override
     public int getItemCount() {

@@ -281,13 +281,13 @@ public class ItemFragment extends Fragment implements ConnectivityReceiver.Conne
                  {
                      txtNumQty.setText(String.valueOf(itemCount));
                      int totalPrice =priceList * itemCount;
-                     txtTotalPrice.setText("$"+String.valueOf(totalPrice));
+                     txtTotalPrice.setText("Rs."+String.valueOf(totalPrice));
                  }
 
              }
          });
          txtNumQty.setText( String.valueOf(itemCount));
-         txtTotalPrice.setText("$"+popitem.getPrice());
+         txtTotalPrice.setText("Rs."+popitem.getPrice());
 
 
 

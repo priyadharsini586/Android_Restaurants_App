@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="5dp"
+    android:paddingTop="10dp"
     android:orientation="vertical"
 
     >
@@ -27,7 +27,7 @@
            android:paddingRight="10dp">
            <ImageView
                android:layout_width="match_parent"
-               android:layout_height="100dp"
+               android:layout_height="130dp"
                android:src="@drawable/cook1"
                android:id="@+id/imgItem"
                android:scaleType="centerCrop"/>
@@ -39,12 +39,13 @@
                <ImageView
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
-                   android:src="@drawable/ic_plus_icon"
+                   android:src="@drawable/ic_minus_icon"
                    android:paddingTop="5dp"
                    android:paddingBottom="5dp"
                    android:paddingRight="20dp"
-                   android:id="@+id/imgIncrease"
+                   android:id="@+id/imgDecrease"
                    android:layout_gravity="center"/>
+
                <TextView
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
@@ -56,15 +57,17 @@
                    android:textColor="@color/black_color"
                    android:textSize="20sp"
                   android:id="@+id/txtQty" />
+
                <ImageView
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
-                   android:src="@drawable/ic_minus_icon"
+                   android:src="@drawable/ic_plus_icon"
                    android:paddingTop="5dp"
                    android:paddingBottom="5dp"
                    android:paddingLeft="20dp"
-                   android:id="@+id/imgDecrease"
+                   android:id="@+id/imgIncrease"
                    android:layout_gravity="center"/>
+
            </LinearLayout>
        </LinearLayout>
        <LinearLayout
@@ -148,7 +151,7 @@
                  android:layout_width="wrap_content"
                  android:layout_height="wrap_content"
                  android:src="@drawable/ic_delete"
-                 android:padding="5dp"/>
+                 android:padding="10dp"/>
              <TextView
                  android:layout_width="wrap_content"
                  android:layout_height="wrap_content"
