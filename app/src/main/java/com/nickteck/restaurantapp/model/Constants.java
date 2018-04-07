@@ -25,6 +25,7 @@ public class Constants {
     //fragment
     public static String CONTENTFRAGMENT = "CONTENT_FRAGMENT";
     public static String CATEGORY_FRAGMENT = "CATEGORY_FRAGMENT";
+    public static String FAVOURITE_FRAGMENT="FAVOURITE_FRAGMENT";
     public static String ITEM_FRAGMENT = "ITEM_FRAGMENT";
     public static String MY_ORDERS_FRAGMENT = "MY_ORDERS_FRAGMENT";
 

@@ -27,7 +27,6 @@ import com.nickteck.restaurantapp.model.ItemModel;
 
 public class MyOrdersFragment extends Fragment implements MyOrdersAdapter.Callback {
 
-
     View mainView;
     TextView txtBrodgeIcon;
     ItemModel itemModel;

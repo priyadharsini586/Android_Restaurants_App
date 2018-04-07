@@ -125,11 +125,11 @@ public class CatagoryFragment extends Fragment {
 
         mSwipeRefreshLayout.setRefreshing(true);
         getCategoryData();
+        getCategoryData();
         return view;
     }
     public void getCategoryData()
     {
-
         apiInterface = ApiClient.getClient().create(ApiInterface.class);
         JSONObject getJsonObject = new JSONObject();
         try {
@@ -143,14 +143,14 @@ public class CatagoryFragment extends Fragment {
             public void onResponse(Call<ItemListRequestAndResponseModel> call, Response<ItemListRequestAndResponseModel> response) {
                 if (response.isSuccessful())
                 {
-                    mSwipeRefreshLayout.setRefreshing(false);
                     ItemListRequestAndResponseModel itemListRequestAndResponseModel = response.body();
                     if (itemListRequestAndResponseModel.getStatus_code().equals(Constants.Success))
                     {
-                        catList = new ArrayList<ItemListRequestAndResponseModel.list>();
-                        List<ItemListRequestAndResponseModel.list> getItemDetils = itemListRequestAndResponseModel.getList();
+                        catList = new ArrayList<>();
+                        ArrayList getItemDetils = itemListRequestAndResponseModel.getList();
                         for (int i = 0; i < getItemDetils.size(); i++) {
-                            ItemListRequestAndResponseModel.list  categoryList = getItemDetils.get(i);
+                            ItemListRequestAndResponseModel.list  categoryList = (ItemListRequestAndResponseModel.list) getItemDetils.get(i);
+
                             categoryList.setName(categoryList.getName());
                             String url=CATEGORY_BASE_URL+categoryList.getImage();
                             categoryList.setImage(url);
