@@ -328,9 +328,6 @@ public class ItemFragment extends Fragment implements ConnectivityReceiver.Conne
                     txtBrodgeIcon.setText(String.valueOf(itemModel.getListArrayList().size()));
                     Toast.makeText(getActivity(), "Added to Cart", Toast.LENGTH_LONG).show();
                 }
-
-
-
             }
         });
 

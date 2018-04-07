@@ -78,56 +78,11 @@ public class CatagoryFragment extends Fragment {
 
             }
         }));
-        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
-        TextView tootBarTextViewb = (TextView)toolbar.findViewById(R.id.txtHomeToolBar);
-        String content_text = getResources().getString(R.string.category_fragment);
-        tootBarTextViewb.setText(content_text);
-
-        txtBrodgeIcon = (TextView)toolbar.findViewById(R.id.txtBrodgeIcon);
-        txtBrodgeIcon.setVisibility(View.GONE);
-        ItemModel itemModel = ItemModel.getInstance();
-        if (itemModel.getListArrayList().size() == 0)
-        {
-            txtBrodgeIcon.setVisibility(View.GONE);
-        }else
-        {
-            txtBrodgeIcon.setVisibility(View.VISIBLE);
-            txtBrodgeIcon.setText(String.valueOf(itemModel.getListArrayList().size()));
-        }
-
         getCategoryData();
-        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
-
-        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary,
-                android.R.color.holo_green_dark,
-                android.R.color.holo_orange_dark,
-                android.R.color.holo_blue_dark);
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-
-                mSwipeRefreshLayout.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        // cancle the Visual indication of a refresh
-                        mSwipeRefreshLayout.setRefreshing(true);
-                        getCategoryData();
-                    }
-                }, 3000);
-
-
-
-            }
-        });
-
-
-
-
         return view;
     }
     public void getCategoryData()
     {
-
         apiInterface = ApiClient.getClient().create(ApiInterface.class);
         JSONObject getJsonObject = new JSONObject();
         try {
@@ -141,14 +96,14 @@ public class CatagoryFragment extends Fragment {
             public void onResponse(Call<ItemListRequestAndResponseModel> call, Response<ItemListRequestAndResponseModel> response) {
                 if (response.isSuccessful())
                 {
-                    mSwipeRefreshLayout.setRefreshing(false);
                     ItemListRequestAndResponseModel itemListRequestAndResponseModel = response.body();
                     if (itemListRequestAndResponseModel.getStatus_code().equals(Constants.Success))
                     {
-                        catList = new ArrayList<ItemListRequestAndResponseModel.list>();
-                        List<ItemListRequestAndResponseModel.list> getItemDetils = itemListRequestAndResponseModel.getList();
+                        catList = new ArrayList<>();
+                        ArrayList getItemDetils = itemListRequestAndResponseModel.getList();
                         for (int i = 0; i < getItemDetils.size(); i++) {
-                            ItemListRequestAndResponseModel.list  categoryList = getItemDetils.get(i);
+                            ItemListRequestAndResponseModel.list  categoryList = (ItemListRequestAndResponseModel.list) getItemDetils.get(i);
+
                             categoryList.setName(categoryList.getName());
                             String url=CATEGORY_BASE_URL+categoryList.getImage();
                             categoryList.setImage(url);

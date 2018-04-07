@@ -22,6 +22,7 @@ import com.nickteck.restaurantapp.R;
 import com.nickteck.restaurantapp.additional_class.AdditionalClass;
 import com.nickteck.restaurantapp.fragment.CatagoryFragment;
 import com.nickteck.restaurantapp.fragment.ContentFragment;
+import com.nickteck.restaurantapp.fragment.FavouriteFragment;
 import com.nickteck.restaurantapp.fragment.MyOrdersFragment;
 import com.nickteck.restaurantapp.model.Constants;
 
@@ -101,6 +102,9 @@ public class MenuNavigationActivity extends AppCompatActivity
             AdditionalClass.replaceFragment(catagoryFragment,Constants.CATEGORY_FRAGMENT,MenuNavigationActivity.this);
 
         } else if (id == R.id.nav_gallery) {
+            FavouriteFragment favouriteFragment=new FavouriteFragment();
+            AdditionalClass.replaceFragment(favouriteFragment,Constants.FAVOURITE_FRAGMENT,MenuNavigationActivity.this);
+
 
         } else if (id == R.id.nav_my_orders) {
             MyOrdersFragment myOrdersFragment = new MyOrdersFragment();
