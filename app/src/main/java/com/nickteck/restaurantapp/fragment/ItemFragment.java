@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.nickteck.restaurantapp.Adapter.ItemAdapter;
+import com.nickteck.restaurantapp.Adapter.MyOrdersAdapter;
 import com.nickteck.restaurantapp.R;
 import com.nickteck.restaurantapp.additional_class.AdditionalClass;
 import com.nickteck.restaurantapp.additional_class.RecyclerTouchListener;
@@ -78,6 +79,7 @@ public class ItemFragment extends Fragment implements ConnectivityReceiver.Conne
 
         txtBrodgeIcon = (TextView)toolbar.findViewById(R.id.txtBrodgeIcon);
         txtBrodgeIcon.setVisibility(View.GONE);
+
 
         if (itemModel.getListArrayList().size() == 0)
         {
@@ -197,8 +199,7 @@ public class ItemFragment extends Fragment implements ConnectivityReceiver.Conne
             });
         }
     }
-    private void openDialognotification(final int position) {
-
+    private void openDialognotification(int position) {
         final ItemListRequestAndResponseModel.item_list popitem=gridImageList.get(position);
         final Dialog dialog = new Dialog(getActivity());
         dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
@@ -257,6 +258,7 @@ public class ItemFragment extends Fragment implements ConnectivityReceiver.Conne
 
             priceList = (int) Double.parseDouble(popitem.getPrice().trim());
         }
+        itemCount = 1;
          imgAdd.setOnClickListener(new View.OnClickListener() {
              @Override
              public void onClick(View v) {
@@ -302,18 +304,17 @@ public class ItemFragment extends Fragment implements ConnectivityReceiver.Conne
                             Log.e("check already", "already have");
                             isHave = true;
 
-                        } else {
-                            isHave = false;
-
                         }
                     }
 
                     if (!isHave)
                     {
                         txtBrodgeIcon.setVisibility(View.VISIBLE);
+                        popitem.setQty(itemCount);
                         itemList.add(popitem);
                         itemModel.setListArrayList(itemList);
                         txtBrodgeIcon.setText(String.valueOf(itemModel.getListArrayList().size()));
+                        Toast.makeText(getActivity(), "Added to Cart", Toast.LENGTH_LONG).show();
                     }else
                     {
                         Toast.makeText(getActivity(), "Already Added to Cart", Toast.LENGTH_LONG).show();
@@ -322,9 +323,11 @@ public class ItemFragment extends Fragment implements ConnectivityReceiver.Conne
                 }else
                 {
                     txtBrodgeIcon.setVisibility(View.VISIBLE);
+                    popitem.setQty(itemCount);
                     itemList.add(popitem);
                     itemModel.setListArrayList(itemList);
                     txtBrodgeIcon.setText(String.valueOf(itemModel.getListArrayList().size()));
+                    Toast.makeText(getActivity(), "Added to Cart", Toast.LENGTH_LONG).show();
                 }
 
 
@@ -354,7 +357,7 @@ public class ItemFragment extends Fragment implements ConnectivityReceiver.Conne
         vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             public boolean onPreDraw() {
                 description.getViewTreeObserver().removeOnPreDrawListener(this);
-               int  finalHeight = description.getMeasuredHeight() + 200 + 300;
+               int  finalHeight = description.getMeasuredHeight() + 250 + 260;
                 int finalWidth = description.getMeasuredWidth();
                 Log.e("height", String.valueOf( "Height: " + finalHeight +  " Width: " + finalWidth));
                 dialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, finalHeight  );
