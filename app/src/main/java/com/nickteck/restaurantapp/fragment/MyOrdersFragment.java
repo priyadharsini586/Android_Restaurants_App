@@ -11,10 +11,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.nickteck.restaurantapp.Adapter.MyOrdersAdapter;
 import com.nickteck.restaurantapp.R;
+import com.nickteck.restaurantapp.chat.rabbitmq_server.RabbitmqServer;
 import com.nickteck.restaurantapp.model.ItemListRequestAndResponseModel;
 import com.nickteck.restaurantapp.model.ItemModel;
 
@@ -27,6 +29,7 @@ public class MyOrdersFragment extends Fragment implements MyOrdersAdapter.Callba
     RecyclerView myOrderRecycleView;
     MyOrdersAdapter myOrdersAdapter;
     TextView txtTotalPrice;
+    LinearLayout ldtPlaceOrder;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -67,6 +70,17 @@ public class MyOrdersFragment extends Fragment implements MyOrdersAdapter.Callba
             price = price + getPrice;
         }
         txtTotalPrice.setText(String.valueOf(price));
+        new RabbitmqServer().execute();
+        ldtPlaceOrder = (LinearLayout) mainView.findViewById(R.id.ldtPlaceOrder);
+        ldtPlaceOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                RabbitmqServer rabbitmqServer = new RabbitmqServer();
+                rabbitmqServer.sendMsg("hi");
+            }
+        });
+
+
         return mainView;
     }
 
