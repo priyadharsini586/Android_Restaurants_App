@@ -20,6 +20,10 @@ import com.nickteck.restaurantapp.chat.rabbitmq_server.RabbitmqServer;
 import com.nickteck.restaurantapp.model.ItemListRequestAndResponseModel;
 import com.nickteck.restaurantapp.model.ItemModel;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 
 public class MyOrdersFragment extends Fragment implements MyOrdersAdapter.Callback {
 
@@ -75,8 +79,9 @@ public class MyOrdersFragment extends Fragment implements MyOrdersAdapter.Callba
         ldtPlaceOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                RabbitmqServer rabbitmqServer = new RabbitmqServer();
-                rabbitmqServer.sendMsg("hi");
+                sendToDesktop();
+               /* RabbitmqServer rabbitmqServer = new RabbitmqServer();
+                rabbitmqServer.sendMsg("hi");*/
             }
         });
 
@@ -141,4 +146,38 @@ public class MyOrdersFragment extends Fragment implements MyOrdersAdapter.Callba
         txtTotalPrice.setText(String.valueOf(totlaPrice));
     }
 
+
+    public void sendToDesktop()
+    {
+        String message;
+        JSONObject json = new JSONObject();
+        try {
+            json.put("table", "table1");
+            JSONArray itemArray = new JSONArray();
+            for (int i=0;i<itemModel.getListArrayList().size();i++)
+            {
+                ItemListRequestAndResponseModel.item_list  item_list = itemModel.getListArrayList().get(i);
+                JSONObject item = new JSONObject();
+                item.put("item_name",item_list.getItem_name());
+                item.put("qty",item_list.getQty());
+                item.put("item_id",item_list.getItem_id());
+                item.put("price",item_list.getPrice());
+                item.put("short_code",item_list.getShort_code());
+                itemArray.put(item);
+            }
+            json.put("Item_list", itemArray);
+
+            message = json.toString();
+            RabbitmqServer rabbitmqServer = new RabbitmqServer();
+            rabbitmqServer.sendMsg(message);
+            Log.e("item size", message);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+
+
+    }
 }
