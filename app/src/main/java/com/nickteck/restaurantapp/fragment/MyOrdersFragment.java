@@ -1,7 +1,6 @@
 package com.nickteck.restaurantapp.fragment;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -23,6 +22,10 @@ import com.nickteck.restaurantapp.R;
 import com.nickteck.restaurantapp.chat.rabbitmq_server.RabbitmqServer;
 import com.nickteck.restaurantapp.model.ItemListRequestAndResponseModel;
 import com.nickteck.restaurantapp.model.ItemModel;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 public class MyOrdersFragment extends Fragment implements MyOrdersAdapter.Callback {
@@ -73,6 +76,19 @@ public class MyOrdersFragment extends Fragment implements MyOrdersAdapter.Callba
             double getPrice = Double.parseDouble(item_list.getPrice());
             price = price + getPrice;
         }
+        txtTotalPrice.setText(String.valueOf(price));
+        new RabbitmqServer().execute();
+        ldtPlaceOrder = (LinearLayout) mainView.findViewById(R.id.ldtPlaceOrder);
+        ldtPlaceOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sendToDesktop();
+               /* RabbitmqServer rabbitmqServer = new RabbitmqServer();
+                rabbitmqServer.sendMsg("hi");*/
+            }
+        });
+
+
         txtTotalPrice.setText("Total : "+String.valueOf(price));
 
         ldtPlaceOrder = (LinearLayout) mainView.findViewById(R.id.ldtPlaceOrder);
@@ -129,7 +145,7 @@ public class MyOrdersFragment extends Fragment implements MyOrdersAdapter.Callba
             totlaPrice = totlaPrice + price;
             Log.e("price",String.valueOf(totlaPrice));
         }
-        txtTotalPrice.setText("Total : "+String.valueOf(totlaPrice));
+        txtTotalPrice.setText(String.valueOf(totlaPrice));
 
     }
 
@@ -146,7 +162,7 @@ public class MyOrdersFragment extends Fragment implements MyOrdersAdapter.Callba
             totlaPrice = totlaPrice + price;
             Log.e("price",String.valueOf(totlaPrice));
         }
-        txtTotalPrice.setText("Total : "+String.valueOf(totlaPrice));
+        txtTotalPrice.setText(String.valueOf(totlaPrice));
     }
 
     @Override
@@ -161,13 +177,41 @@ public class MyOrdersFragment extends Fragment implements MyOrdersAdapter.Callba
             totlaPrice = totlaPrice + price;
             Log.e("price",String.valueOf(totlaPrice));
         }
-        txtTotalPrice.setText("Total : "+String.valueOf(totlaPrice));
+        txtTotalPrice.setText(String.valueOf(totlaPrice));
     }
 
 
-    public void sendData()
+    public void sendToDesktop()
     {
-        RabbitmqServer rabbitmqServer = new RabbitmqServer();
-        rabbitmqServer.sendMsg("hi");
+        String message;
+        JSONObject json = new JSONObject();
+        try {
+            json.put("table", "table1");
+            JSONArray itemArray = new JSONArray();
+            for (int i=0;i<itemModel.getListArrayList().size();i++)
+            {
+                ItemListRequestAndResponseModel.item_list  item_list = itemModel.getListArrayList().get(i);
+                JSONObject item = new JSONObject();
+                item.put("item_name",item_list.getItem_name());
+                item.put("qty",item_list.getQty());
+                item.put("item_id",item_list.getItem_id());
+                item.put("price",item_list.getPrice());
+                item.put("short_code",item_list.getShort_code());
+                itemArray.put(item);
+            }
+            json.put("Item_list", itemArray);
+
+            message = json.toString();
+            RabbitmqServer rabbitmqServer = new RabbitmqServer();
+            rabbitmqServer.sendMsg(message);
+            Log.e("item size", message);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+
+
     }
 }

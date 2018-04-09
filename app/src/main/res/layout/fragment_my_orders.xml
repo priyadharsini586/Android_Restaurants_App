@@ -50,13 +50,12 @@
                 android:src="@drawable/ic_place_order"
                 android:paddingRight="10dp"/>
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/place_order"
+                android:text="@string/price"
                 android:gravity="center"
                 android:textColor="@color/white_color"
-                android:textStyle="bold"
-                android:textSize="@dimen/item_heading_text_size"/>
+                android:textStyle="bold"/>
         </LinearLayout>
     </LinearLayout>
 
