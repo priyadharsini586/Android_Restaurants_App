@@ -31,7 +31,7 @@ public class SplashActivity extends AppCompatActivity implements ConnectivityRec
             @Override
             public void run() {
 
-                Intent i = new Intent(SplashActivity.this, LoginActivity.class);
+                Intent i = new Intent(SplashActivity.this,TableActivity.class);
                 startActivity(i);
                 
                 finish();
