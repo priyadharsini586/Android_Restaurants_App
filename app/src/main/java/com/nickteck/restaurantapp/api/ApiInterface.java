@@ -3,6 +3,7 @@ package com.nickteck.restaurantapp.api;
 import com.nickteck.restaurantapp.model.AddWhislist;
 import com.nickteck.restaurantapp.model.ItemListRequestAndResponseModel;
 import com.nickteck.restaurantapp.model.LoginRequestAndResponse;
+import com.nickteck.restaurantapp.model.TableModel;
 
 import org.json.JSONObject;
 
@@ -33,5 +34,7 @@ public interface ApiInterface {
     @POST("favourite_list.php")
     Call<AddWhislist> getWhishlist(@Field("x") JSONObject Itemobject);
 
+    @POST("table_list.php")
+    Call<TableModel> getTableData();
 
 }

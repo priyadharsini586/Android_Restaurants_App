@@ -31,6 +31,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder>{
     public ItemAdapter(ArrayList<ItemListRequestAndResponseModel.item_list> gridImageList, Context context) {
         this.gridImageList = gridImageList;
         this.context = context;
+
     }
 
     @Override
