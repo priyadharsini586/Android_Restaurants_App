@@ -1,5 +1,7 @@
 package com.nickteck.restaurantapp.activity;
 
+import android.content.Intent;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -9,6 +11,7 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.nickteck.restaurantapp.Adapter.TableAdapter;
 import com.nickteck.restaurantapp.Db.Database;
 import com.nickteck.restaurantapp.R;
@@ -29,53 +32,52 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class TableActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class TableActivity extends AppCompatActivity {
     TableAdapter tableAdapter;
     ApiInterface apiInterface;
-    Spinner spin;
+    MaterialSpinner spin;
     Database database;
     Button button;
     TableModel.list table;
-    boolean data;
-    private ArrayList<TableModel.list> tableList=new ArrayList<>();
+    private ArrayList<String> tableList = new ArrayList<>();
+    private ArrayList<TableModel.list> tableItem = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_table);
-        database=new Database(getApplicationContext());
-        spin = (Spinner) findViewById(R.id.simpleSpinner);
+        database = new Database(getApplicationContext());
+        spin = (MaterialSpinner) findViewById(R.id.tableSpinner);
         //button=(Button)findViewById(R.id.button);
-        spin.setOnItemSelectedListener(this);
+
         getTabledata();
 
         button = (Button) findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                database.insertTable(table.getId(),table.getName());
-                String text=database.getData();
-                data=database.checkTables();
-                if(data) {
-                    Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
-                }
-                else {
-                    Toast.makeText(getApplicationContext(),"data not available", Toast.LENGTH_LONG).show();
+                if (table != null) {
+                    database.insertTable(table.getId(), table.getName());
+                    Toast.makeText(getApplicationContext(), "Data Saved", Toast.LENGTH_LONG).show();
+                    Intent i = new Intent(TableActivity.this, MenuNavigationActivity.class);
+                    startActivity(i);
+                    finish();
                 }
             }
         });
 
-    }
 
-    @Override
-    public void onItemSelected(AdapterView<?> adapterView, View view, final int i, long l) {
+        spin.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(MaterialSpinner view, int position, long id, Object item) {
+//                Snackbar.make(view, "Clicked " + item, Snackbar.LENGTH_LONG).show();
+                if (position != 0)
+                    table = tableItem.get(position);
+                else
+                    Toast.makeText(getApplicationContext(), "Please select valid date", Toast.LENGTH_LONG).show();
 
-                table=tableList.get(i);
-
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> adapterView) {
-
+            }
+        });
     }
 
 
@@ -93,17 +95,21 @@ public class TableActivity extends AppCompatActivity implements AdapterView.OnIt
 
                         if (tableModel.getStatus_code().equals(Constants.Success))
                         {
-                            tableList = new ArrayList<TableModel.list>();
+                            tableList = new ArrayList<String>();
+                            tableList.add("Table List");
+                            tableItem.add(null);
                             List<TableModel.list> lsttbl=tableModel.getList();
                             for (int i = 0; i < lsttbl.size(); i++) {
                                 TableModel.list tableitem=lsttbl.get(i);
                                 tableitem.setName(tableitem.getName());
                                 tableitem.setId(tableitem.getId());
                                 tableitem.setActive(tableitem.getActive());
-                                tableList.add(tableitem);
+                                tableItem.add(tableitem);
+                                tableList.add(tableitem.getName());
                             }
-                            tableAdapter= new TableAdapter(getApplicationContext(),tableList);
-                            spin.setAdapter(tableAdapter);
+//                            tableAdapter= new TableAdapter(getApplicationContext(),tableList);
+                            spin.setItems(tableList);
+//                            spin.setAdapter(tableAdapter);
                          
 
                         }else if (tableModel.getStatus_code().equals(Constants.Failure))

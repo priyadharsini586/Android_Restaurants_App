@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.nickteck.restaurantapp.Db.Database;
 import com.nickteck.restaurantapp.R;
 import com.nickteck.restaurantapp.network.ConnectivityReceiver;
 import com.nickteck.restaurantapp.network.MyApplication;
@@ -14,13 +15,15 @@ public class SplashActivity extends AppCompatActivity implements ConnectivityRec
 
     boolean isNetworkConnected;
     private static int SPLASH_TIME_OUT = 3000;
+    Database database;
+    boolean data;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
         MyApplication.getInstance().setConnectivityListener(this);
-
+        database = new Database(getApplicationContext());
         new Handler().postDelayed(new Runnable() {
 
             /*
@@ -31,8 +34,18 @@ public class SplashActivity extends AppCompatActivity implements ConnectivityRec
             @Override
             public void run() {
 
-                Intent i = new Intent(SplashActivity.this,TableActivity.class);
-                startActivity(i);
+                data = database.checkTables();
+                if (data) {
+                    Intent i = new Intent(SplashActivity.this,MenuNavigationActivity.class);
+                    startActivity(i);
+                    finish();
+                } else {
+                    Intent i = new Intent(SplashActivity.this,TableActivity.class);
+                    startActivity(i);
+                    finish();
+                }
+
+
                 
                 finish();
             }

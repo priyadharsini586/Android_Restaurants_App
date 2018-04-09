@@ -43,11 +43,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.nickteck.restaurantapp.model.Constants.CATEGORY_BASE_URL;
-import static com.nickteck.restaurantapp.model.Constants.ITEM_BASE_URL;
-
-/**
- * Created by admin on 3/27/2018.
- */
 
 public class CatagoryFragment extends Fragment {
     View view;
@@ -143,6 +138,7 @@ public class CatagoryFragment extends Fragment {
             public void onResponse(Call<ItemListRequestAndResponseModel> call, Response<ItemListRequestAndResponseModel> response) {
                 if (response.isSuccessful())
                 {
+                    mSwipeRefreshLayout.setRefreshing(false);
                     ItemListRequestAndResponseModel itemListRequestAndResponseModel = response.body();
                     if (itemListRequestAndResponseModel.getStatus_code().equals(Constants.Success))
                     {

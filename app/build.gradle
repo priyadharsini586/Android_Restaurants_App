@@ -43,5 +43,7 @@ dependencies {
     compile 'com.androidadvance:topsnackbar:1.1.1'
     compile 'com.android.support:recyclerview-v7:26.1.0'
     compile 'com.github.kanytu:android-parallax-recyclerview:v1.7'
+    compile 'com.jaredrummler:material-spinner:1.2.5'
+
 
 }

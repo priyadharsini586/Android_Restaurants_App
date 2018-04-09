@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.nickteck.restaurantapp.Adapter.MyOrdersAdapter;
+import com.nickteck.restaurantapp.Db.Database;
 import com.nickteck.restaurantapp.R;
 import com.nickteck.restaurantapp.chat.GetFromDesktopListener;
 import com.nickteck.restaurantapp.chat.rabbitmq_server.RabbitmqServer;
@@ -119,7 +120,7 @@ public class MyOrdersFragment extends Fragment implements MyOrdersAdapter.Callba
             new RabbitmqServer().execute();
         }
 
-
+//        new RabbitmqServer().execute();
         return mainView;
     }
 
@@ -185,8 +186,9 @@ public class MyOrdersFragment extends Fragment implements MyOrdersAdapter.Callba
     {
         String message;
         JSONObject json = new JSONObject();
+        Database database = new Database(getActivity());
         try {
-            json.put("table", "table1");
+            json.put("table", database.getData());
             json.put("from", "mobile");
             JSONArray itemArray = new JSONArray();
             for (int i=0;i<itemModel.getListArrayList().size();i++)
