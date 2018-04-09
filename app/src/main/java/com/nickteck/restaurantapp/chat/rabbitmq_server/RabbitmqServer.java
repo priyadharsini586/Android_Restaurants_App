@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.nickteck.restaurantapp.chat.GetFromDesktopListener;
 import com.nickteck.restaurantapp.chat.rabbitmq_stomp.Client;
 import com.nickteck.restaurantapp.chat.rabbitmq_stomp.Listener;
 import com.nickteck.restaurantapp.model.Constants;
@@ -15,6 +16,8 @@ import java.util.Map;
 
 import javax.security.auth.login.LoginException;
 
+import retrofit2.http.GET;
+
 /**
  * Created by admin on 3/7/2018.
  */
@@ -24,21 +27,25 @@ public class RabbitmqServer extends AsyncTask {
     int count = 0;
 
     public static Client client;
+ public static  GetFromDesktopListener getFromDesktopListener;
 
     protected void onPreExecute() {
         super.onPreExecute();
     }
+
     @Override
     protected Object doInBackground(Object[] params) {
+
         try {
             client = new Client(Constants.CHAT_SERVER_URL,61613, "restaurantServer", "restaurant");
 
             client.subscribe("/topic/resturantApp", new Listener() {
                 @Override
-                public void message(Map headers, String body) {
+                public void message(Map headers, final String body) {
 
+                    if (getFromDesktopListener != null)
+                        getFromDesktopListener.getFromDeskTop(body);
 
-                    Log.e("receive message", body);
                 }
             });
         } catch (IOException e) {
@@ -55,8 +62,6 @@ public class RabbitmqServer extends AsyncTask {
     @Override
     protected void onPostExecute(Object o) {
         super.onPostExecute(o);
-
-
     }
 
     public  void sendMsg(String msg) {
@@ -78,4 +83,6 @@ public class RabbitmqServer extends AsyncTask {
             Log.e("client connect", "client not connected");
         }
     }
+
+
 }

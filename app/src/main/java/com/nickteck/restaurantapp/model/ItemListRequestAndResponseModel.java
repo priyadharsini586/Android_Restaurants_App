@@ -210,7 +210,7 @@ public class ItemListRequestAndResponseModel {
         this.item_list = item_lists;
     }
 
-    public class item_list
+    public static class item_list
     {
         String item_id,item_name,description,price,image,short_code,favourite;
         List<cat_list> cat_list;

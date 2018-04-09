@@ -29,6 +29,7 @@
     <string name="about_us_icon">Feedback</string>
     <string name="price">Price</string>
     <string name="place_order">Place Order</string>
+    <string name="update_item">Update Item</string>
 
 
     <!--toolbar text-->

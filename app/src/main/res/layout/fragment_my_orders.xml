@@ -50,12 +50,23 @@
                 android:src="@drawable/ic_place_order"
                 android:paddingRight="10dp"/>
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/price"
+                android:text="@string/place_order"
                 android:gravity="center"
                 android:textColor="@color/white_color"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                android:textSize="@dimen/item_heading_text_size"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/update_item"
+                android:gravity="center"
+                android:textColor="@color/white_color"
+                android:textStyle="bold"
+                android:textSize="@dimen/item_heading_text_size"
+                android:visibility="gone"/>
         </LinearLayout>
     </LinearLayout>
 

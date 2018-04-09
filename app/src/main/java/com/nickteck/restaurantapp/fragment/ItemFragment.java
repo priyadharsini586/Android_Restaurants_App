@@ -341,7 +341,7 @@ public class ItemFragment extends Fragment implements ConnectivityReceiver.Conne
         vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             public boolean onPreDraw() {
                 description.getViewTreeObserver().removeOnPreDrawListener(this);
-               int  finalHeight = description.getMeasuredHeight() + 250 + 800;
+               int  finalHeight = description.getMeasuredHeight() + 250 + 200;
                 int finalWidth = description.getMeasuredWidth();
                 Log.e("height", String.valueOf( "Height: " + finalHeight +  " Width: " + finalWidth));
                 dialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, finalHeight  );

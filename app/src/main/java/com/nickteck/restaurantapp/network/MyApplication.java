@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.nickteck.restaurantapp.additional_class.FontsOverride;
+import com.nickteck.restaurantapp.chat.GetFromDesktopListener;
+import com.nickteck.restaurantapp.chat.rabbitmq_server.RabbitmqServer;
 import com.nickteck.restaurantapp.model.Constants;
 
 /**
@@ -62,5 +64,7 @@ public class MyApplication extends Application {
     }
 
 
-
+    public void setGetFromDesktopListener(GetFromDesktopListener listener) {
+        RabbitmqServer.getFromDesktopListener = listener;
+    }
 }
