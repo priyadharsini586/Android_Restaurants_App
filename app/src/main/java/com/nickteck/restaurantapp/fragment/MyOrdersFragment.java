@@ -11,12 +11,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.nickteck.restaurantapp.Adapter.MyOrdersAdapter;
 import com.nickteck.restaurantapp.R;
+import com.nickteck.restaurantapp.chat.rabbitmq_server.RabbitmqServer;
 import com.nickteck.restaurantapp.model.ItemListRequestAndResponseModel;
 import com.nickteck.restaurantapp.model.ItemModel;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 public class MyOrdersFragment extends Fragment implements MyOrdersAdapter.Callback {
@@ -27,6 +33,7 @@ public class MyOrdersFragment extends Fragment implements MyOrdersAdapter.Callba
     RecyclerView myOrderRecycleView;
     MyOrdersAdapter myOrdersAdapter;
     TextView txtTotalPrice;
+    LinearLayout ldtPlaceOrder;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -67,6 +74,18 @@ public class MyOrdersFragment extends Fragment implements MyOrdersAdapter.Callba
             price = price + getPrice;
         }
         txtTotalPrice.setText(String.valueOf(price));
+        new RabbitmqServer().execute();
+        ldtPlaceOrder = (LinearLayout) mainView.findViewById(R.id.ldtPlaceOrder);
+        ldtPlaceOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sendToDesktop();
+               /* RabbitmqServer rabbitmqServer = new RabbitmqServer();
+                rabbitmqServer.sendMsg("hi");*/
+            }
+        });
+
+
         return mainView;
     }
 
@@ -127,4 +146,38 @@ public class MyOrdersFragment extends Fragment implements MyOrdersAdapter.Callba
         txtTotalPrice.setText(String.valueOf(totlaPrice));
     }
 
+
+    public void sendToDesktop()
+    {
+        String message;
+        JSONObject json = new JSONObject();
+        try {
+            json.put("table", "table1");
+            JSONArray itemArray = new JSONArray();
+            for (int i=0;i<itemModel.getListArrayList().size();i++)
+            {
+                ItemListRequestAndResponseModel.item_list  item_list = itemModel.getListArrayList().get(i);
+                JSONObject item = new JSONObject();
+                item.put("item_name",item_list.getItem_name());
+                item.put("qty",item_list.getQty());
+                item.put("item_id",item_list.getItem_id());
+                item.put("price",item_list.getPrice());
+                item.put("short_code",item_list.getShort_code());
+                itemArray.put(item);
+            }
+            json.put("Item_list", itemArray);
+
+            message = json.toString();
+            RabbitmqServer rabbitmqServer = new RabbitmqServer();
+            rabbitmqServer.sendMsg(message);
+            Log.e("item size", message);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+
+
+    }
 }
