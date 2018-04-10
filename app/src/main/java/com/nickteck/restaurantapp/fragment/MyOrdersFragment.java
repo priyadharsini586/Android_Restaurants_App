@@ -2,6 +2,7 @@ package com.nickteck.restaurantapp.fragment;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SyncRequest;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -41,10 +42,11 @@ public class MyOrdersFragment extends Fragment implements MyOrdersAdapter.Callba
     ItemModel itemModel;
     RecyclerView myOrderRecycleView;
     MyOrdersAdapter myOrdersAdapter;
-    TextView txtTotalPrice;
+    TextView txtTotalPrice,txtPlaceItem,txtUpdateItem;
     LinearLayout ldtPlaceOrder;
     RabbitmqServer rabbitmqServer;
     ArrayList<ItemListRequestAndResponseModel.item_list>itemLists;
+    Database database ;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -66,7 +68,7 @@ public class MyOrdersFragment extends Fragment implements MyOrdersAdapter.Callba
         }
 
         Log.e("itemList", String.valueOf(itemModel.getListArrayList().size()));
-
+         database = new Database(getActivity());
         myOrderRecycleView = (RecyclerView) mainView.findViewById(R.id.myOrderRecycleView);
         itemLists = itemModel.getListArrayList();
         myOrdersAdapter=new MyOrdersAdapter(itemLists,getActivity());
@@ -88,6 +90,18 @@ public class MyOrdersFragment extends Fragment implements MyOrdersAdapter.Callba
 
         txtTotalPrice.setText("Total : "+String.valueOf(price));
 
+        txtUpdateItem = (TextView) mainView.findViewById(R.id.txtUpdateItem);
+        txtPlaceItem = (TextView) mainView.findViewById(R.id.txtPlaceItem);
+        if (itemModel.isAlreadyPlace())
+        {
+            txtPlaceItem.setVisibility(View.GONE);
+            txtUpdateItem.setVisibility(View.VISIBLE);
+        }else
+        {
+            txtPlaceItem.setVisibility(View.VISIBLE);
+            txtUpdateItem.setVisibility(View.GONE);
+        }
+
         ldtPlaceOrder = (LinearLayout) mainView.findViewById(R.id.ldtPlaceOrder);
         ldtPlaceOrder.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,6 +114,10 @@ public class MyOrdersFragment extends Fragment implements MyOrdersAdapter.Callba
                             public void onClick(DialogInterface dialog, int which) {
 
                                 sendToDesktop();
+                                itemModel.setAlreadyPlace(true);
+                                txtPlaceItem.setVisibility(View.GONE);
+                                txtUpdateItem.setVisibility(View.VISIBLE);
+
                             }
                         })
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -146,7 +164,7 @@ public class MyOrdersFragment extends Fragment implements MyOrdersAdapter.Callba
             totlaPrice = totlaPrice + price;
             Log.e("price",String.valueOf(totlaPrice));
         }
-        txtTotalPrice.setText(String.valueOf(totlaPrice));
+        txtTotalPrice.setText("Total : "+String.valueOf(totlaPrice));
 
     }
 
@@ -163,7 +181,7 @@ public class MyOrdersFragment extends Fragment implements MyOrdersAdapter.Callba
             totlaPrice = totlaPrice + price;
             Log.e("price",String.valueOf(totlaPrice));
         }
-        txtTotalPrice.setText(String.valueOf(totlaPrice));
+        txtTotalPrice.setText("Total : "+String.valueOf(totlaPrice));
     }
 
     @Override
@@ -178,7 +196,7 @@ public class MyOrdersFragment extends Fragment implements MyOrdersAdapter.Callba
             totlaPrice = totlaPrice + price;
             Log.e("price",String.valueOf(totlaPrice));
         }
-        txtTotalPrice.setText(String.valueOf(totlaPrice));
+        txtTotalPrice.setText("Total : "+String.valueOf(totlaPrice));
     }
 
 
@@ -186,7 +204,7 @@ public class MyOrdersFragment extends Fragment implements MyOrdersAdapter.Callba
     {
         String message;
         JSONObject json = new JSONObject();
-        Database database = new Database(getActivity());
+
         try {
             json.put("table", database.getData());
             json.put("from", "mobile");
@@ -220,51 +238,60 @@ public class MyOrdersFragment extends Fragment implements MyOrdersAdapter.Callba
     @Override
     public void getFromDeskTop(String result) {
 
+        String table = database.getData();
+        Log.e("list",result);
         try {
             JSONObject getResult = new JSONObject(result);
             if (getResult.has("from"))
             {
                 if (getResult.getString("from").equals("Desktop"))
                 {
-                    Log.e("result",result);
+                    Log.e("result",getResult.getString("table"));
+                    final ItemModel itemModel = ItemModel.getInstance();
+                    final ArrayList<ItemListRequestAndResponseModel.item_list> savetoModel = new ArrayList<>();
+                    if (getResult.getString("table").equals(database.getData())) {
+                        JSONArray getListArray = getResult.getJSONArray("Item_list");
+                        if (getListArray.length() != 0) {
+                            itemLists.clear();
+                            final ArrayList<ItemListRequestAndResponseModel.item_list> item_listArrayList = new ArrayList<>();
+                            for (int j = 0; j < getListArray.length(); j++) {
+                                JSONObject jsonObject = getListArray.getJSONObject(j);
+                                final ItemListRequestAndResponseModel.item_list item_list = new ItemListRequestAndResponseModel.item_list();
+                                item_list.setShort_code(jsonObject.getString("short_code"));
+                                item_list.setQty(jsonObject.getInt("qty"));
+                                item_list.setItem_name(jsonObject.getString("item_name"));
+                                item_list.setDescription(jsonObject.getString("des"));
+                                item_list.setImage(jsonObject.getString("image"));
+                                item_list.setPrice(jsonObject.getString("price"));
+                                item_listArrayList.add(item_list);
+                                savetoModel.add(item_list);
+                                itemModel.setListArrayList(savetoModel);
 
-                    JSONArray getListArray = getResult.getJSONArray("Item_list");
-                    if (getListArray.length() != 0) {
-                        itemLists.clear();
-                        final ArrayList<ItemListRequestAndResponseModel.item_list> item_listArrayList = new ArrayList<>();
-                        for (int j = 0; j < getListArray.length(); j++) {
-                            JSONObject jsonObject = getListArray.getJSONObject(j);
-                            final ItemListRequestAndResponseModel.item_list item_list = new ItemListRequestAndResponseModel.item_list();
-                            item_list.setItem_id(jsonObject.getString("short_code"));
-                            item_list.setQty(jsonObject.getInt("qty"));
-                            item_list.setItem_name(jsonObject.getString("item_name"));
-                            item_list.setDescription(jsonObject.getString("des"));
-                            item_list.setImage(jsonObject.getString("image"));
-                            item_list.setPrice(jsonObject.getString("price"));
-                            item_listArrayList.add(item_list);
+                                getActivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        itemLists.add(item_list);
+                                        myOrdersAdapter.notifyDataSetChanged();
+                                        setTotalPrice();
+                                    }
+                                });
+
+                            }
+
+
+
+                        } else {
                             getActivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    itemLists.add(item_list);
+                                    itemLists.clear();
                                     myOrdersAdapter.notifyDataSetChanged();
-                                    setTotalPrice();
+                                    txtTotalPrice.setText("Total : 0.0");
                                 }
                             });
-
                         }
-                    }else
-                    {
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                itemLists.clear();
-                                myOrdersAdapter.notifyDataSetChanged();
-                                txtTotalPrice.setText("Total : 0.0");
-                            }
-                        });
+
                     }
-
-
                 }
             }
         } catch (JSONException e) {
@@ -285,7 +312,7 @@ public class MyOrdersFragment extends Fragment implements MyOrdersAdapter.Callba
             totlaPrice = totlaPrice + price;
             Log.e("price",String.valueOf(totlaPrice));
         }
-        txtTotalPrice.setText(String.valueOf(totlaPrice));
+        txtTotalPrice.setText("Total : "+String.valueOf(totlaPrice));
 
     }
 }

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 public class ItemModel {
 
     ArrayList<ItemListRequestAndResponseModel.item_list>listArrayList = new ArrayList<>();
+    boolean alreadyPlace = false;
 
     private static ItemModel ourInstance = new ItemModel();
     public static ItemModel getInstance() {
@@ -21,5 +22,13 @@ public class ItemModel {
 
     public void setListArrayList(ArrayList<ItemListRequestAndResponseModel.item_list> listArrayList) {
         this.listArrayList = listArrayList;
+    }
+
+    public boolean isAlreadyPlace() {
+        return alreadyPlace;
+    }
+
+    public void setAlreadyPlace(boolean alreadyPlace) {
+        this.alreadyPlace = alreadyPlace;
     }
 }

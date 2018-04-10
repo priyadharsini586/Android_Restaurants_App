@@ -56,7 +56,8 @@
                 android:gravity="center"
                 android:textColor="@color/white_color"
                 android:textStyle="bold"
-                android:textSize="@dimen/item_heading_text_size"/>
+                android:textSize="@dimen/item_heading_text_size"
+                android:id="@+id/txtPlaceItem"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -66,7 +67,8 @@
                 android:textColor="@color/white_color"
                 android:textStyle="bold"
                 android:textSize="@dimen/item_heading_text_size"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                android:id="@+id/txtUpdateItem"/>
         </LinearLayout>
     </LinearLayout>
 
