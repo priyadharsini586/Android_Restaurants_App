@@ -18,7 +18,9 @@ public class Database  extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "TABLE";
     private static final String CREATE_TABLE_LIST ="table_list";
 
-
+    private static final String CUSTOMER_ID = "customer_id";
+    private static final String ID = "id";
+   private static final String CUSTOMER_TABLE = "customer_table";
 
     public Database(Context context) {
         super(context,DATABASE_NAME,null, DATABASE_VERSION);
@@ -27,7 +29,9 @@ public class Database  extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         String TABLE="CREATE TABLE "+CREATE_TABLE_LIST+"("+KEY_ID +" TEXT,"+NAME +" TEXT"+")";
+        String CUSTOMER="CREATE TABLE "+CUSTOMER_TABLE+"("+ID +" TEXT,"+CUSTOMER_ID +" TEXT"+")";
         sqLiteDatabase.execSQL(TABLE);
+        sqLiteDatabase.execSQL(CUSTOMER);
     }
 
     @Override
@@ -44,6 +48,34 @@ public class Database  extends SQLiteOpenHelper {
         db.close();
         return list;
     }
+
+    public long insertCustomerTable(String id,String name) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(ID,id);
+        values.put(CUSTOMER_ID,name);
+        long list=db.insert(CUSTOMER_TABLE, null, values);
+        db.close();
+        return list;
+    }
+    public  String getCustomerId() {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String selectQuery = "SELECT  * FROM " + CUSTOMER_TABLE;
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor != null)
+            cursor.moveToFirst();
+
+
+        String data = cursor.getString(1);
+
+        return data;
+    }
+
+
+
     public  String getData() {
         SQLiteDatabase db = this.getReadableDatabase();
 

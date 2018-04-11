@@ -36,7 +36,7 @@ public class SplashActivity extends AppCompatActivity implements ConnectivityRec
 
                 data = database.checkTables();
                 if (data) {
-                    Intent i = new Intent(SplashActivity.this,MenuNavigationActivity.class);
+                    Intent i = new Intent(SplashActivity.this,LoginActivity.class);
                     startActivity(i);
                     finish();
                 } else {

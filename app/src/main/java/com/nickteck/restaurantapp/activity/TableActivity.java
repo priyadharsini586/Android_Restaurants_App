@@ -59,7 +59,7 @@ public class TableActivity extends AppCompatActivity {
                 if (table != null) {
                     database.insertTable(table.getId(), table.getName());
                     Toast.makeText(getApplicationContext(), "Data Saved", Toast.LENGTH_LONG).show();
-                    Intent i = new Intent(TableActivity.this, MenuNavigationActivity.class);
+                    Intent i = new Intent(TableActivity.this, LoginActivity.class);
                     startActivity(i);
                     finish();
                 }

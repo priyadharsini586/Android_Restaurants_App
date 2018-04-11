@@ -56,4 +56,9 @@
         <item name="android:textColor">@color/white_color</item>
         <item name="android:layout_gravity">center</item>
     </style>
+
+    <style name="checkBoxStyle" parent="Base.Theme.AppCompat">
+        <item name="colorAccent">@color/white_color</item>
+        <item name="android:textColorSecondary">@color/white_color</item>
+    </style>
 </resources>

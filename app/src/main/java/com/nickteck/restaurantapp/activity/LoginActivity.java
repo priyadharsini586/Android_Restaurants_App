@@ -20,11 +20,14 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androidadvance.topsnackbar.TSnackbar;
+import com.nickteck.restaurantapp.Db.Database;
 import com.nickteck.restaurantapp.R;
 import com.nickteck.restaurantapp.additional_class.AdditionalClass;
 import com.nickteck.restaurantapp.api.ApiClient;
@@ -50,7 +53,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     EditText edtPhone, edtName, edtMailId;
     String strName, strMailId;
     boolean isNetworkConnected;
-    ScrollView sclMainView;
+    RelativeLayout sclMainView;
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +75,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         edtName = (EditText) findViewById(R.id.edtName);
         edtMailId = (EditText) findViewById(R.id.edtMailId);
 
-        sclMainView = (ScrollView) findViewById(R.id.sclMainView);
+        sclMainView = (RelativeLayout) findViewById(R.id.sclMainView);
+
+        progressBar =(ProgressBar) findViewById(R.id.progressLogin);
+        progressBar.setVisibility(View.GONE);
 
         checkConnection();
         MyApplication.getInstance().setConnectivityListener(this);
@@ -84,7 +91,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void checkConnection() {
         boolean isConnected = ConnectivityReceiver.isConnected();
         if (!isConnected) {
+            isNetworkConnected = false;
             Toast.makeText(getApplicationContext(), "Network not available", Toast.LENGTH_LONG).show();
+        }else if (isConnected)
+        {
+            isNetworkConnected = true;
         }
     }
 
@@ -99,9 +110,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             case R.id.btnSubmitLogin:
 
-                    Intent intent=new Intent(LoginActivity.this,MenuNavigationActivity.class);
-                    startActivity(intent);
-
+                if (!edtPhone.getText().toString().isEmpty())
+                    checkLogin();
+                else
+                    Toast.makeText(getApplicationContext(),"Please Enter your mobile number",Toast.LENGTH_LONG).show();
 
                 break;
         }
@@ -109,44 +121,55 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private void checkLogin() {
 
-
-        ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
-        JSONObject jsonObject = new JSONObject();
-        if (edtName.getText().toString().isEmpty()) {
-            strName = "";
-        } else {
-            strName = edtName.getText().toString();
-        }
-        if (edtMailId.getText().toString().isEmpty()) {
-            strMailId = "";
-        } else {
-            strMailId = edtMailId.getText().toString();
-        }
-        try {
-            jsonObject.put("phone", edtPhone.getText().toString());
-            jsonObject.put("name", strName);
-            jsonObject.put("email", strMailId);
-            jsonObject.put("dob", "");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        Call<LoginRequestAndResponse> loginRequestAndResponseCall = apiInterface.getLoginResponse(jsonObject);
-        loginRequestAndResponseCall.enqueue(new Callback<LoginRequestAndResponse>() {
-            @Override
-            public void onResponse(Call<LoginRequestAndResponse> call, Response<LoginRequestAndResponse> response) {
-                if (response.isSuccessful()) {
-                    LoginRequestAndResponse loginRequestAndResponse = response.body();
-                    Log.e("response", String.valueOf(response.body()));
+        if (isNetworkConnected) {
+            progressBar.setVisibility(View.VISIBLE);
+            ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
+            JSONObject jsonObject = new JSONObject();
+            if (edtName.getText().toString().isEmpty()) {
+                strName = "";
+            } else {
+                strName = edtName.getText().toString();
+            }
+            if (edtMailId.getText().toString().isEmpty()) {
+                strMailId = "";
+            } else {
+                strMailId = edtMailId.getText().toString();
+            }
+            try {
+                jsonObject.put("phone", edtPhone.getText().toString());
+                jsonObject.put("name", strName);
+                jsonObject.put("email", strMailId);
+                jsonObject.put("dob", "");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            Call<LoginRequestAndResponse> loginRequestAndResponseCall = apiInterface.getLoginResponse(jsonObject);
+            loginRequestAndResponseCall.enqueue(new Callback<LoginRequestAndResponse>() {
+                @Override
+                public void onResponse(Call<LoginRequestAndResponse> call, Response<LoginRequestAndResponse> response) {
+                    if (response.isSuccessful()) {
+                        LoginRequestAndResponse loginRequestAndResponse = response.body();
+                        Log.e("response", String.valueOf(response.body()));
+                        if (loginRequestAndResponse.getCustomer_id() != null) {
+                            Database database = new Database(getApplicationContext());
+                            database.insertCustomerTable("1", loginRequestAndResponse.customer_id);
+                            Intent intent= new Intent(getApplicationContext(),MenuNavigationActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<LoginRequestAndResponse> call, Throwable t) {
+                @Override
+                public void onFailure(Call<LoginRequestAndResponse> call, Throwable t) {
 
-            }
-        });
+                }
+            });
 
-
+        }else
+        {
+            AdditionalClass.showSnackBar(LoginActivity.this);
+        }
     }
 
     public void checkboxAdvanced() {
