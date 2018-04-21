@@ -120,7 +120,6 @@ public class CatagoryFragment extends Fragment {
 
         mSwipeRefreshLayout.setRefreshing(true);
         getCategoryData();
-        getCategoryData();
         return view;
     }
     public void getCategoryData()
@@ -132,7 +131,7 @@ public class CatagoryFragment extends Fragment {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        Call<ItemListRequestAndResponseModel> getCatageoryList = apiInterface.getCatagoryList(getJsonObject);
+        Call<ItemListRequestAndResponseModel> getCatageoryList = apiInterface.getCatagoryList();
         getCatageoryList.enqueue(new Callback<ItemListRequestAndResponseModel>() {
             @Override
             public void onResponse(Call<ItemListRequestAndResponseModel> call, Response<ItemListRequestAndResponseModel> response) {
@@ -152,7 +151,7 @@ public class CatagoryFragment extends Fragment {
                             categoryList.setImage(url);
                             catList.add(categoryList);
                         }
-                        CatagoryAdapter gridAdapter=new CatagoryAdapter(getActivity(),catList);
+                  /*      CatagoryAdapter gridAdapter=new CatagoryAdapter(getActivity(),catList);
                         catagory.setAdapter(gridAdapter);
                         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
                         catagory.setLayoutManager(linearLayoutManager);
@@ -162,7 +161,7 @@ public class CatagoryFragment extends Fragment {
                         catagory.setLayoutAnimation(controller);
                         catagory.getAdapter().notifyDataSetChanged();
                         catagory.scheduleLayoutAnimation();
-                        gridAdapter.notifyDataSetChanged();
+                        gridAdapter.notifyDataSetChanged();*/
 
                     }
                 }

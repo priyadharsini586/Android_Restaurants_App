@@ -12,9 +12,27 @@ public class ItemListRequestAndResponseModel {
     String status_code,itemId,itemName,itemDescription,itemImage,itemPrice,itemShortCode,id,name,status,value,combine,status_message,comboList;
     int tot_items,tot_taxes;
     public ArrayList<item_list> item_list = new ArrayList<>();
+    public ArrayList<cat_list> cat_list = new ArrayList<>();
+    public ArrayList<Variety_id_list> Variety_id_list = new ArrayList<>();
     ArrayList<list>list = new ArrayList<>();
     String itemCategoryList,Status_code,Success ;
     int image_drawable;
+
+    public ArrayList<ItemListRequestAndResponseModel.Variety_id_list> getVariety_id_list() {
+        return Variety_id_list;
+    }
+
+    public void setVariety_id_list(ArrayList<ItemListRequestAndResponseModel.Variety_id_list> variety_id_list) {
+        Variety_id_list = variety_id_list;
+    }
+
+    public ArrayList<ItemListRequestAndResponseModel.cat_list> getCat_list() {
+        return cat_list;
+    }
+
+    public void setCat_list(ArrayList<ItemListRequestAndResponseModel.cat_list> cat_list) {
+        this.cat_list = cat_list;
+    }
 
     public String getStatus_message() {
         return status_message;
@@ -117,8 +135,10 @@ public class ItemListRequestAndResponseModel {
         this.Status_code = code;
 
     }
+
+
     public String getStatusCode() {
-        return Success;
+        return Status_code;
     }
 
 
@@ -215,6 +235,24 @@ public class ItemListRequestAndResponseModel {
         String item_id,item_name,description,price,image,short_code,favourite;
         List<cat_list> cat_list;
         int qty;
+        ArrayList<Variety_id_list>variety_list  = new ArrayList();
+        String notes;
+
+        public String getNotes() {
+            return notes;
+        }
+
+        public void setNotes(String notes) {
+            this.notes = notes;
+        }
+
+        public ArrayList<ItemListRequestAndResponseModel.Variety_id_list> getVariety_list() {
+            return variety_list;
+        }
+
+        public void setVariety_list(ArrayList<ItemListRequestAndResponseModel.Variety_id_list> variety_list) {
+            this.variety_list = variety_list;
+        }
 
         public int getQty() {
             return qty;
@@ -291,22 +329,30 @@ public class ItemListRequestAndResponseModel {
 
     public class cat_list
     {
-        String cat_id,cat_name;
+        String Cat_id,Cat_name,Image;
 
         public String getCat_id() {
-            return cat_id;
+            return Cat_id;
         }
 
         public void setCat_id(String cat_id) {
-            this.cat_id = cat_id;
+            Cat_id = cat_id;
         }
 
         public String getCat_name() {
-            return cat_name;
+            return Cat_name;
         }
 
         public void setCat_name(String cat_name) {
-            this.cat_name = cat_name;
+            Cat_name = cat_name;
+        }
+
+        public String getImage() {
+            return Image;
+        }
+
+        public void setImage(String image) {
+            Image = image;
         }
     }
 
@@ -386,4 +432,33 @@ public class ItemListRequestAndResponseModel {
         }
     }
 
+
+    public class Variety_id_list
+    {
+        String Variety_id,Variety_name,variety_id;
+
+        public String getVariety_id() {
+            return Variety_id;
+        }
+
+        public void setVariety_id(String variety_id) {
+            Variety_id = variety_id;
+        }
+
+        public String getVariety_name() {
+            return Variety_name;
+        }
+
+        public void setVariety_name(String variety_name) {
+            Variety_name = variety_name;
+        }
+
+        public String getVarietyid() {
+            return variety_id;
+        }
+
+        public void setVarietyid(String variety_id) {
+            variety_id = variety_id;
+        }
+    }
 }

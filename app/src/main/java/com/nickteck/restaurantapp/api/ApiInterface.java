@@ -22,9 +22,12 @@ public interface ApiInterface {
     @POST("check_client_details.php")
      Call<LoginRequestAndResponse> getLoginResponse(@Field("x") JSONObject jsonObject);
 
-    @FormUrlEncoded
-    @POST("category_view.php")
-    Call<ItemListRequestAndResponseModel> getCatagoryList(@Field("x") JSONObject Itemobject);
+
+    @POST("category_list.php")
+    Call<ItemListRequestAndResponseModel> getCatagoryList();
+
+    @POST("veraity_list.php")
+    Call<ItemListRequestAndResponseModel> getVarietyList();
 
     @FormUrlEncoded
     @POST("cat_item_list.php")
@@ -36,5 +39,8 @@ public interface ApiInterface {
 
     @POST("table_list.php")
     Call<TableModel> getTableData();
+
+    @POST("item_list.php")
+    Call<ItemListRequestAndResponseModel> getItemData();
 
 }

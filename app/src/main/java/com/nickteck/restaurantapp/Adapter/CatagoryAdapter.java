@@ -31,10 +31,10 @@ import java.util.ArrayList;
 
 public class CatagoryAdapter extends RecyclerView.Adapter<CatagoryAdapter.ViewHolder>{
     Context context;
-    ArrayList<ItemListRequestAndResponseModel.list> catList;
+    ArrayList<ItemListRequestAndResponseModel.cat_list> catList;
     private int lastPosition = -1;
 
-    public CatagoryAdapter(Context context, ArrayList<ItemListRequestAndResponseModel.list> catList) {
+    public CatagoryAdapter(Context context, ArrayList<ItemListRequestAndResponseModel.cat_list> catList) {
         this.context = context;
         this.catList = catList;
     }
@@ -51,9 +51,9 @@ public class CatagoryAdapter extends RecyclerView.Adapter<CatagoryAdapter.ViewHo
     public void onBindViewHolder(final CatagoryAdapter.ViewHolder holder, int position) {
 
 
-        final ItemListRequestAndResponseModel.list list =catList.get(position);
+        final ItemListRequestAndResponseModel.cat_list list =catList.get(position);
         Log.e("item size", String.valueOf(list.getImage()));
-        holder.mName.setText(list.getName());
+        holder.mName.setText(list.getCat_name());
         Picasso.with(context)
                 .load(list.getImage())
                 .placeholder(R.mipmap.ic_default_image)

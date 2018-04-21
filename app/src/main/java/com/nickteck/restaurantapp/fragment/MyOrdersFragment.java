@@ -208,6 +208,7 @@ public class MyOrdersFragment extends Fragment implements MyOrdersAdapter.Callba
         try {
             json.put("table", database.getData());
             json.put("from", "mobile");
+            json.put("cus_id",database.getCustomerId());
             JSONArray itemArray = new JSONArray();
             for (int i=0;i<itemModel.getListArrayList().size();i++)
             {

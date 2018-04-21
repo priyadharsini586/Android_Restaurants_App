@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -114,6 +115,13 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.ViewHo
             }
         });
 
+        holder.imgNotes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openDialog(item_lists.get(position));
+            }
+        });
+
     }
 
     @Override
@@ -123,7 +131,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.ViewHo
 
     public class ViewHolder extends RecyclerView.ViewHolder{
 
-        public ImageView imgItem,imgIncrease,imgDecrease;
+        public ImageView imgItem,imgIncrease,imgDecrease,imgNotes;
         public TextView txtItemName,txtItemDes,txtItemPrice,txtItemQty,txtQty,txtTotalPrice;
         ItemListRequestAndResponseModel.item_list list;
         LinearLayout ldtRemoveItem;
@@ -141,6 +149,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.ViewHo
             imgDecrease = (ImageView) view.findViewById(R.id.imgDecrease);
             imgIncrease = (ImageView) view.findViewById(R.id.imgIncrease);
             ldtRemoveItem = (LinearLayout)view.findViewById(R.id.ldtRemoveItem);
+            imgNotes = (ImageView) view.findViewById(R.id.imgNotes);
         }
 
     }
@@ -186,5 +195,41 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.ViewHo
 
     public void setListener(Callback listener)    {
         this.listener = listener;
+    }
+
+    private void openDialog(final ItemListRequestAndResponseModel.item_list item_list) {
+        {
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
+            alertDialog.setTitle("Notes");
+            alertDialog.setMessage("Enter Your Notes");
+
+            final EditText input = new EditText(context);
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.MATCH_PARENT);
+            input.setLayoutParams(lp);
+            alertDialog.setView(input);
+            if (item_list.getNotes() != null) {
+                if (!item_list.getNotes().isEmpty())
+                    input.setText(item_list.getNotes());
+            }
+            alertDialog.setPositiveButton("YES",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            item_list.setNotes(input.getText().toString());
+
+                        }
+                    });
+
+            alertDialog.setNegativeButton("NO",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+
+            alertDialog.show();
+        }
     }
 }

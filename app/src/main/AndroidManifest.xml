@@ -40,10 +40,6 @@
                 android:resource="@xml/provider_paths" />
         </provider>
 
-        <activity
-            android:name=".activity.MenuActivity"
-            android:screenOrientation="portrait" />
-
         <receiver
             android:name=".network.ConnectivityReceiver"
             android:enabled="true"

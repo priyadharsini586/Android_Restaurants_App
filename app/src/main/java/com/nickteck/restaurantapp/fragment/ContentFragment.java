@@ -187,8 +187,8 @@ public class ContentFragment extends Fragment implements View.OnClickListener {
         switch (v.getId())
         {
             case R.id.ldtMenuList:
-                CatagoryFragment catagoryFragment = new CatagoryFragment();
-               AdditionalClass.replaceFragment(catagoryFragment, Constants.ITEM_FRAGMENT,(AppCompatActivity)getActivity());
+                OrderTakenScreenFragment catagoryFragment = new OrderTakenScreenFragment();
+               AdditionalClass.replaceFragment(catagoryFragment, Constants.ORDER_TAKEN_FRAGMENT,(AppCompatActivity)getActivity());
                 break;
 
             case R.id.ldtMyOrders:

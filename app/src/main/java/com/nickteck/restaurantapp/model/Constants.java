@@ -5,7 +5,7 @@ package com.nickteck.restaurantapp.model;
  */
 
 public class Constants {
-    public static String CHAT_SERVER_URL = "192.168.1.3";
+    public static String CHAT_SERVER_URL = "192.168.1.8";
 
     public static String Success = "1";
     public static String Failure = "0";
@@ -28,5 +28,6 @@ public class Constants {
     public static String FAVOURITE_FRAGMENT="FAVOURITE_FRAGMENT";
     public static String ITEM_FRAGMENT = "ITEM_FRAGMENT";
     public static String MY_ORDERS_FRAGMENT = "MY_ORDERS_FRAGMENT";
+    public static String ORDER_TAKEN_FRAGMENT = "ORDER_TAKEN_FRAGMENT";
 
 }

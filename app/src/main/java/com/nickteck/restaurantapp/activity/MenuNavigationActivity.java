@@ -24,6 +24,7 @@ import com.nickteck.restaurantapp.fragment.CatagoryFragment;
 import com.nickteck.restaurantapp.fragment.ContentFragment;
 import com.nickteck.restaurantapp.fragment.FavouriteFragment;
 import com.nickteck.restaurantapp.fragment.MyOrdersFragment;
+import com.nickteck.restaurantapp.fragment.OrderTakenScreenFragment;
 import com.nickteck.restaurantapp.model.Constants;
 
 public class MenuNavigationActivity extends AppCompatActivity
@@ -98,8 +99,8 @@ public class MenuNavigationActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_menu) {
-            CatagoryFragment catagoryFragment = new CatagoryFragment();
-            AdditionalClass.replaceFragment(catagoryFragment,Constants.CATEGORY_FRAGMENT,MenuNavigationActivity.this);
+            OrderTakenScreenFragment catagoryFragment = new OrderTakenScreenFragment();
+            AdditionalClass.replaceFragment(catagoryFragment,Constants.ORDER_TAKEN_FRAGMENT,MenuNavigationActivity.this);
 
         } else if (id == R.id.nav_gallery) {
             FavouriteFragment favouriteFragment=new FavouriteFragment();
