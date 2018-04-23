@@ -13,6 +13,7 @@
     <string name="name_hint"><font size="12">Name</font></string>
     <string name="e_mail_hint"><font size="12">E Mail id</font></string>
     <string name="title_activity_menu_navigation">MenuNavigationActivity</string>
+    <string name="addresses_hint"><font size="12">Address</font></string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -30,7 +31,7 @@
     <string name="price">Price</string>
     <string name="place_order">Place Order</string>
     <string name="update_item">Update Item</string>
-
+    <string name="category">Category List</string>
 
     <!--toolbar text-->
     <string name="content_fragment">Dashboard</string>

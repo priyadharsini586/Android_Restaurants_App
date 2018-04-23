@@ -47,6 +47,12 @@
                     android:padding="10dp"
                     android:layout_weight="0.5"
                     android:gravity="end">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/logout"
+                        android:layout_gravity="end"
+                        android:id="@+id/imgLogOut"/>
                 <include
                     layout="@layout/custom_action_item_layout"/>
                 </LinearLayout>

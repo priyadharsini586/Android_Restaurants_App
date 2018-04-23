@@ -1,11 +1,13 @@
 package com.nickteck.restaurantapp.model;
 
+import java.lang.ref.SoftReference;
+
 /**
  * Created by admin on 3/1/2018.
  */
 
 public class Constants {
-    public static String CHAT_SERVER_URL = "192.168.1.3";
+    public static String CHAT_SERVER_URL = "";
 
     public static String Success = "1";
     public static String Failure = "0";
@@ -29,5 +31,11 @@ public class Constants {
     public static String ITEM_FRAGMENT = "ITEM_FRAGMENT";
     public static String MY_ORDERS_FRAGMENT = "MY_ORDERS_FRAGMENT";
     public static String ORDER_TAKEN_FRAGMENT = "ORDER_TAKEN_FRAGMENT";
+
+
+    //SharedPreferences
+    public static String PREFS_NAME = "RESTARANT_APP";
+    public static String MOBILE_NUMBER = "MOBILE_NUMBER";
+    public static String NAME = "NAME";
 
 }

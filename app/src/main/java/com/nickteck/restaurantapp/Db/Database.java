@@ -91,6 +91,17 @@ public class Database  extends SQLiteOpenHelper {
 
         return data;
     }
+
+    public void deleteAll()
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from "+ CREATE_TABLE_LIST);
+        db.close();
+
+        SQLiteDatabase db1 = this.getWritableDatabase();
+        db1.execSQL("delete from "+ CUSTOMER_TABLE);
+        db1.close();
+    }
     public boolean checkTables() {
 
         SQLiteDatabase db = this.getWritableDatabase();

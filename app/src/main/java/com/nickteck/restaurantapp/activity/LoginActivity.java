@@ -5,6 +5,7 @@ import android.annotation.TargetApi;
 import android.app.ActivityOptions;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -16,6 +17,7 @@ import android.transition.Slide;
 import android.transition.Transition;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -50,8 +52,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     CheckBox chkAdvanced;
     LinearLayout ldtEMail_id;
     Button btnSubmitLogin;
-    EditText edtPhone, edtName, edtMailId;
-    String strName, strMailId;
+    EditText edtPhone, edtName, edtMailId,edtAddress;
+    String strName, strMailId,strAddress,strTableId,strTableName,strSubName;
     boolean isNetworkConnected;
     RelativeLayout sclMainView;
     ProgressBar progressBar;
@@ -61,12 +63,20 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        //Get the bundle
+        Bundle bundle = getIntent().getExtras();
+         strTableName = bundle.getString("table_name");
+        strTableId = bundle.getString("id");
+        strSubName = bundle.getString("sub_name");
+
 
         chkAdvanced = (CheckBox) findViewById(R.id.chkAdvanced);
         chkAdvanced.setOnClickListener(this);
 
         ldtEMail_id = findViewById(R.id.ldtEMail_id);
-        ldtEMail_id.setVisibility(View.GONE);
+//        ldtEMail_id.setVisibility(View.GONE);
 
         btnSubmitLogin = (Button) findViewById(R.id.btnSubmitLogin);
         btnSubmitLogin.setOnClickListener(this);
@@ -74,7 +84,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         edtPhone = (EditText) findViewById(R.id.edtPhone);
         edtName = (EditText) findViewById(R.id.edtName);
         edtMailId = (EditText) findViewById(R.id.edtMailId);
-
+        edtAddress = (EditText) findViewById(R.id.edtAddress);
         sclMainView = (RelativeLayout) findViewById(R.id.sclMainView);
 
         progressBar =(ProgressBar) findViewById(R.id.progressLogin);
@@ -135,11 +145,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             } else {
                 strMailId = edtMailId.getText().toString();
             }
+            if (edtAddress.getText().toString().isEmpty()) {
+                strAddress = "";
+            } else {
+                strAddress = edtAddress.getText().toString();
+            }
+
             try {
                 jsonObject.put("phone", edtPhone.getText().toString());
                 jsonObject.put("name", strName);
                 jsonObject.put("email", strMailId);
-                jsonObject.put("dob", "");
+                jsonObject.put("address", "");
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -153,8 +169,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         if (loginRequestAndResponse.getCustomer_id() != null) {
                             Database database = new Database(getApplicationContext());
                             database.insertCustomerTable("1", loginRequestAndResponse.customer_id);
+                            if (!strSubName.isEmpty())
+                            {
+                                strTableName = strTableName + "("+strSubName +")";
+                            }
+                            database.insertTable(strTableId, strTableName);
+                            SharedPreferences settings = getApplicationContext().getSharedPreferences(Constants.PREFS_NAME, 0);
+                            SharedPreferences.Editor editor = settings.edit();
+                            editor.putString(edtPhone.getText().toString(), Constants.MOBILE_NUMBER);
+                            editor.apply();
                             Intent intent= new Intent(getApplicationContext(),MenuNavigationActivity.class);
                             startActivity(intent);
+                            overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
                             finish();
                         }
                     }

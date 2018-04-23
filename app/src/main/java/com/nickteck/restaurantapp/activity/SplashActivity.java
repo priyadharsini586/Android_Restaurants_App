@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.nickteck.restaurantapp.Db.Database;
@@ -20,8 +22,12 @@ public class SplashActivity extends AppCompatActivity implements ConnectivityRec
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_splash);
 
+        //code that displays the content in full screen mode
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         MyApplication.getInstance().setConnectivityListener(this);
         database = new Database(getApplicationContext());
         new Handler().postDelayed(new Runnable() {
@@ -34,18 +40,11 @@ public class SplashActivity extends AppCompatActivity implements ConnectivityRec
             @Override
             public void run() {
 
-                data = database.checkTables();
-                if (data) {
-                    Intent i = new Intent(SplashActivity.this,LoginActivity.class);
-                    startActivity(i);
-                    finish();
-                } else {
+
                     Intent i = new Intent(SplashActivity.this,TableActivity.class);
                     startActivity(i);
+                    overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
                     finish();
-                }
-
-
                 
                 finish();
             }

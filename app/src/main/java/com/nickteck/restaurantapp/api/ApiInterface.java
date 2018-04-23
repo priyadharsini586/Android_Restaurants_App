@@ -43,4 +43,8 @@ public interface ApiInterface {
     @POST("item_list.php")
     Call<ItemListRequestAndResponseModel> getItemData();
 
+    @FormUrlEncoded
+    @POST("current_ip.php")
+    Call<LoginRequestAndResponse> getIp(@Field("x") JSONObject object);
+
 }

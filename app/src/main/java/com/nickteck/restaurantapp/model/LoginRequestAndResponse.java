@@ -6,7 +6,7 @@ package com.nickteck.restaurantapp.model;
 
 public class LoginRequestAndResponse {
 
-    public String status_code,status_message,no_of_visit,success,customer_id;
+    public String status_code,status_message,no_of_visit,success,customer_id,Status_code,current_ip;
 
     public String getCustomer_id() {
         return customer_id;
@@ -46,5 +46,21 @@ public class LoginRequestAndResponse {
 
     public void setSuccess(String success) {
         this.success = success;
+    }
+
+    public String getCurrent_ip() {
+        return current_ip;
+    }
+
+    public void setCurrent_ip(String current_ip) {
+        this.current_ip = current_ip;
+    }
+
+    public String getStatusCode() {
+        return Status_code;
+    }
+
+    public void setStatusCode(String status_code) {
+        this.Status_code = status_code;
     }
 }

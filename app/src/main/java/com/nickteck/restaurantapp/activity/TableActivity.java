@@ -8,6 +8,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -20,6 +23,7 @@ import com.nickteck.restaurantapp.api.ApiInterface;
 import com.nickteck.restaurantapp.model.AddWhislist;
 import com.nickteck.restaurantapp.model.Constants;
 import com.nickteck.restaurantapp.model.ItemListRequestAndResponseModel;
+import com.nickteck.restaurantapp.model.LoginRequestAndResponse;
 import com.nickteck.restaurantapp.model.TableModel;
 
 import org.json.JSONException;
@@ -32,7 +36,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class TableActivity extends AppCompatActivity {
+public class TableActivity extends AppCompatActivity  {
     TableAdapter tableAdapter;
     ApiInterface apiInterface;
     MaterialSpinner spin;
@@ -41,7 +45,9 @@ public class TableActivity extends AppCompatActivity {
     TableModel.list table;
     private ArrayList<String> tableList = new ArrayList<>();
     private ArrayList<TableModel.list> tableItem = new ArrayList<>();
-
+    CheckBox chkA,chkB,chkC,chkD,chkE,chkF;
+    String checkStr = "";
+    ProgressBar progressTable;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,7 +55,9 @@ public class TableActivity extends AppCompatActivity {
         database = new Database(getApplicationContext());
         spin = (MaterialSpinner) findViewById(R.id.tableSpinner);
         //button=(Button)findViewById(R.id.button);
-
+        progressTable = (ProgressBar) findViewById(R.id.progressTable);
+        progressTable.setVisibility(View.VISIBLE);
+        getServerIp();
         getTabledata();
 
         button = (Button) findViewById(R.id.button);
@@ -57,10 +65,14 @@ public class TableActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (table != null) {
-                    database.insertTable(table.getId(), table.getName());
-                    Toast.makeText(getApplicationContext(), "Data Saved", Toast.LENGTH_LONG).show();
                     Intent i = new Intent(TableActivity.this, LoginActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("id", table.getId());
+                    bundle.putString("table_name", table.getName());
+                    bundle.putString("sub_name", checkStr);
+                    i.putExtras(bundle);
                     startActivity(i);
+                    overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
                     finish();
                 }
             }
@@ -74,10 +86,101 @@ public class TableActivity extends AppCompatActivity {
                 if (position != 0)
                     table = tableItem.get(position);
                 else
-                    Toast.makeText(getApplicationContext(), "Please select valid date", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Please select valid Table", Toast.LENGTH_LONG).show();
 
             }
         });
+
+        chkA = (CheckBox) findViewById(R.id.chkA);
+        chkA.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked)
+                    checkStr = "A";
+            }
+        });
+        chkB = (CheckBox) findViewById(R.id.chkB);
+        chkB.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked)
+                    checkStr = "B";
+            }
+        });
+        chkC = (CheckBox) findViewById(R.id.chkC);
+        chkC.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked)
+                    checkStr = "C";
+                else
+                    checkStr = "";
+            }
+        });
+        chkD = (CheckBox) findViewById(R.id.chkD);
+        chkD.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked)
+                    checkStr = "D";
+                else
+                    checkStr = "";
+            }
+        });
+        chkE = (CheckBox) findViewById(R.id.chkE);
+        chkE.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked)
+                    checkStr = "E";
+                else
+                    checkStr = "";
+            }
+        });
+        chkF = (CheckBox) findViewById(R.id.chkF);
+        chkF.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked)
+                    checkStr = "F";
+                else
+                    checkStr = "";
+            }
+        });
+    }
+
+    private void getServerIp() {
+
+
+        apiInterface = ApiClient.getClient().create(ApiInterface.class);
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("act","get");
+                jsonObject.put("current_ip", "");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            Call<LoginRequestAndResponse> customerDetailsCall = apiInterface.getIp(jsonObject);
+            customerDetailsCall.enqueue(new Callback<LoginRequestAndResponse>() {
+                @Override
+                public void onResponse(Call<LoginRequestAndResponse> call, Response<LoginRequestAndResponse> response) {
+                    if (response.isSuccessful())
+                    {
+                        LoginRequestAndResponse loginRequestAndResponse = response.body();
+                        if (loginRequestAndResponse.getStatusCode().equals(Constants.Success))
+                        {
+                            Constants.CHAT_SERVER_URL = loginRequestAndResponse.getCurrent_ip();
+                        }
+
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<LoginRequestAndResponse> call, Throwable throwable) {
+
+                }
+            });
+
     }
 
 
@@ -92,7 +195,7 @@ public class TableActivity extends AppCompatActivity {
                     if (response.isSuccessful())
                     {
                         TableModel tableModel = response.body();
-
+                        progressTable.setVisibility(View.GONE);
                         if (tableModel.getStatus_code().equals(Constants.Success))
                         {
                             tableList = new ArrayList<String>();
@@ -129,6 +232,7 @@ public class TableActivity extends AppCompatActivity {
             });
 
         }
+
 
 
 }

@@ -145,14 +145,7 @@ public class MyOrdersFragment extends Fragment implements MyOrdersAdapter.Callba
 
     @Override
     public void onChangeItemCount(int totaltcount) {
-        if (totaltcount == 0)
-        {
-            txtBrodgeIcon.setVisibility(View.GONE);
-        }else
-        {
-            txtBrodgeIcon.setVisibility(View.VISIBLE);
-            txtBrodgeIcon.setText(String.valueOf(itemModel.getListArrayList().size()));
-        }
+
 
         double totlaPrice = 0.0;
         for (int i=0;i<itemModel.getListArrayList().size();i++)
@@ -165,6 +158,14 @@ public class MyOrdersFragment extends Fragment implements MyOrdersAdapter.Callba
             Log.e("price",String.valueOf(totlaPrice));
         }
         txtTotalPrice.setText("Total : "+String.valueOf(totlaPrice));
+        if (totaltcount == 0)
+        {
+            txtBrodgeIcon.setVisibility(View.GONE);
+        }else
+        {
+            txtBrodgeIcon.setVisibility(View.VISIBLE);
+            txtBrodgeIcon.setText(String.valueOf(itemModel.getListArrayList().size()));
+        }
 
     }
 
@@ -219,6 +220,12 @@ public class MyOrdersFragment extends Fragment implements MyOrdersAdapter.Callba
                 item.put("item_id",item_list.getItem_id());
                 item.put("price",item_list.getPrice());
                 item.put("short_code",item_list.getShort_code());
+                if (item_list.getNotes() == null)
+                {
+                    item.put("notes","notes");
+                }else {
+                item.put("notes",item_list.getNotes());
+                }
                 itemArray.put(item);
             }
             json.put("Item_list", itemArray);
@@ -264,21 +271,22 @@ public class MyOrdersFragment extends Fragment implements MyOrdersAdapter.Callba
                                 item_list.setDescription(jsonObject.getString("des"));
                                 item_list.setImage(jsonObject.getString("image"));
                                 item_list.setPrice(jsonObject.getString("price"));
+                                item_list.setNotes(jsonObject.getString("notes"));
+                                item_list.setItem_id(jsonObject.getString("item_id"));
                                 item_listArrayList.add(item_list);
                                 savetoModel.add(item_list);
                                 itemModel.setListArrayList(savetoModel);
-
-                                getActivity().runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        itemLists.add(item_list);
-                                        myOrdersAdapter.notifyDataSetChanged();
-                                        setTotalPrice();
-                                    }
-                                });
+                                itemLists.add(item_list);
 
                             }
-
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    myOrdersAdapter.notifyDataSetChanged();
+                                    setTotalPrice();
+                                    Log.e("list size", String.valueOf(itemLists.size()));
+                                }
+                            });
 
 
                         } else {
@@ -314,6 +322,16 @@ public class MyOrdersFragment extends Fragment implements MyOrdersAdapter.Callba
             Log.e("price",String.valueOf(totlaPrice));
         }
         txtTotalPrice.setText("Total : "+String.valueOf(totlaPrice));
+        ItemModel itemModel = ItemModel.getInstance();
+        if (itemModel.getListArrayList().size() == 0)
+        {
+            txtBrodgeIcon.setVisibility(View.GONE);
+        }else
+        {
+            txtBrodgeIcon.setVisibility(View.VISIBLE);
+            txtBrodgeIcon.setText(String.valueOf(itemModel.getListArrayList().size()));
+        }
+
 
     }
 }

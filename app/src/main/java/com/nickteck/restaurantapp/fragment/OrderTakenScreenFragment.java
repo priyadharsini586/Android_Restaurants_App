@@ -56,6 +56,7 @@ public class OrderTakenScreenFragment extends Fragment implements ItemListener{
     CatagoryAdapter gridAdapter;
     VarietyAdapter varietyAdapter;
     ItemAdapter itemAdapter;
+    String cat_id;
     HashMap<String,ArrayList<ItemListRequestAndResponseModel.item_list>> getVarityList = new HashMap<>();
     private  ArrayList<ItemListRequestAndResponseModel.item_list> gridImageList=new ArrayList<>();
     public static ArrayList<ItemListRequestAndResponseModel.item_list> itemList = new ArrayList<>();
@@ -77,7 +78,7 @@ public class OrderTakenScreenFragment extends Fragment implements ItemListener{
 
                 ItemListRequestAndResponseModel.cat_list list = catList.get(position);
                 getVarityList = new HashMap<>();
-                getVarietyData();
+                cat_id = list.getCat_id();
                 getItemView(list.getCat_id());
 
             }
@@ -154,14 +155,8 @@ public class OrderTakenScreenFragment extends Fragment implements ItemListener{
                 }else
                 {
 
-                  Collection<ArrayList<ItemListRequestAndResponseModel.item_list>> itemLists = getVarityList.values();
-                  Iterator iterator =itemLists.iterator();
-                   /* while(iterator.hasNext()) {
-                        ItemListRequestAndResponseModel.item_list element = (ItemListRequestAndResponseModel.item_list) iterator.next();
-                        Log.e("item",element.getItem_id());
 
-                    }*/
-
+                    getItemView(cat_id);
 
                 }
             }
