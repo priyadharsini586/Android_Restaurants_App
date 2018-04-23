@@ -67,6 +67,10 @@ public class VarietyAdapter extends RecyclerView.Adapter<VarietyAdapter.VarietyV
         return varietyIdLists.size();
     }
 
+    public int getRow_index() {
+        return row_index;
+    }
+
     public class VarietyViewHolder extends RecyclerView.ViewHolder {
 
         public TextView txtVarityName;
@@ -78,6 +82,11 @@ public class VarietyAdapter extends RecyclerView.Adapter<VarietyAdapter.VarietyV
             mainView=(ConstraintLayout)view.findViewById(R.id.mainView);
 
         }
+
+    }
+
+    public void getView()
+    {
 
     }
 }

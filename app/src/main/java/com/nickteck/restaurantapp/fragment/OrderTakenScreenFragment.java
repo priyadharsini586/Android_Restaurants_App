@@ -1,12 +1,8 @@
 package com.nickteck.restaurantapp.fragment;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -21,10 +17,8 @@ import android.widget.Toast;
 
 import com.nickteck.restaurantapp.Adapter.CatagoryAdapter;
 import com.nickteck.restaurantapp.Adapter.ItemAdapter;
-import com.nickteck.restaurantapp.Adapter.MyOrdersAdapter;
 import com.nickteck.restaurantapp.Adapter.VarietyAdapter;
 import com.nickteck.restaurantapp.R;
-import com.nickteck.restaurantapp.additional_class.AdditionalClass;
 import com.nickteck.restaurantapp.additional_class.RecyclerTouchListener;
 import com.nickteck.restaurantapp.api.ApiClient;
 import com.nickteck.restaurantapp.api.ApiInterface;
@@ -37,7 +31,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import retrofit2.Call;
@@ -64,7 +60,6 @@ public class OrderTakenScreenFragment extends Fragment implements ItemListener{
     private  ArrayList<ItemListRequestAndResponseModel.item_list> gridImageList=new ArrayList<>();
     public static ArrayList<ItemListRequestAndResponseModel.item_list> itemList = new ArrayList<>();
     ItemModel itemModel = ItemModel.getInstance();
-    TextView txtAll;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,8 +76,8 @@ public class OrderTakenScreenFragment extends Fragment implements ItemListener{
             public void onClick(View view, int position) {
 
                 ItemListRequestAndResponseModel.cat_list list = catList.get(position);
-
                 getVarityList = new HashMap<>();
+                getVarietyData();
                 getItemView(list.getCat_id());
 
             }
@@ -140,21 +135,34 @@ public class OrderTakenScreenFragment extends Fragment implements ItemListener{
         variety_recycler_view.addOnItemTouchListener(new RecyclerTouchListener(getActivity(), item_recycler_view, new RecyclerTouchListener.ClickListener() {
             @Override
             public void onClick(View view, int position) {
-                ItemListRequestAndResponseModel.Variety_id_list varietyIdList = varietyIdLists.get(position);
-                Log.e("hashmap", String.valueOf(varietyIdList.getVariety_id()));
-                Log.e("hashmap", String.valueOf(getVarityList));
+                if (position != 0) {
+                    ItemListRequestAndResponseModel.Variety_id_list varietyIdList = varietyIdLists.get(position);
+                    Log.e("hashmap", String.valueOf(varietyIdList.getVariety_id()));
+                    Log.e("hashmap", String.valueOf(getVarityList));
 
-                Log.e("hashmap", String.valueOf(getVarityList.get(varietyIdList.getVariety_id())));
+                    Log.e("hashmap", String.valueOf(getVarityList.get(varietyIdList.getVariety_id())));
 
-                if (getVarityList.size() != 0) {
-                    gridImageList.clear();
-                    for (int i = 0; i < getVarityList.get(varietyIdList.getVariety_id()).size(); i++) {
-                        gridImageList.add(getVarityList.get(varietyIdList.getVariety_id()).get(i));
+                    if (getVarityList.size() != 0) {
+                        gridImageList.clear();
+                        for (int i = 0; i < getVarityList.get(varietyIdList.getVariety_id()).size(); i++) {
+                            gridImageList.add(getVarityList.get(varietyIdList.getVariety_id()).get(i));
+                        }
+                        itemAdapter.notifyDataSetChanged();
+                    } else {
+                        Toast.makeText(getActivity(), "Please select category", Toast.LENGTH_LONG).show();
                     }
-                    itemAdapter.notifyDataSetChanged();
                 }else
                 {
-                    Toast.makeText(getActivity(),"Please select category",Toast.LENGTH_LONG).show();
+
+                  Collection<ArrayList<ItemListRequestAndResponseModel.item_list>> itemLists = getVarityList.values();
+                  Iterator iterator =itemLists.iterator();
+                   /* while(iterator.hasNext()) {
+                        ItemListRequestAndResponseModel.item_list element = (ItemListRequestAndResponseModel.item_list) iterator.next();
+                        Log.e("item",element.getItem_id());
+
+                    }*/
+
+
                 }
             }
 
@@ -165,13 +173,6 @@ public class OrderTakenScreenFragment extends Fragment implements ItemListener{
         }));
         item_recycler_view = (RecyclerView) view.findViewById(R.id.item_recycler_view);
 
-        txtAll = (TextView) view.findViewById(R.id.txtAll);
-        txtAll.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getItemList();
-            }
-        });
         mSwipeRefreshLayout.setRefreshing(true);
         getCategoryData();
         getVarietyData();
@@ -261,8 +262,14 @@ public class OrderTakenScreenFragment extends Fragment implements ItemListener{
 
                     if (itemListRequestAndResponseModel.getStatusCode().equals(Constants.Success)) {
                         varietyIdLists = new ArrayList<>();
-                        ArrayList getItemDetils = itemListRequestAndResponseModel.getVariety_id_list();
+                        ArrayList getItemDetils = new ArrayList();
+                        getItemDetils = itemListRequestAndResponseModel.getVariety_id_list();
+                        ItemListRequestAndResponseModel.Variety_id_list model = new ItemListRequestAndResponseModel.Variety_id_list();
+                        model.setVariety_name("All");
+                        model.setVariety_id("0");
+                        varietyIdLists.add(model);
                         for (int i = 0; i < getItemDetils.size(); i++) {
+
                             ItemListRequestAndResponseModel.Variety_id_list categoryList = (ItemListRequestAndResponseModel.Variety_id_list) getItemDetils.get(i);
                             varietyIdLists.add(categoryList);
 

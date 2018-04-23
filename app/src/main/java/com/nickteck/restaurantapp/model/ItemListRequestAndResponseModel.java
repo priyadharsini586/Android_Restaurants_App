@@ -433,8 +433,11 @@ public class ItemListRequestAndResponseModel {
     }
 
 
-    public class Variety_id_list
+    public static class Variety_id_list
     {
+
+        public Variety_id_list()
+        {}
         String Variety_id,Variety_name,variety_id;
 
         public String getVariety_id() {

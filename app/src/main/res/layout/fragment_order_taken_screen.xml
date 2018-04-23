@@ -29,14 +29,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1.5"
                 android:orientation="vertical">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="All"
-                    android:textSize="@dimen/item_heading_text_size"
-                    android:textColor="@color/black_color"
-                    android:padding="10dp"
-                    android:id="@+id/txtAll"/>
+
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/variety_recycler_view"
                     android:layout_width="match_parent"

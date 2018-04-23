@@ -1,6 +1,7 @@
 package com.nickteck.restaurantapp.Adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
@@ -33,7 +34,7 @@ public class CatagoryAdapter extends RecyclerView.Adapter<CatagoryAdapter.ViewHo
     Context context;
     ArrayList<ItemListRequestAndResponseModel.cat_list> catList;
     private int lastPosition = -1;
-
+    int row_index = -1;
     public CatagoryAdapter(Context context, ArrayList<ItemListRequestAndResponseModel.cat_list> catList) {
         this.context = context;
         this.catList = catList;
@@ -48,7 +49,7 @@ public class CatagoryAdapter extends RecyclerView.Adapter<CatagoryAdapter.ViewHo
 
 
     @Override
-    public void onBindViewHolder(final CatagoryAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(final CatagoryAdapter.ViewHolder holder, final int position) {
 
 
         final ItemListRequestAndResponseModel.cat_list list =catList.get(position);
@@ -61,6 +62,21 @@ public class CatagoryAdapter extends RecyclerView.Adapter<CatagoryAdapter.ViewHo
         holder.setIsRecyclable(false);
 
 
+
+        holder.rldMainMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                row_index = position;
+                notifyDataSetChanged();
+            }
+        });
+        if(row_index ==position){
+            holder.rldMainMenu.setBackgroundColor(Color.parseColor("#567845"));
+        }
+        else
+        {
+            holder.rldMainMenu.setBackgroundColor(Color.parseColor("#ffffff"));
+        }
     }
 
 
