@@ -110,6 +110,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
                     int totalPrice = priceList * itemCount[0];
                     holder.txtTotalPrice.setText("Rs." + String.valueOf(totalPrice));
                     holder.list.setQty(itemCount[0]);
+
                     if (listener != null) {
                         listener.onAddClick(itemCount[0], holder.list);
                     }
@@ -127,6 +128,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
                     int totalPrice = priceList * itemCount[0];
                     holder.txtTotalPrice.setText("Rs." + String.valueOf(totalPrice));
                     holder.list.setQty(itemCount[0]);
+
                     if (listener != null) {
                         listener.onAddClick(itemCount[0], holder.list);
                     }

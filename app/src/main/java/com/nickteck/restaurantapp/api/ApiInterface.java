@@ -1,6 +1,7 @@
 package com.nickteck.restaurantapp.api;
 
 import com.nickteck.restaurantapp.model.AddWhislist;
+import com.nickteck.restaurantapp.model.HistoryModel;
 import com.nickteck.restaurantapp.model.ItemListRequestAndResponseModel;
 import com.nickteck.restaurantapp.model.LoginRequestAndResponse;
 import com.nickteck.restaurantapp.model.TableModel;
@@ -46,5 +47,13 @@ public interface ApiInterface {
     @FormUrlEncoded
     @POST("current_ip.php")
     Call<LoginRequestAndResponse> getIp(@Field("x") JSONObject object);
+
+    @FormUrlEncoded
+    @POST("customer_history.php")
+    Call<HistoryModel> getHistoryDetails(@Field("x") JSONObject object);
+
+    @FormUrlEncoded
+    @POST("client_details_by_phone.php")
+    Call<LoginRequestAndResponse> clientDetailsByNum(@Field("x") JSONObject object);
 
 }

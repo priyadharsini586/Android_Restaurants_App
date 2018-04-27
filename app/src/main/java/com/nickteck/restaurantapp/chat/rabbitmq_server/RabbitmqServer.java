@@ -37,7 +37,7 @@ public class RabbitmqServer extends AsyncTask {
     protected Object doInBackground(Object[] params) {
 
         try {
-            client = new Client(Constants.CHAT_SERVER_URL,61613, "restaurantServer", "restaurant");
+                client = new Client(Constants.CHAT_SERVER_URL,61613, "restaurantServer", "restaurant");
 
             client.subscribe("/topic/resturantApp", new Listener() {
                 @Override

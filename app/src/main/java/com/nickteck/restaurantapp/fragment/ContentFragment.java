@@ -50,7 +50,7 @@ public class ContentFragment extends Fragment implements View.OnClickListener {
     private int [] sliderList = {R.drawable.cook2,R.drawable.cook3,R.drawable.cook4,R.drawable.cook5};
     private ArrayList<ItemListRequestAndResponseModel> imageModelArrayList;
     View mainView;
-    LinearLayout ldtMenuList,ldtMyOrders;
+    LinearLayout ldtMenuList,ldtMyOrders,ldtHistoryList;
     TextView txtBrodgeIcon;
     public ContentFragment() {
         // Required empty public constructor
@@ -166,6 +166,9 @@ public class ContentFragment extends Fragment implements View.OnClickListener {
 
         ldtMyOrders = (LinearLayout)mainView.findViewById(R.id.ldtMyOrders);
         ldtMyOrders.setOnClickListener(this);
+
+        ldtHistoryList = (LinearLayout) mainView.findViewById(R.id.ldtHistoryList);
+        ldtHistoryList.setOnClickListener(this);
     }
 
     private ArrayList<ItemListRequestAndResponseModel> populateList(){
@@ -194,6 +197,11 @@ public class ContentFragment extends Fragment implements View.OnClickListener {
             case R.id.ldtMyOrders:
                 MyOrdersFragment myOrdersFragment = new MyOrdersFragment();
                 AdditionalClass.replaceFragment(myOrdersFragment,Constants.MY_ORDERS_FRAGMENT,(AppCompatActivity) getActivity());
+                break;
+
+            case R.id.ldtHistoryList:
+                HistoryFragment historyFragment = new HistoryFragment();
+                AdditionalClass.replaceFragment(historyFragment,Constants.HISTORY_FRAGMENT,(AppCompatActivity) getActivity());
                 break;
         }
     }

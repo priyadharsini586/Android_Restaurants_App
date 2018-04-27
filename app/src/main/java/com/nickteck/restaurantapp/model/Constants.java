@@ -31,6 +31,7 @@ public class Constants {
     public static String ITEM_FRAGMENT = "ITEM_FRAGMENT";
     public static String MY_ORDERS_FRAGMENT = "MY_ORDERS_FRAGMENT";
     public static String ORDER_TAKEN_FRAGMENT = "ORDER_TAKEN_FRAGMENT";
+    public static String HISTORY_FRAGMENT = "HISTORY_FRAGMENT";
 
 
     //SharedPreferences

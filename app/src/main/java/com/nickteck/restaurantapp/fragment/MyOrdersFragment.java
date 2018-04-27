@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -22,8 +23,11 @@ import android.widget.TextView;
 import com.nickteck.restaurantapp.Adapter.MyOrdersAdapter;
 import com.nickteck.restaurantapp.Db.Database;
 import com.nickteck.restaurantapp.R;
+import com.nickteck.restaurantapp.activity.MenuNavigationActivity;
+import com.nickteck.restaurantapp.additional_class.AdditionalClass;
 import com.nickteck.restaurantapp.chat.GetFromDesktopListener;
 import com.nickteck.restaurantapp.chat.rabbitmq_server.RabbitmqServer;
+import com.nickteck.restaurantapp.model.Constants;
 import com.nickteck.restaurantapp.model.ItemListRequestAndResponseModel;
 import com.nickteck.restaurantapp.model.ItemModel;
 import com.nickteck.restaurantapp.network.MyApplication;
@@ -43,7 +47,7 @@ public class MyOrdersFragment extends Fragment implements MyOrdersAdapter.Callba
     RecyclerView myOrderRecycleView;
     MyOrdersAdapter myOrdersAdapter;
     TextView txtTotalPrice,txtPlaceItem,txtUpdateItem;
-    LinearLayout ldtPlaceOrder;
+    LinearLayout ldtPlaceOrder,ldtAddMore;
     RabbitmqServer rabbitmqServer;
     ArrayList<ItemListRequestAndResponseModel.item_list>itemLists;
     Database database ;
@@ -84,9 +88,12 @@ public class MyOrdersFragment extends Fragment implements MyOrdersAdapter.Callba
         {
             ItemListRequestAndResponseModel.item_list item_list = itemModel.getListArrayList().get(i);
             double getPrice = Double.parseDouble(item_list.getPrice());
+            double qty = item_list.getQty();
+            getPrice = getPrice * qty;
+//            double priceGet = item_list.getQty() * item_list.getPrice();
             price = price + getPrice;
         }
-        txtTotalPrice.setText(String.valueOf(price));
+//        txtTotalPrice.setText(String.valueOf(price));
 
         txtTotalPrice.setText("Total : "+String.valueOf(price));
 
@@ -137,6 +144,14 @@ public class MyOrdersFragment extends Fragment implements MyOrdersAdapter.Callba
         }else {
             new RabbitmqServer().execute();
         }
+        ldtAddMore = (LinearLayout) mainView.findViewById(R.id.ldtAddMore);
+        ldtAddMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                OrderTakenScreenFragment catagoryFragment = new OrderTakenScreenFragment();
+                AdditionalClass.replaceFragment(catagoryFragment, Constants.ORDER_TAKEN_FRAGMENT,(AppCompatActivity)getActivity());
+            }
+        });
 
 //        new RabbitmqServer().execute();
         return mainView;

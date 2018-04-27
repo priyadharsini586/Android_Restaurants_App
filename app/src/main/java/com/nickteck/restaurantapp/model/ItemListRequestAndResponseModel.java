@@ -236,7 +236,15 @@ public class ItemListRequestAndResponseModel {
         List<cat_list> cat_list;
         int qty;
         ArrayList<Variety_id_list>variety_list  = new ArrayList();
-        String notes;
+        String notes,date;
+
+        public String getDate() {
+            return date;
+        }
+
+        public void setDate(String date) {
+            this.date = date;
+        }
 
         public String getNotes() {
             return notes;

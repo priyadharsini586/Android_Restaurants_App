@@ -28,7 +28,7 @@
     <string name="offer_icon">Offers</string>
     <string name="feedback_icon">Feedback</string>
     <string name="about_us_icon">Feedback</string>
-    <string name="price">Price</string>
+    <string name="price">Total : 0.0</string>
     <string name="place_order">Place Order</string>
     <string name="update_item">Update Item</string>
     <string name="category">Category List</string>

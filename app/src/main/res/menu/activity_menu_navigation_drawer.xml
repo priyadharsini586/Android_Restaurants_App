@@ -29,7 +29,7 @@
             android:icon="@drawable/ic_offers_menu"
             android:title="Offers" />
         <item
-            android:id="@+id/nav_send"
+            android:id="@+id/nav_history"
             android:icon="@drawable/ic_history_menu"
             android:title="History" />
 

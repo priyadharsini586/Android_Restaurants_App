@@ -3,6 +3,7 @@ package com.nickteck.restaurantapp.fragment;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,6 +21,8 @@ import com.nickteck.restaurantapp.Adapter.CatagoryAdapter;
 import com.nickteck.restaurantapp.Adapter.ItemAdapter;
 import com.nickteck.restaurantapp.Adapter.VarietyAdapter;
 import com.nickteck.restaurantapp.R;
+import com.nickteck.restaurantapp.activity.MenuNavigationActivity;
+import com.nickteck.restaurantapp.additional_class.AdditionalClass;
 import com.nickteck.restaurantapp.additional_class.RecyclerTouchListener;
 import com.nickteck.restaurantapp.api.ApiClient;
 import com.nickteck.restaurantapp.api.ApiInterface;
@@ -29,6 +33,7 @@ import com.nickteck.restaurantapp.model.ItemModel;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -61,6 +66,8 @@ public class OrderTakenScreenFragment extends Fragment implements ItemListener{
     private  ArrayList<ItemListRequestAndResponseModel.item_list> gridImageList=new ArrayList<>();
     public static ArrayList<ItemListRequestAndResponseModel.item_list> itemList = new ArrayList<>();
     ItemModel itemModel = ItemModel.getInstance();
+    TextView txtTotalPrice;
+    LinearLayout ldtPlaceOrder;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,7 +114,15 @@ public class OrderTakenScreenFragment extends Fragment implements ItemListener{
             txtBrodgeIcon.setText(String.valueOf(itemModel.getListArrayList().size()));
         }
 
-
+        txtTotalPrice = (TextView) view.findViewById(R.id.txtTotalPrice);
+        ldtPlaceOrder = (LinearLayout) view.findViewById(R.id.ldtPlaceOrder);
+        ldtPlaceOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MyOrdersFragment myOrdersFragment = new MyOrdersFragment();
+                AdditionalClass.replaceFragment(myOrdersFragment,Constants.MY_ORDERS_FRAGMENT,(AppCompatActivity)getActivity());
+            }
+        });
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
 
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary,
@@ -166,6 +181,7 @@ public class OrderTakenScreenFragment extends Fragment implements ItemListener{
 
             }
         }));
+        changePrice();
         item_recycler_view = (RecyclerView) view.findViewById(R.id.item_recycler_view);
 
         mSwipeRefreshLayout.setRefreshing(true);
@@ -457,7 +473,7 @@ public class OrderTakenScreenFragment extends Fragment implements ItemListener{
     public void onAddClick(int totalunitcount,ItemListRequestAndResponseModel.item_list item_lists) {
         txtBrodgeIcon.setVisibility(View.VISIBLE);
 
-        if (itemList.size() != 0) {
+        if (itemList.size() != 0 ) {
             for (int i = 0; i < itemList.size(); i++) {
                 ItemListRequestAndResponseModel.item_list list = itemList.get(i);
 
@@ -465,7 +481,8 @@ public class OrderTakenScreenFragment extends Fragment implements ItemListener{
                     itemList.remove(list);
 
                     if (item_lists.getQty() != 0) {
-                        itemList.add(item_lists);
+                        if (!itemList.contains(item_lists))
+                            itemList.add(item_lists);
                     }
                 if (totalunitcount == 0)
                 {
@@ -475,6 +492,10 @@ public class OrderTakenScreenFragment extends Fragment implements ItemListener{
                     if (!itemList.contains(item_lists))
                         itemList.add(item_lists);
                 }
+            }
+            if (item_lists.getQty() == 0)
+            {
+                itemList.remove(item_lists);
             }
         }else
         {
@@ -500,6 +521,25 @@ public class OrderTakenScreenFragment extends Fragment implements ItemListener{
             txtBrodgeIcon.setText(String.valueOf(itemList.size()));
             txtBrodgeIcon.setVisibility(View.GONE);
         }
+        changePrice();
 
+    }
+
+    public void changePrice()
+    {
+        double price = 0;
+        if (itemModel.getListArrayList().size() !=  0) {
+            for (int i = 0; i < itemModel.getListArrayList().size(); i++) {
+                ItemListRequestAndResponseModel.item_list item_list = itemModel.getListArrayList().get(i);
+                double getPrice = Double.parseDouble(item_list.getPrice());
+                double qty = item_list.getQty();
+                getPrice = getPrice * qty;
+//            double priceGet = item_list.getQty() * item_list.getPrice();
+                price = price + getPrice;
+            }
+//        txtTotalPrice.setText(String.valueOf(price));
+
+            txtTotalPrice.setText("Total : " + String.valueOf(price));
+        }
     }
 }

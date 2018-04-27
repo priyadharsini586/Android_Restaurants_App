@@ -28,6 +28,7 @@ import com.nickteck.restaurantapp.additional_class.AdditionalClass;
 import com.nickteck.restaurantapp.fragment.CatagoryFragment;
 import com.nickteck.restaurantapp.fragment.ContentFragment;
 import com.nickteck.restaurantapp.fragment.FavouriteFragment;
+import com.nickteck.restaurantapp.fragment.HistoryFragment;
 import com.nickteck.restaurantapp.fragment.MyOrdersFragment;
 import com.nickteck.restaurantapp.fragment.OrderTakenScreenFragment;
 import com.nickteck.restaurantapp.model.Constants;
@@ -133,8 +134,9 @@ public class MenuNavigationActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_share) {
 
-        } else if (id == R.id.nav_send) {
-
+        } else if (id == R.id.nav_history) {
+            HistoryFragment myOrdersFragment = new HistoryFragment();
+            AdditionalClass.replaceFragment(myOrdersFragment,Constants.HISTORY_FRAGMENT,MenuNavigationActivity.this);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

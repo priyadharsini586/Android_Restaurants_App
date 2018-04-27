@@ -13,6 +13,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.transition.Slide;
 import android.transition.Transition;
 import android.util.Log;
@@ -41,6 +43,8 @@ import com.nickteck.restaurantapp.network.MyApplication;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.regex.Pattern;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -86,7 +90,26 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         edtMailId = (EditText) findViewById(R.id.edtMailId);
         edtAddress = (EditText) findViewById(R.id.edtAddress);
         sclMainView = (RelativeLayout) findViewById(R.id.sclMainView);
+        edtPhone.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                Log.e("string count", String.valueOf(s.length()));
+                if (s.length() == 10)
+                {
+                    checkNumberLogin();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
         progressBar =(ProgressBar) findViewById(R.id.progressLogin);
         progressBar.setVisibility(View.GONE);
 
@@ -97,7 +120,21 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
 
-
+    private boolean isValidMobile(String phone) {
+        boolean check=false;
+        if(!Pattern.matches("[a-zA-Z]+", phone)) {
+            if(phone.length() < 6 || phone.length() > 13) {
+                // if(phone.length() != 10) {
+                check = false;
+                edtPhone.setError("Not Valid Number");
+            } else {
+                check = true;
+            }
+        } else {
+            check=false;
+        }
+        return check;
+    }
     private void checkConnection() {
         boolean isConnected = ConnectivityReceiver.isConnected();
         if (!isConnected) {
@@ -120,7 +157,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             case R.id.btnSubmitLogin:
 
-                if (!edtPhone.getText().toString().isEmpty())
+                if (isValidMobile(edtPhone.getText().toString()))
                     checkLogin();
                 else
                     Toast.makeText(getApplicationContext(),"Please Enter your mobile number",Toast.LENGTH_LONG).show();
@@ -155,7 +192,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 jsonObject.put("phone", edtPhone.getText().toString());
                 jsonObject.put("name", strName);
                 jsonObject.put("email", strMailId);
-                jsonObject.put("address", "");
+                jsonObject.put("address", strAddress);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -237,4 +274,41 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
 
+    public void checkNumberLogin()
+    {
+        progressBar.setVisibility(View.VISIBLE);
+        ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("phone",edtPhone.getText().toString().trim());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Call<LoginRequestAndResponse> loginRequestAndResponseCall = apiInterface.clientDetailsByNum(jsonObject);
+        loginRequestAndResponseCall.enqueue(new Callback<LoginRequestAndResponse>() {
+            @Override
+            public void onResponse(Call<LoginRequestAndResponse> call, Response<LoginRequestAndResponse> response) {
+                if (response.isSuccessful())
+                {
+                    LoginRequestAndResponse loginRequestAndResponse = response.body();
+                    if (loginRequestAndResponse.getStatusCode().equals(Constants.Success))
+                    {
+                        edtAddress.setText(loginRequestAndResponse.getAddress());
+                        edtName.setText(loginRequestAndResponse.getName());
+                        edtMailId.setText(loginRequestAndResponse.getEmail());
+                        progressBar.setVisibility(View.GONE);
+                        AdditionalClass.hideKeyboard(LoginActivity.this);
+                    }else
+                    {
+                        Toast.makeText(getApplicationContext(),loginRequestAndResponse.getStatusMessage(),Toast.LENGTH_LONG).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LoginRequestAndResponse> call, Throwable t) {
+
+            }
+        });
+    }
 }

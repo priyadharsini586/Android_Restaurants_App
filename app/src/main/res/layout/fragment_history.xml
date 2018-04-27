@@ -1,13 +1,35 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.nickteck.restaurantapp.fragment.HistoryFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/myHistoryRecycleView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:scrollbars="vertical"
+        android:layoutAnimation="@anim/layout_animation_fall_down"
+        />
+    </android.support.v4.widget.SwipeRefreshLayout>
 
-</FrameLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtNoHostory"
+        android:text="No History"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:textColor="@color/black_color"
+        android:textSize="@dimen/item_heading_text_size"/>
+    
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:id="@+id/progressHistory"/>
+</RelativeLayout>
