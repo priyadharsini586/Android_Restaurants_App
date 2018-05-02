@@ -19,6 +19,7 @@ public class Constants {
 
     public static String CATEGORY_BASE_URL = "https://prawnandcrab.com/webservice/images/category/";
     public static String ITEM_BASE_URL = "https://prawnandcrab.com/webservice/images/item/";
+    public static String SUB_CATEGORY_BASE_URL = "https://prawnandcrab.com/webservice/images/sub_category/";
 
 //    public static String CATEGORY_BASE_URL = "http://192.168.1.8/prawnandcrab/webservice/images/category/";
 //    public static String ITEM_BASE_URL = "http://192.168.1.8/prawnandcrab/webservice/images/item/";

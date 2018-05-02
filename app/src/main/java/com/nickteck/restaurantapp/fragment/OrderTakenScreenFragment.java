@@ -9,11 +9,15 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +34,7 @@ import com.nickteck.restaurantapp.interfaceFol.ItemListener;
 import com.nickteck.restaurantapp.model.Constants;
 import com.nickteck.restaurantapp.model.ItemListRequestAndResponseModel;
 import com.nickteck.restaurantapp.model.ItemModel;
+import com.nickteck.restaurantapp.model.LoginRequestAndResponse;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -47,15 +52,17 @@ import retrofit2.Response;
 
 import static com.nickteck.restaurantapp.model.Constants.CATEGORY_BASE_URL;
 import static com.nickteck.restaurantapp.model.Constants.ITEM_BASE_URL;
+import static com.nickteck.restaurantapp.model.Constants.SUB_CATEGORY_BASE_URL;
 
 
 public class OrderTakenScreenFragment extends Fragment implements ItemListener{
     View view;
     ApiInterface apiInterface;
-    RecyclerView catagory,variety_recycler_view,item_recycler_view;
+    RecyclerView subCatagory,variety_recycler_view,item_recycler_view;
     SwipeRefreshLayout mSwipeRefreshLayout;
 
-    ArrayList<ItemListRequestAndResponseModel.cat_list> catList;
+    ArrayList<ItemListRequestAndResponseModel.cat_list> subCatList,tempSubcatList;
+    ArrayList<String>catList,catId;
     ArrayList<ItemListRequestAndResponseModel.Variety_id_list> varietyIdLists;
     TextView txtBrodgeIcon;
     CatagoryAdapter gridAdapter;
@@ -63,11 +70,13 @@ public class OrderTakenScreenFragment extends Fragment implements ItemListener{
     ItemAdapter itemAdapter;
     String cat_id;
     HashMap<String,ArrayList<ItemListRequestAndResponseModel.item_list>> getVarityList = new HashMap<>();
-    private  ArrayList<ItemListRequestAndResponseModel.item_list> gridImageList=new ArrayList<>();
+    private  ArrayList<ItemListRequestAndResponseModel.item_list> gridImageList,tempItemList;
     public static ArrayList<ItemListRequestAndResponseModel.item_list> itemList = new ArrayList<>();
     ItemModel itemModel = ItemModel.getInstance();
     TextView txtTotalPrice;
-    LinearLayout ldtPlaceOrder;
+    LinearLayout ldtPlaceOrder,ldtSpinner;
+    Spinner cat_spinner;
+    private boolean isSpinnerTouched = false;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,15 +87,15 @@ public class OrderTakenScreenFragment extends Fragment implements ItemListener{
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_order_taken_screen, container, false);
-        catagory=(RecyclerView)view.findViewById(R.id.recycler_view);
-        catagory.addOnItemTouchListener(new RecyclerTouchListener(getActivity(), catagory, new RecyclerTouchListener.ClickListener() {
+        subCatagory=(RecyclerView)view.findViewById(R.id.recycler_view);
+        subCatagory.addOnItemTouchListener(new RecyclerTouchListener(getActivity(), subCatagory, new RecyclerTouchListener.ClickListener() {
             @Override
             public void onClick(View view, int position) {
 
-                ItemListRequestAndResponseModel.cat_list list = catList.get(position);
+                ItemListRequestAndResponseModel.cat_list list = subCatList.get(position);
                 getVarityList = new HashMap<>();
-                cat_id = list.getCat_id();
-                getItemView(list.getCat_id());
+                cat_id = list.getSub_Cat_id();
+                getItemView(list.getSub_Cat_id());
 
             }
 
@@ -114,6 +123,47 @@ public class OrderTakenScreenFragment extends Fragment implements ItemListener{
             txtBrodgeIcon.setText(String.valueOf(itemModel.getListArrayList().size()));
         }
 
+        ldtSpinner = (LinearLayout) toolbar.findViewById(R.id.ldtSpinner);
+        ldtSpinner.setVisibility(View.VISIBLE);
+        cat_spinner = (Spinner)toolbar.findViewById(R.id.cat_spinner);
+        cat_spinner.setVisibility(View.VISIBLE);
+        cat_spinner.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                isSpinnerTouched = true;
+                return false;
+            }
+        });
+        cat_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Log.e("spinner select",catList.get(position));
+                if (isSpinnerTouched) {
+                    if (position == 0) {
+                        getCatagoryData();
+                        getSubCategoryData();
+                        getVarietyData();
+                        getItemList();
+
+                    } else {
+                        subCatList.clear();
+                        subCatList.addAll(tempSubcatList);
+                        gridImageList.clear();
+                        gridImageList.addAll(tempItemList);
+                        searchItemBasedOnCat(catId.get(position));
+                    }
+                }
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                Log.e("spinner select","nothing selected");
+
+            }
+        });
+
+
         txtTotalPrice = (TextView) view.findViewById(R.id.txtTotalPrice);
         ldtPlaceOrder = (LinearLayout) view.findViewById(R.id.ldtPlaceOrder);
         ldtPlaceOrder.setOnClickListener(new View.OnClickListener() {
@@ -138,7 +188,7 @@ public class OrderTakenScreenFragment extends Fragment implements ItemListener{
                     public void run() {
                         // cancle the Visual indication of a refresh
                         mSwipeRefreshLayout.setRefreshing(true);
-                        getCategoryData();
+                        getSubCategoryData();
                     }
                 }, 3000);
 
@@ -185,10 +235,53 @@ public class OrderTakenScreenFragment extends Fragment implements ItemListener{
         item_recycler_view = (RecyclerView) view.findViewById(R.id.item_recycler_view);
 
         mSwipeRefreshLayout.setRefreshing(true);
-        getCategoryData();
+        getCatagoryData();
+        getSubCategoryData();
         getVarietyData();
         getItemList();
         return view;
+    }
+
+    private void getCatagoryData() {
+
+        apiInterface = ApiClient.getClient().create(ApiInterface.class);
+
+        Call<ItemListRequestAndResponseModel> getCatageoryList = apiInterface.getCatagoryList();
+        getCatageoryList.enqueue(new Callback<ItemListRequestAndResponseModel>() {
+            @Override
+            public void onResponse(Call<ItemListRequestAndResponseModel> call, Response<ItemListRequestAndResponseModel> response) {
+                if (response.isSuccessful())
+                {
+                    mSwipeRefreshLayout.setRefreshing(false);
+                    ItemListRequestAndResponseModel itemListRequestAndResponseModel = response.body();
+                    if (itemListRequestAndResponseModel.getStatus_code().equals(Constants.Success))
+                    {
+                        catList = new ArrayList<>();
+                        catId = new ArrayList<>();
+                        catList.add("All");
+                        catId.add("0");
+                        ArrayList getItemDetils = itemListRequestAndResponseModel.getCat_list();
+                        for (int i = 0; i < getItemDetils.size(); i++) {
+                            ItemListRequestAndResponseModel.cat_list  categoryList = (ItemListRequestAndResponseModel.cat_list) getItemDetils.get(i);
+                           catList.add(categoryList.getCat_name());
+                           catId.add(categoryList.getCat_id());
+
+                        }
+
+                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
+                                R.layout.spinner_item,catList);
+                        adapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
+                        cat_spinner.setAdapter(adapter);
+
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ItemListRequestAndResponseModel> call, Throwable t) {
+
+            }
+        });
     }
 
     private void getItemList() {
@@ -204,7 +297,7 @@ public class OrderTakenScreenFragment extends Fragment implements ItemListener{
                     if (itemListRequestAndResponseModel.getStatus_code().equals(Constants.Success))
                     {
                         gridImageList = new ArrayList<ItemListRequestAndResponseModel.item_list>();
-
+                        tempItemList = new ArrayList<ItemListRequestAndResponseModel.item_list>();
                         List<ItemListRequestAndResponseModel.item_list> getItemDetils = itemListRequestAndResponseModel.getItem_list();
                         for (int i = 0; i < getItemDetils.size(); i++) {
                             ItemListRequestAndResponseModel.item_list items=getItemDetils.get(i);
@@ -233,6 +326,7 @@ public class OrderTakenScreenFragment extends Fragment implements ItemListener{
 
 
                         }
+                        tempItemList.addAll(gridImageList);
                         itemAdapter=new ItemAdapter(gridImageList,getActivity());
                         itemAdapter.setListener(OrderTakenScreenFragment.this);
                         item_recycler_view.setAdapter(itemAdapter);
@@ -259,6 +353,8 @@ public class OrderTakenScreenFragment extends Fragment implements ItemListener{
         });
 
     }
+
+
 
     private void getVarietyData() {
         apiInterface = ApiClient.getClient().create(ApiInterface.class);
@@ -313,16 +409,11 @@ public class OrderTakenScreenFragment extends Fragment implements ItemListener{
 
     }
 
-    public void getCategoryData()
+    public void getSubCategoryData()
     {
         apiInterface = ApiClient.getClient().create(ApiInterface.class);
-        JSONObject getJsonObject = new JSONObject();
-        try {
-            getJsonObject.put("from",1);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        Call<ItemListRequestAndResponseModel> getCatageoryList = apiInterface.getCatagoryList();
+
+        Call<ItemListRequestAndResponseModel> getCatageoryList = apiInterface.getSubCatagoryList();
         getCatageoryList.enqueue(new Callback<ItemListRequestAndResponseModel>() {
             @Override
             public void onResponse(Call<ItemListRequestAndResponseModel> call, Response<ItemListRequestAndResponseModel> response) {
@@ -330,31 +421,33 @@ public class OrderTakenScreenFragment extends Fragment implements ItemListener{
                 {
                     mSwipeRefreshLayout.setRefreshing(false);
                     ItemListRequestAndResponseModel itemListRequestAndResponseModel = response.body();
-                    if (itemListRequestAndResponseModel.getStatus_code().equals(Constants.Success))
+                    if (itemListRequestAndResponseModel.getStatusCode().equals(Constants.Success))
                     {
-                        catList = new ArrayList<>();
+                        subCatList = new ArrayList<>();
+                        tempSubcatList = new ArrayList<>();
                         ArrayList getItemDetils = itemListRequestAndResponseModel.getCat_list();
                         for (int i = 0; i < getItemDetils.size(); i++) {
                             ItemListRequestAndResponseModel.cat_list  categoryList = (ItemListRequestAndResponseModel.cat_list) getItemDetils.get(i);
-
-                            categoryList.setCat_name(categoryList.getCat_name());
-                            String url=CATEGORY_BASE_URL+categoryList.getImage();
+                            categoryList.setSub_Cat_name(categoryList.getSub_Cat_name());
+                            String url=SUB_CATEGORY_BASE_URL+categoryList.getImage();
+                            categoryList.setSub_Cat_id(categoryList.getSub_Cat_id());
                             categoryList.setImage(url);
-                            catList.add(categoryList);
+                            subCatList.add(categoryList);
 
                         }
-                         gridAdapter=new CatagoryAdapter(getActivity(),catList);
+                        tempSubcatList.addAll(subCatList);
+                         gridAdapter=new CatagoryAdapter(getActivity(),subCatList);
 
-                        catagory.setAdapter(gridAdapter);
+                        subCatagory.setAdapter(gridAdapter);
 //                        catagory.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.HORIZONTAL));
                         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false);
-                        catagory.setLayoutManager(linearLayoutManager);
+                        subCatagory.setLayoutManager(linearLayoutManager);
                         final LayoutAnimationController controller =
                                 AnimationUtils.loadLayoutAnimation(getActivity(), R.anim.layout_animation_fall_down);
 
-                        catagory.setLayoutAnimation(controller);
-                        catagory.getAdapter().notifyDataSetChanged();
-                        catagory.scheduleLayoutAnimation();
+                        subCatagory.setLayoutAnimation(controller);
+                        subCatagory.getAdapter().notifyDataSetChanged();
+                        subCatagory.scheduleLayoutAnimation();
                         gridAdapter.notifyDataSetChanged();
 
 
@@ -376,7 +469,7 @@ public class OrderTakenScreenFragment extends Fragment implements ItemListener{
             apiInterface = ApiClient.getClient().create(ApiInterface.class);
             JSONObject getJsonObject = new JSONObject();
             try {
-                getJsonObject.put("cat_id",catId);
+                getJsonObject.put("sub_cat_id",catId);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -387,76 +480,77 @@ public class OrderTakenScreenFragment extends Fragment implements ItemListener{
                     if (response.isSuccessful())
                     {
                         ItemListRequestAndResponseModel itemListRequestAndResponseModel = response.body();
-                        if (itemListRequestAndResponseModel.getStatus_code().equals(Constants.Success))
-                        {
-                            gridImageList = new ArrayList<ItemListRequestAndResponseModel.item_list>();
-                            List<ItemListRequestAndResponseModel.item_list> getItemDetils = itemListRequestAndResponseModel.getItem_list();
-                            for (int i = 0; i < getItemDetils.size(); i++) {
-                                ItemListRequestAndResponseModel.item_list items=getItemDetils.get(i);
-                                items.setItem_name(items.getItem_name());
-                                items.setDescription(items.getDescription());
-                                items.setPrice(items.getPrice());
-                                items.setImage(items.getImage());
-                                String url=ITEM_BASE_URL+items.getImage();
-                                Log.e("url",url);
-                                items.setFavourite("0");
-                                items.setImage(url);
-                                for (int j = 0 ; j < itemModel.getListArrayList().size();j++)
-                                {
-                                    ItemListRequestAndResponseModel.item_list item_list = itemModel.getListArrayList().get(j);
-                                    if (item_list.getItem_id().equals(items.getItem_id()))
-                                    {
-                                        items.setQty(item_list.getQty());
-                                        if (item_list.getNotes() != null)
-                                        {
-                                            items.setNotes(item_list.getNotes());
-                                        }
-                                        Log.e("qty", String.valueOf(items.getQty()));
-                                    }
-                                }
+                        if (itemListRequestAndResponseModel.getStatus_code() != null) {
 
-                                gridImageList.add(items);
-
-                                ArrayList<ItemListRequestAndResponseModel.Variety_id_list> varityList= items.getVariety_list();
-                                ArrayList<ItemListRequestAndResponseModel.item_list> itemVarityList = new ArrayList<>();
-                                if (varityList.size() !=0) {
-                                    ArrayList varityId = new ArrayList();
-                                    for (int j = 0; j < varityList.size(); j++) {
-                                        ItemListRequestAndResponseModel.Variety_id_list variety_id_list = varityList.get(j);
-                                        varityId.add(variety_id_list.getVarietyid());
-                                        itemVarityList.add(items);
-                                        if (getVarityList.containsKey(variety_id_list.getVarietyid())) {
-                                            ArrayList<ItemListRequestAndResponseModel.item_list> list = getVarityList.get(variety_id_list.getVarietyid());
-                                            for (int  k= 0 ; k< list.size() ; k ++)
-                                            {
-                                                itemVarityList.add(list.get(k));
+                            if (itemListRequestAndResponseModel.getStatus_code().equals(Constants.Success)) {
+                                gridImageList = new ArrayList<ItemListRequestAndResponseModel.item_list>();
+                                List<ItemListRequestAndResponseModel.item_list> getItemDetils = itemListRequestAndResponseModel.getItem_list();
+                                for (int i = 0; i < getItemDetils.size(); i++) {
+                                    ItemListRequestAndResponseModel.item_list items = getItemDetils.get(i);
+                                    items.setItem_name(items.getItem_name());
+                                    items.setDescription(items.getDescription());
+                                    items.setPrice(items.getPrice());
+                                    items.setImage(items.getImage());
+                                    String url = ITEM_BASE_URL + items.getImage();
+                                    Log.e("url", url);
+                                    items.setFavourite("0");
+                                    items.setImage(url);
+                                    for (int j = 0; j < itemModel.getListArrayList().size(); j++) {
+                                        ItemListRequestAndResponseModel.item_list item_list = itemModel.getListArrayList().get(j);
+                                        if (item_list.getItem_id().equals(items.getItem_id())) {
+                                            items.setQty(item_list.getQty());
+                                            if (item_list.getNotes() != null) {
+                                                items.setNotes(item_list.getNotes());
                                             }
-                                            getVarityList.put(variety_id_list.getVarietyid(), itemVarityList);
-                                            itemVarityList = new ArrayList<>();
-                                        }else
-                                        {
-                                            getVarityList.put(variety_id_list.getVarietyid(), itemVarityList);
-                                            itemVarityList = new ArrayList<>();
+                                            Log.e("qty", String.valueOf(items.getQty()));
                                         }
                                     }
 
-                                }
-                            }
-                            itemAdapter=new ItemAdapter(gridImageList,getActivity());
-                            itemAdapter.setListener(OrderTakenScreenFragment.this);
-                            item_recycler_view.setAdapter(itemAdapter);
-                            final LayoutAnimationController controller =
-                                    AnimationUtils.loadLayoutAnimation(getActivity(), R.anim.layout_animation_fall_down);
-                            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
-                            item_recycler_view.setLayoutManager(linearLayoutManager);
-                            item_recycler_view.setLayoutAnimation(controller);
-                            item_recycler_view.getAdapter().notifyDataSetChanged();
-                            item_recycler_view.scheduleLayoutAnimation();
-                            itemAdapter.notifyDataSetChanged();
+                                    gridImageList.add(items);
 
-                        }else if (itemListRequestAndResponseModel.getStatus_code().equals(Constants.Failure))
+                                    ArrayList<ItemListRequestAndResponseModel.Variety_id_list> varityList = items.getVariety_list();
+                                    ArrayList<ItemListRequestAndResponseModel.item_list> itemVarityList = new ArrayList<>();
+                                    if (varityList.size() != 0) {
+                                        ArrayList varityId = new ArrayList();
+                                        for (int j = 0; j < varityList.size(); j++) {
+                                            ItemListRequestAndResponseModel.Variety_id_list variety_id_list = varityList.get(j);
+                                            varityId.add(variety_id_list.getVarietyid());
+                                            itemVarityList.add(items);
+                                            if (getVarityList.containsKey(variety_id_list.getVarietyid())) {
+                                                ArrayList<ItemListRequestAndResponseModel.item_list> list = getVarityList.get(variety_id_list.getVarietyid());
+                                                for (int k = 0; k < list.size(); k++) {
+                                                    itemVarityList.add(list.get(k));
+                                                }
+                                                getVarityList.put(variety_id_list.getVarietyid(), itemVarityList);
+                                                itemVarityList = new ArrayList<>();
+                                            } else {
+                                                getVarityList.put(variety_id_list.getVarietyid(), itemVarityList);
+                                                itemVarityList = new ArrayList<>();
+                                            }
+                                        }
+
+                                    }
+                                }
+                                itemAdapter = new ItemAdapter(gridImageList, getActivity());
+                                itemAdapter.setListener(OrderTakenScreenFragment.this);
+                                item_recycler_view.setAdapter(itemAdapter);
+                                final LayoutAnimationController controller =
+                                        AnimationUtils.loadLayoutAnimation(getActivity(), R.anim.layout_animation_fall_down);
+                                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+                                item_recycler_view.setLayoutManager(linearLayoutManager);
+                                item_recycler_view.setLayoutAnimation(controller);
+                                item_recycler_view.getAdapter().notifyDataSetChanged();
+                                item_recycler_view.scheduleLayoutAnimation();
+                                itemAdapter.notifyDataSetChanged();
+
+                            } else if (itemListRequestAndResponseModel.getStatus_code().equals(Constants.Failure)) {
+                                Toast.makeText(getActivity(), itemListRequestAndResponseModel.getStatus_message(), Toast.LENGTH_LONG).show();
+                            }
+                        }else if (itemListRequestAndResponseModel.getStatusCode().equals(Constants.Failure))
                         {
-                            Toast.makeText(getActivity(),itemListRequestAndResponseModel.getStatus_message(),Toast.LENGTH_LONG).show();
+                            gridImageList.clear();
+                            itemAdapter.notifyDataSetChanged();
+                            Toast.makeText(getActivity(),"No Item Found",Toast.LENGTH_LONG).show();
                         }
                     }
                 }
@@ -541,5 +635,82 @@ public class OrderTakenScreenFragment extends Fragment implements ItemListener{
 
             txtTotalPrice.setText("Total : " + String.valueOf(price));
         }
+    }
+
+    public void searchItemBasedOnCat(String cat_id)
+    {
+        apiInterface = ApiClient.getClient().create(ApiInterface.class);
+        JSONObject getJsonObject = new JSONObject();
+        try {
+            getJsonObject.put("cat_id",cat_id);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Call<ItemListRequestAndResponseModel> getCatageoryList = apiInterface.getItemBasedOnCat(getJsonObject);
+        getCatageoryList.enqueue(new Callback<ItemListRequestAndResponseModel>() {
+            @Override
+            public void onResponse(Call<ItemListRequestAndResponseModel> call, Response<ItemListRequestAndResponseModel> response) {
+                if (response.isSuccessful())
+                {
+                    ItemListRequestAndResponseModel itemListRequestAndResponseModel = response.body();
+                    if (itemListRequestAndResponseModel.getStatusCode().equals(Constants.Success))
+                    {
+                        if (itemListRequestAndResponseModel.getSub_cat_list() != null)
+                        {
+                            ArrayList<ItemListRequestAndResponseModel.cat_list>sub_cat_list = subCatList;
+                            ArrayList<ItemListRequestAndResponseModel.cat_list>tempSubCatList = new ArrayList<>();
+
+                            for (int i = 0 ; i < itemListRequestAndResponseModel.getSub_cat_list().size() ; i ++)
+                            {
+                                ItemListRequestAndResponseModel.sub_cat_list subCatList = itemListRequestAndResponseModel.getSub_cat_list().get(i);
+                                for (int j = 0 ; j< sub_cat_list.size() ; j++)
+                                {
+                                    ItemListRequestAndResponseModel.cat_list cat_list = sub_cat_list.get(j);
+                                    if (subCatList.getSub_cat_id().equals(cat_list.getSub_Cat_id()))
+                                    {
+                                        tempSubCatList.add(cat_list);
+                                    }
+                                }
+
+                            }
+
+                            subCatList.clear();
+                            subCatList.addAll(tempSubCatList);
+                            gridAdapter.notifyDataSetChanged();
+
+                        }
+                        if (itemListRequestAndResponseModel.getItem_list() != null)
+                        {
+                            ArrayList<ItemListRequestAndResponseModel.item_list>item_list = gridImageList;
+                            ArrayList<ItemListRequestAndResponseModel.item_list>tempItemList = new ArrayList<>();
+
+                            for (int i = 0 ; i < itemListRequestAndResponseModel.getItem_list().size() ; i ++)
+                            {
+                                ItemListRequestAndResponseModel.item_list subCatList = itemListRequestAndResponseModel.getItem_list().get(i);
+                                for (int j = 0 ; j< item_list.size() ; j++)
+                                {
+                                    ItemListRequestAndResponseModel.item_list cat_list = item_list.get(j);
+                                    if (subCatList.getItem_id().equals(cat_list.getItem_id()))
+                                    {
+                                        tempItemList.add(cat_list);
+                                    }
+                                }
+
+                            }
+
+                            gridImageList.clear();
+                            gridImageList.addAll(tempItemList);
+                            itemAdapter.notifyDataSetChanged();
+
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ItemListRequestAndResponseModel> call, Throwable t) {
+
+            }
+        });
     }
 }

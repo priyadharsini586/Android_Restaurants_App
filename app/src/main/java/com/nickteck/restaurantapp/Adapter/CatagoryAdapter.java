@@ -54,7 +54,7 @@ public class CatagoryAdapter extends RecyclerView.Adapter<CatagoryAdapter.ViewHo
 
         final ItemListRequestAndResponseModel.cat_list list =catList.get(position);
         Log.e("item size", String.valueOf(list.getImage()));
-        holder.mName.setText(list.getCat_name());
+        holder.mName.setText(list.getSub_Cat_name());
         Picasso.with(context)
                 .load(list.getImage())
                 .placeholder(R.mipmap.ic_default_image)

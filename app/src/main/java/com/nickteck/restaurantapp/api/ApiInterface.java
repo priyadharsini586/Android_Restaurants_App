@@ -3,6 +3,7 @@ package com.nickteck.restaurantapp.api;
 import com.nickteck.restaurantapp.model.AddWhislist;
 import com.nickteck.restaurantapp.model.HistoryModel;
 import com.nickteck.restaurantapp.model.ItemListRequestAndResponseModel;
+import com.nickteck.restaurantapp.model.ItemModel;
 import com.nickteck.restaurantapp.model.LoginRequestAndResponse;
 import com.nickteck.restaurantapp.model.TableModel;
 
@@ -27,11 +28,14 @@ public interface ApiInterface {
     @POST("category_list.php")
     Call<ItemListRequestAndResponseModel> getCatagoryList();
 
+    @POST("sub_category_list.php")
+    Call<ItemListRequestAndResponseModel> getSubCatagoryList();
+
     @POST("veraity_list.php")
     Call<ItemListRequestAndResponseModel> getVarietyList();
 
     @FormUrlEncoded
-    @POST("cat_item_list.php")
+    @POST("subcat_item_list.php")
     Call<ItemListRequestAndResponseModel> getItemList(@Field("x") JSONObject Itemobject);
 
     @FormUrlEncoded
@@ -55,5 +59,9 @@ public interface ApiInterface {
     @FormUrlEncoded
     @POST("client_details_by_phone.php")
     Call<LoginRequestAndResponse> clientDetailsByNum(@Field("x") JSONObject object);
+
+    @FormUrlEncoded
+    @POST("cat_subcat_item_list.php")
+    Call<ItemListRequestAndResponseModel> getItemBasedOnCat(@Field("x") JSONObject object);
 
 }

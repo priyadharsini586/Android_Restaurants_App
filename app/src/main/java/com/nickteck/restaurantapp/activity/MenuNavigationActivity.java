@@ -20,6 +20,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.nickteck.restaurantapp.Db.Database;
@@ -40,6 +41,7 @@ public class MenuNavigationActivity extends AppCompatActivity
     FrameLayout layBadge;
     ImageView imgLogOut;
     Database database ;
+    LinearLayout ldtSpinner;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +65,8 @@ public class MenuNavigationActivity extends AppCompatActivity
         txtHomeToolBar = (TextView) findViewById(R.id.txtHomeToolBar);
         txtHomeToolBar.setText("Check");
         layBadge = (FrameLayout) findViewById(R.id.layBadge);
+        ldtSpinner = (LinearLayout) findViewById(R.id.ldtSpinner);
+        ldtSpinner.setVisibility(View.GONE);
         layBadge.setOnClickListener(this);
 
         imgLogOut = (ImageView) findViewById(R.id.imgLogOut);
@@ -75,6 +79,7 @@ public class MenuNavigationActivity extends AppCompatActivity
                 database.deleteAll();
                 Intent intent = new Intent(getApplicationContext(),TableActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
 
