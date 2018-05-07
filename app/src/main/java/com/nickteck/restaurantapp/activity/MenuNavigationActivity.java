@@ -23,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.nickteck.restaurantapp.Adapter.OrderAdapter;
 import com.nickteck.restaurantapp.Db.Database;
 import com.nickteck.restaurantapp.R;
 import com.nickteck.restaurantapp.additional_class.AdditionalClass;
@@ -31,6 +32,7 @@ import com.nickteck.restaurantapp.fragment.ContentFragment;
 import com.nickteck.restaurantapp.fragment.FavouriteFragment;
 import com.nickteck.restaurantapp.fragment.HistoryFragment;
 import com.nickteck.restaurantapp.fragment.MyOrdersFragment;
+import com.nickteck.restaurantapp.fragment.OrderFragment;
 import com.nickteck.restaurantapp.fragment.OrderTakenScreenFragment;
 import com.nickteck.restaurantapp.model.Constants;
 
@@ -133,8 +135,8 @@ public class MenuNavigationActivity extends AppCompatActivity
 
 
         } else if (id == R.id.nav_my_orders) {
-            MyOrdersFragment myOrdersFragment = new MyOrdersFragment();
-            AdditionalClass.replaceFragment(myOrdersFragment,Constants.MY_ORDERS_FRAGMENT,MenuNavigationActivity.this);
+            OrderFragment orderFragment = new OrderFragment();
+            AdditionalClass.replaceFragment(orderFragment,Constants.ORDER_FRAGMENT,MenuNavigationActivity.this);
         } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_share) {

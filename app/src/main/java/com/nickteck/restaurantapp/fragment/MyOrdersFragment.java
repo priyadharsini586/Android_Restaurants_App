@@ -2,11 +2,13 @@ package com.nickteck.restaurantapp.fragment;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SyncRequest;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -18,7 +20,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.nickteck.restaurantapp.Adapter.MyOrdersAdapter;
 import com.nickteck.restaurantapp.Db.Database;
@@ -38,6 +42,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import ng.max.slideview.SlideView;
+
 
 public class MyOrdersFragment extends Fragment implements MyOrdersAdapter.Callback,GetFromDesktopListener {
 
@@ -51,6 +57,8 @@ public class MyOrdersFragment extends Fragment implements MyOrdersAdapter.Callba
     RabbitmqServer rabbitmqServer;
     ArrayList<ItemListRequestAndResponseModel.item_list>itemLists;
     Database database ;
+    Spinner cat_spinner;
+    public String TAG = MyOrdersFragment.class.getName();
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -70,6 +78,8 @@ public class MyOrdersFragment extends Fragment implements MyOrdersAdapter.Callba
             txtBrodgeIcon.setVisibility(View.VISIBLE);
             txtBrodgeIcon.setText(String.valueOf(itemModel.getListArrayList().size()));
         }
+        cat_spinner = (Spinner)toolbar.findViewById(R.id.cat_spinner);
+        cat_spinner.setVisibility(View.GONE);
 
         Log.e("itemList", String.valueOf(itemModel.getListArrayList().size()));
          database = new Database(getActivity());
@@ -108,8 +118,8 @@ public class MyOrdersFragment extends Fragment implements MyOrdersAdapter.Callba
             txtPlaceItem.setVisibility(View.VISIBLE);
             txtUpdateItem.setVisibility(View.GONE);
         }
-
         ldtPlaceOrder = (LinearLayout) mainView.findViewById(R.id.ldtPlaceOrder);
+        ldtPlaceOrder.setVisibility(View.GONE);
         ldtPlaceOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -152,12 +162,72 @@ public class MyOrdersFragment extends Fragment implements MyOrdersAdapter.Callba
                 AdditionalClass.replaceFragment(catagoryFragment, Constants.ORDER_TAKEN_FRAGMENT,(AppCompatActivity)getActivity());
             }
         });
+        SlideView slideView = (SlideView) mainView.findViewById(R.id.slideView);
+        slideView.setOnSlideCompleteListener(new SlideView.OnSlideCompleteListener() {
+            @Override
+            public void onSlideComplete(SlideView slideView) {
+                // vibrate the device
+                Vibrator vibrator = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
+                vibrator.vibrate(500);
+
+                new AlertDialog.Builder(getActivity())
+                        .setTitle("Conformation?")
+                        .setMessage("Do you want to Place this item?")
+                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+//
+                                Log.e(TAG, "onClick: "+ itemModel.isAlreadyPlace());
+                                if (!itemModel.isAlreadyPlace())
+                                {
+                                    sendToDesktop();
+                                    itemModel.setAlreadyPlace(true);
+                                    txtPlaceItem.setVisibility(View.GONE);
+                                    txtUpdateItem.setVisibility(View.VISIBLE);
+                                    removeItemFromOrderItem();
+                                }else
+                                {
+                                    Toast.makeText(getActivity(),"Already send to Desktop",Toast.LENGTH_LONG).show();
+                                }
+
+
+                            }
+                        })
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        })
+                        .show();
+
+            }
+        });
 
 //        new RabbitmqServer().execute();
         return mainView;
     }
 
 
+    public void removeItemFromOrderItem()
+    {
+       /* ItemModel itemModel = ItemModel.getInstance();
+        itemModel.getListArrayList().clear();*/
+        itemLists.clear();
+        myOrdersAdapter.notifyDataSetChanged();
+
+        itemModel = ItemModel.getInstance();
+        if (itemModel.getListArrayList().size() == 0)
+        {
+            txtBrodgeIcon.setVisibility(View.GONE);
+        }else
+        {
+            txtBrodgeIcon.setVisibility(View.VISIBLE);
+            txtBrodgeIcon.setText(String.valueOf(itemModel.getListArrayList().size()));
+        }
+        txtTotalPrice.setText("Total : 0.0");
+    }
     @Override
     public void onChangeItemCount(int totaltcount) {
 

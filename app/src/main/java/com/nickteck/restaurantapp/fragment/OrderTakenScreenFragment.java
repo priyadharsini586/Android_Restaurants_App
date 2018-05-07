@@ -203,10 +203,6 @@ public class OrderTakenScreenFragment extends Fragment implements ItemListener{
             public void onClick(View view, int position) {
                 if (position != 0) {
                     ItemListRequestAndResponseModel.Variety_id_list varietyIdList = varietyIdLists.get(position);
-                    Log.e("hashmap", String.valueOf(varietyIdList.getVariety_id()));
-                    Log.e("hashmap", String.valueOf(getVarityList));
-
-                    Log.e("hashmap", String.valueOf(getVarityList.get(varietyIdList.getVariety_id())));
 
                     if (getVarityList.size() != 0) {
                         gridImageList.clear();
@@ -306,7 +302,7 @@ public class OrderTakenScreenFragment extends Fragment implements ItemListener{
                             items.setPrice(items.getPrice());
                             items.setImage(items.getImage());
                             String url=ITEM_BASE_URL+items.getImage();
-                            Log.e("url",url);
+                            Log.e("sub catagory url",url);
                             items.setFavourite("0");
                             items.setImage(url);
                             for (int j = 0 ; j < itemModel.getListArrayList().size();j++)

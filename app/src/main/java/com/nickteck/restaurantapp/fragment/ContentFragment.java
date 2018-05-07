@@ -50,7 +50,7 @@ public class ContentFragment extends Fragment implements View.OnClickListener {
     private int [] sliderList = {R.drawable.cook2,R.drawable.cook3,R.drawable.cook4,R.drawable.cook5};
     private ArrayList<ItemListRequestAndResponseModel> imageModelArrayList;
     View mainView;
-    LinearLayout ldtMenuList,ldtMyOrders,ldtHistoryList,ldtSpinner;
+    LinearLayout ldtMenuList,ldtMyOrders,ldtHistoryList,ldtSpinner,ldtFav;
     TextView txtBrodgeIcon;
     public ContentFragment() {
         // Required empty public constructor
@@ -170,6 +170,9 @@ public class ContentFragment extends Fragment implements View.OnClickListener {
 
         ldtHistoryList = (LinearLayout) mainView.findViewById(R.id.ldtHistoryList);
         ldtHistoryList.setOnClickListener(this);
+
+        ldtFav = (LinearLayout)mainView.findViewById(R.id.ldtFav);
+        ldtFav.setOnClickListener(this);
     }
 
     private ArrayList<ItemListRequestAndResponseModel> populateList(){
@@ -196,13 +199,18 @@ public class ContentFragment extends Fragment implements View.OnClickListener {
                 break;
 
             case R.id.ldtMyOrders:
-                MyOrdersFragment myOrdersFragment = new MyOrdersFragment();
-                AdditionalClass.replaceFragment(myOrdersFragment,Constants.MY_ORDERS_FRAGMENT,(AppCompatActivity) getActivity());
+                OrderFragment orderFragment = new OrderFragment();
+                AdditionalClass.replaceFragment(orderFragment,Constants.ORDER_FRAGMENT,(AppCompatActivity)getActivity());
                 break;
 
             case R.id.ldtHistoryList:
                 HistoryFragment historyFragment = new HistoryFragment();
                 AdditionalClass.replaceFragment(historyFragment,Constants.HISTORY_FRAGMENT,(AppCompatActivity) getActivity());
+                break;
+
+            case R.id.ldtFav:
+                FavouriteFragment favouriteFragment=new FavouriteFragment();
+                AdditionalClass.replaceFragment(favouriteFragment,Constants.FAVOURITE_FRAGMENT,(AppCompatActivity) getActivity());
                 break;
         }
     }
