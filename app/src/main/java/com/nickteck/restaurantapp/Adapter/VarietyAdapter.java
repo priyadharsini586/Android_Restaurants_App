@@ -51,13 +51,13 @@ public class VarietyAdapter extends RecyclerView.Adapter<VarietyAdapter.VarietyV
             }
         });
         if(row_index ==position){
-            holder.mainView.setBackgroundColor(Color.parseColor("#567845"));
+            holder.mainView.setBackgroundColor(Color.parseColor("#ff5500"));
             holder.txtVarityName.setTextColor(Color.parseColor("#ffffff"));
         }
         else
         {
-            holder.mainView.setBackgroundColor(Color.parseColor("#ffffff"));
-            holder.txtVarityName.setTextColor(Color.parseColor("#000000"));
+            holder.mainView.setBackgroundColor(Color.parseColor("#ffccb2"));
+            holder.txtVarityName.setTextColor(Color.parseColor("#ffffff"));
         }
 
     }

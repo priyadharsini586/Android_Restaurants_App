@@ -18,16 +18,28 @@
     android:layout_width="match_parent"
     android:layout_height="250dp"
     android:id="@+id/swipe_container"
-    android:layout_below="@+id/txtCat">
+    android:layout_below="@+id/txtCat"
+   >
 
-<android.support.v7.widget.RecyclerView
+<!--<android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="250dp"
         android:scrollbars="vertical"
         android:layoutAnimation="@anim/layout_animation_fall_down"
+       android:visibility="gone" />-->
+    <GridView
+        android:id="@+id/grid_view_image_text"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:columnWidth="157dp"
+        android:gravity="center"
+        android:numColumns="4"
+        android:layout_below="@+id/txtCat"
         />
+
 </android.support.v4.widget.SwipeRefreshLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

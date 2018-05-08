@@ -16,16 +16,17 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.nickteck.restaurantapp.Adapter.CatagoryAdapter;
+import com.nickteck.restaurantapp.Adapter.CustomSubCatGridViewAdapter;
 import com.nickteck.restaurantapp.Adapter.ItemAdapter;
 import com.nickteck.restaurantapp.Adapter.VarietyAdapter;
 import com.nickteck.restaurantapp.R;
-import com.nickteck.restaurantapp.activity.MenuNavigationActivity;
 import com.nickteck.restaurantapp.additional_class.AdditionalClass;
 import com.nickteck.restaurantapp.additional_class.RecyclerTouchListener;
 import com.nickteck.restaurantapp.api.ApiClient;
@@ -34,23 +35,18 @@ import com.nickteck.restaurantapp.interfaceFol.ItemListener;
 import com.nickteck.restaurantapp.model.Constants;
 import com.nickteck.restaurantapp.model.ItemListRequestAndResponseModel;
 import com.nickteck.restaurantapp.model.ItemModel;
-import com.nickteck.restaurantapp.model.LoginRequestAndResponse;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.nickteck.restaurantapp.model.Constants.CATEGORY_BASE_URL;
 import static com.nickteck.restaurantapp.model.Constants.ITEM_BASE_URL;
 import static com.nickteck.restaurantapp.model.Constants.SUB_CATEGORY_BASE_URL;
 
@@ -58,14 +54,15 @@ import static com.nickteck.restaurantapp.model.Constants.SUB_CATEGORY_BASE_URL;
 public class OrderTakenScreenFragment extends Fragment implements ItemListener{
     View view;
     ApiInterface apiInterface;
-    RecyclerView subCatagory,variety_recycler_view,item_recycler_view;
+    RecyclerView variety_recycler_view,item_recycler_view;
     SwipeRefreshLayout mSwipeRefreshLayout;
-
     ArrayList<ItemListRequestAndResponseModel.cat_list> subCatList,tempSubcatList;
     ArrayList<String>catList,catId;
     ArrayList<ItemListRequestAndResponseModel.Variety_id_list> varietyIdLists;
     TextView txtBrodgeIcon;
     CatagoryAdapter gridAdapter;
+    CustomSubCatGridViewAdapter customSubCatGridViewAdapter;
+    GridView grid_view_image_text;
     VarietyAdapter varietyAdapter;
     ItemAdapter itemAdapter;
     String cat_id;
@@ -87,7 +84,7 @@ public class OrderTakenScreenFragment extends Fragment implements ItemListener{
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_order_taken_screen, container, false);
-        subCatagory=(RecyclerView)view.findViewById(R.id.recycler_view);
+        /*subCatagory=(RecyclerView)view.findViewById(R.id.recycler_view);
         subCatagory.addOnItemTouchListener(new RecyclerTouchListener(getActivity(), subCatagory, new RecyclerTouchListener.ClickListener() {
             @Override
             public void onClick(View view, int position) {
@@ -103,7 +100,7 @@ public class OrderTakenScreenFragment extends Fragment implements ItemListener{
             public void onLongClick(View view, int position) {
 
             }
-        }));
+        }));*/
 
 
         Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
@@ -229,6 +226,18 @@ public class OrderTakenScreenFragment extends Fragment implements ItemListener{
         }));
         changePrice();
         item_recycler_view = (RecyclerView) view.findViewById(R.id.item_recycler_view);
+
+        grid_view_image_text = (GridView)view.findViewById(R.id.grid_view_image_text);
+        grid_view_image_text.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int i, long id) {
+                ItemListRequestAndResponseModel.cat_list list = subCatList.get(i);
+                getVarityList = new HashMap<>();
+                cat_id = list.getSub_Cat_id();
+                getItemView(list.getSub_Cat_id());            }
+        });
 
         mSwipeRefreshLayout.setRefreshing(true);
         getCatagoryData();
@@ -434,16 +443,20 @@ public class OrderTakenScreenFragment extends Fragment implements ItemListener{
                         tempSubcatList.addAll(subCatList);
                          gridAdapter=new CatagoryAdapter(getActivity(),subCatList);
 
-                        subCatagory.setAdapter(gridAdapter);
+                        customSubCatGridViewAdapter = new CustomSubCatGridViewAdapter(getActivity(),subCatList);
+                        grid_view_image_text.setAdapter(customSubCatGridViewAdapter);
+
+
+//                        subCatagory.setAdapter(gridAdapter);
 //                        catagory.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.HORIZONTAL));
                         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false);
-                        subCatagory.setLayoutManager(linearLayoutManager);
+                       /* subCatagory.setLayoutManager(linearLayoutManager);
                         final LayoutAnimationController controller =
                                 AnimationUtils.loadLayoutAnimation(getActivity(), R.anim.layout_animation_fall_down);
 
                         subCatagory.setLayoutAnimation(controller);
                         subCatagory.getAdapter().notifyDataSetChanged();
-                        subCatagory.scheduleLayoutAnimation();
+                        subCatagory.scheduleLayoutAnimation();*/
                         gridAdapter.notifyDataSetChanged();
 
 

@@ -88,6 +88,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
         {
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
             alertDialog.setTitle("Notes");
+
             final TextView input = new TextView(mContext);
             input.setTextColor(mContext.getResources().getColor(R.color.black_color));
             input.setGravity(Gravity.CENTER | Gravity.BOTTOM);
