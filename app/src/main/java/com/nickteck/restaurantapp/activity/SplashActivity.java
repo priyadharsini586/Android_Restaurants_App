@@ -31,17 +31,11 @@ public class SplashActivity extends AppCompatActivity implements ConnectivityRec
         MyApplication.getInstance().setConnectivityListener(this);
         database = new Database(getApplicationContext());
         new Handler().postDelayed(new Runnable() {
-
-            /*
-             * Showing splash screen with a timer. This will be useful when you
-             * want to show case your app logo / company
-             */
-
             @Override
             public void run() {
 
 
-                    Intent i = new Intent(SplashActivity.this,TableActivity.class);
+                    Intent i = new Intent(SplashActivity.this,RatingActivity.class);
                     startActivity(i);
                     overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
                     finish();

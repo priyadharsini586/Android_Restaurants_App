@@ -52,12 +52,12 @@ public class VarietyAdapter extends RecyclerView.Adapter<VarietyAdapter.VarietyV
         });
         if(row_index ==position){
             holder.mainView.setBackgroundColor(Color.parseColor("#ff5500"));
-            holder.txtVarityName.setTextColor(Color.parseColor("#ffffff"));
+
         }
         else
         {
             holder.mainView.setBackgroundColor(Color.parseColor("#ffccb2"));
-            holder.txtVarityName.setTextColor(Color.parseColor("#ffffff"));
+
         }
 
     }
@@ -85,8 +85,8 @@ public class VarietyAdapter extends RecyclerView.Adapter<VarietyAdapter.VarietyV
 
     }
 
-    public void getView()
+    public  void clearView()
     {
-
+        row_index = -1;
     }
 }

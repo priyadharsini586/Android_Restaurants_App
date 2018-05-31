@@ -22,9 +22,11 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -61,7 +63,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     boolean isNetworkConnected;
     RelativeLayout sclMainView;
     ProgressBar progressBar;
-
+    RadioButton radioRegularUser,radioNewUser,radioExistingUser,radioOneTimeUser;
+    LinearLayout ldtlogin;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,6 +78,97 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         strTableId = bundle.getString("id");
         strSubName = bundle.getString("sub_name");
 
+        ldtlogin= (LinearLayout) findViewById(R.id.ldtlogin);
+        ldtlogin.setVisibility(View.GONE);
+
+
+        radioRegularUser = (RadioButton) findViewById(R.id.radioRegularUser);
+        radioNewUser = (RadioButton) findViewById(R.id.radioNewUser);
+        radioExistingUser= (RadioButton) findViewById(R.id.radioExistingUser);
+        radioOneTimeUser = (RadioButton) findViewById(R.id.radioOneTimeUser);
+
+        radioRegularUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                radioRegularUser.setChecked(true);
+                radioNewUser.setChecked(false);
+                radioExistingUser.setChecked(false);
+                radioOneTimeUser.setChecked(false);
+
+                ldtlogin.setVisibility(View.VISIBLE);
+                edtPhone.setVisibility(View.VISIBLE);
+                btnSubmitLogin.setVisibility(View.VISIBLE);
+                edtAddress.setVisibility(View.GONE);
+                edtMailId.setVisibility(View.GONE);
+                edtName.setVisibility(View.GONE);
+
+            }
+        });
+
+        radioNewUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                radioRegularUser.setChecked(false);
+                radioNewUser.setChecked(true);
+                radioExistingUser.setChecked(false);
+                radioOneTimeUser.setChecked(false);
+
+                ldtlogin.setVisibility(View.VISIBLE);
+                edtPhone.setVisibility(View.VISIBLE);
+                btnSubmitLogin.setVisibility(View.VISIBLE);
+                edtAddress.setVisibility(View.VISIBLE);
+                edtMailId.setVisibility(View.VISIBLE);
+                edtName.setVisibility(View.VISIBLE);
+            }
+        });
+
+        radioExistingUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                radioRegularUser.setChecked(false);
+                radioNewUser.setChecked(false);
+                radioExistingUser.setChecked(true);
+                radioOneTimeUser.setChecked(false);
+
+                radioRegularUser.setChecked(false);
+                radioNewUser.setChecked(true);
+                radioExistingUser.setChecked(false);
+                radioOneTimeUser.setChecked(false);
+
+                ldtlogin.setVisibility(View.VISIBLE);
+                edtPhone.setVisibility(View.VISIBLE);
+                btnSubmitLogin.setVisibility(View.VISIBLE);
+                edtAddress.setVisibility(View.VISIBLE);
+                edtMailId.setVisibility(View.VISIBLE);
+                edtName.setVisibility(View.VISIBLE);
+            }
+        });
+
+        radioOneTimeUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                radioRegularUser.setChecked(false);
+                radioNewUser.setChecked(false);
+                radioExistingUser.setChecked(false);
+                radioOneTimeUser.setChecked(true);
+
+                Database database = new Database(getApplicationContext());
+                database.insertCustomerTable("1", "1");
+                if (!strSubName.isEmpty())
+                {
+                    strTableName = strTableName + "("+strSubName +")";
+                }
+                database.insertTable(strTableId, strTableName);
+                SharedPreferences settings = getApplicationContext().getSharedPreferences(Constants.PREFS_NAME, 0);
+                SharedPreferences.Editor editor = settings.edit();
+                editor.putString(edtPhone.getText().toString(), Constants.MOBILE_NUMBER);
+                editor.apply();
+                Intent intent= new Intent(getApplicationContext(),MenuNavigationActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
+                finish();
+            }
+        });
 
         chkAdvanced = (CheckBox) findViewById(R.id.chkAdvanced);
         chkAdvanced.setOnClickListener(this);
@@ -90,6 +184,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         edtMailId = (EditText) findViewById(R.id.edtMailId);
         edtAddress = (EditText) findViewById(R.id.edtAddress);
         sclMainView = (RelativeLayout) findViewById(R.id.sclMainView);
+        edtPhone.setVisibility(View.GONE);
+        edtAddress.setVisibility(View.GONE);
+        edtMailId.setVisibility(View.GONE);
+        edtName.setVisibility(View.GONE);
+        btnSubmitLogin.setVisibility(View.GONE);
         edtPhone.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {

@@ -1,51 +1,47 @@
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
    android:orientation="vertical"
-    >
+    android:weightSum="2">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/category"
-        android:gravity="center"
-        android:textColor="@color/black_color"
-        android:textSize="@dimen/item_heading_text_size"
-        android:textStyle="bold"
-        android:id="@+id/txtCat"/>
+
 <android.support.v4.widget.SwipeRefreshLayout
     android:layout_width="match_parent"
-    android:layout_height="250dp"
+    android:layout_height="wrap_content"
     android:id="@+id/swipe_container"
-    android:layout_below="@+id/txtCat"
-   >
-
-<!--<android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view"
+   android:layout_weight="1.1">
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="250dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:weightSum="1">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/cat_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:scrollbars="vertical"
         android:layoutAnimation="@anim/layout_animation_fall_down"
-       android:visibility="gone" />-->
-    <GridView
-        android:id="@+id/grid_view_image_text"
-        android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:columnWidth="157dp"
-        android:gravity="center"
-        android:numColumns="4"
-        android:layout_below="@+id/txtCat"
-        />
+        android:layout_weight="0.5"/>
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/sub_cat_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="vertical"
+        android:layoutAnimation="@anim/layout_animation_fall_down"
+        android:layout_weight="0.5"
+        android:paddingLeft="30dp"/>
+
+    </LinearLayout>
 </android.support.v4.widget.SwipeRefreshLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/swipe_container"
         android:id="@+id/ldtList"
-        android:layout_above="@+id/ldtBottom">
+        android:layout_weight="0.9">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -56,15 +52,6 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1.5"
                 android:orientation="vertical">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="Variety"
-                    android:textColor="@color/black_color"
-                    android:textSize="@dimen/item_price_text_size"
-                    android:textStyle="bold"
-                    android:padding="10dp"/>
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/variety_recycler_view"
@@ -72,22 +59,14 @@
                     android:layout_height="match_parent"
                     android:scrollbars="vertical"
                     android:layoutAnimation="@anim/layout_animation_fall_down"
-                    />
+                    android:background="#ffccb2"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="0.5"
                 android:orientation="vertical">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="Items"
-                    android:textColor="@color/black_color"
-                    android:textSize="@dimen/item_price_text_size"
-                    android:textStyle="bold"
-                    android:padding="10dp"/>
+
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/item_recycler_view"
                     android:layout_width="match_parent"
@@ -148,4 +127,4 @@
 
     </LinearLayout>
     </LinearLayout>
-</RelativeLayout>
+</LinearLayout>

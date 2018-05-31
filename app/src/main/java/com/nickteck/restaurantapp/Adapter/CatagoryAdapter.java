@@ -13,6 +13,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -53,14 +54,18 @@ public class CatagoryAdapter extends RecyclerView.Adapter<CatagoryAdapter.ViewHo
 
 
         final ItemListRequestAndResponseModel.cat_list list =catList.get(position);
-        Log.e("item size", String.valueOf(list.getImage()));
-        holder.mName.setText(list.getSub_Cat_name());
+
+        if (list.getSub_Cat_name() != null) {
+            holder.mName.setText(list.getSub_Cat_name());
+        }else if (list.getCat_name() != null)
+        {
+            holder.mName.setText(list.getCat_name());
+        }
         Picasso.with(context)
                 .load(list.getImage())
                 .placeholder(R.mipmap.ic_default_image)
                 .into(holder.img);
         holder.setIsRecyclable(false);
-
 
 
         holder.rldMainMenu.setOnClickListener(new View.OnClickListener() {
@@ -88,15 +93,20 @@ public class CatagoryAdapter extends RecyclerView.Adapter<CatagoryAdapter.ViewHo
 
         public TextView mName;
         ImageView img;
-        RelativeLayout rldMainMenu;
+        LinearLayout rldMainMenu;
 
         ViewHolder(View view) {
             super(view);
-            mName=(TextView)view.findViewById(R.id.cat_name);
-            img=(ImageView)view.findViewById(R.id.cat_image);
-            rldMainMenu = (RelativeLayout) view.findViewById(R.id.rldMainMenu);
+            mName=(TextView)view.findViewById(R.id.android_gridview_text);
+            img=(ImageView)view.findViewById(R.id.android_gridview_image);
+            rldMainMenu = (LinearLayout) view.findViewById(R.id.android_custom_gridview_layout);
 
         }
 
+    }
+
+    public void clearView()
+    {
+         row_index = -1;
     }
 }

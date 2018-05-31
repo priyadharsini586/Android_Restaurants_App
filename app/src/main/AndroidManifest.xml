@@ -28,11 +28,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.TableActivity"
+        <activity
+            android:name=".activity.TableActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"/>
 
-        </activity>
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.nickteck.restaurantapp"
@@ -52,12 +52,13 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".activity.LoginActivity"
+        <activity
+            android:name=".activity.LoginActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.MenuNavigationActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-
+        <activity android:name=".activity.RatingActivity"></activity>
     </application>
 
 </manifest>

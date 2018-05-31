@@ -48,7 +48,7 @@ import ng.max.slideview.SlideView;
 public class MyOrdersFragment extends Fragment implements MyOrdersAdapter.Callback,GetFromDesktopListener {
 
     View mainView;
-    TextView txtBrodgeIcon;
+    TextView txtBrodgeIcon,txtOrderPlaced;
     ItemModel itemModel;
     RecyclerView myOrderRecycleView;
     MyOrdersAdapter myOrdersAdapter;
@@ -57,7 +57,6 @@ public class MyOrdersFragment extends Fragment implements MyOrdersAdapter.Callba
     RabbitmqServer rabbitmqServer;
     ArrayList<ItemListRequestAndResponseModel.item_list>itemLists;
     Database database ;
-    Spinner cat_spinner;
     public String TAG = MyOrdersFragment.class.getName();
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -78,8 +77,7 @@ public class MyOrdersFragment extends Fragment implements MyOrdersAdapter.Callba
             txtBrodgeIcon.setVisibility(View.VISIBLE);
             txtBrodgeIcon.setText(String.valueOf(itemModel.getListArrayList().size()));
         }
-        cat_spinner = (Spinner)toolbar.findViewById(R.id.cat_spinner);
-        cat_spinner.setVisibility(View.GONE);
+
 
         Log.e("itemList", String.valueOf(itemModel.getListArrayList().size()));
          database = new Database(getActivity());
@@ -204,7 +202,8 @@ public class MyOrdersFragment extends Fragment implements MyOrdersAdapter.Callba
 
             }
         });
-
+        txtOrderPlaced = (TextView)mainView.findViewById(R.id.txtOrderPlaced);
+        txtOrderPlaced.setVisibility(View.GONE);
 //        new RabbitmqServer().execute();
         return mainView;
     }
@@ -214,16 +213,17 @@ public class MyOrdersFragment extends Fragment implements MyOrdersAdapter.Callba
     {
        /* ItemModel itemModel = ItemModel.getInstance();
         itemModel.getListArrayList().clear();*/
-        itemLists.clear();
-        myOrdersAdapter.notifyDataSetChanged();
+       myOrderRecycleView.setVisibility(View.GONE);
+        txtOrderPlaced.setVisibility(View.VISIBLE);
 
         itemModel = ItemModel.getInstance();
+
         if (itemModel.getListArrayList().size() == 0)
         {
             txtBrodgeIcon.setVisibility(View.GONE);
         }else
         {
-            txtBrodgeIcon.setVisibility(View.VISIBLE);
+            txtBrodgeIcon.setVisibility(View.GONE);
             txtBrodgeIcon.setText(String.valueOf(itemModel.getListArrayList().size()));
         }
         txtTotalPrice.setText("Total : 0.0");

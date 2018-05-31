@@ -50,7 +50,7 @@ public class ContentFragment extends Fragment implements View.OnClickListener {
     private int [] sliderList = {R.drawable.cook2,R.drawable.cook3,R.drawable.cook4,R.drawable.cook5};
     private ArrayList<ItemListRequestAndResponseModel> imageModelArrayList;
     View mainView;
-    LinearLayout ldtMenuList,ldtMyOrders,ldtHistoryList,ldtSpinner,ldtFav;
+    LinearLayout ldtMenuList,ldtMyOrders,ldtHistoryList,ldtFav;
     TextView txtBrodgeIcon;
     public ContentFragment() {
         // Required empty public constructor
@@ -94,8 +94,6 @@ public class ContentFragment extends Fragment implements View.OnClickListener {
         tootBarTextViewb.setText(content_text);
 
         txtBrodgeIcon = (TextView)toolbar.findViewById(R.id.txtBrodgeIcon);
-        ldtSpinner = (LinearLayout)toolbar.findViewById(R.id.ldtSpinner);
-        ldtSpinner.setVisibility(View.GONE);
         ItemModel itemModel = ItemModel.getInstance();
         if (itemModel.getListArrayList().size() == 0)
         {

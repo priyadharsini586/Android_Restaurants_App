@@ -41,9 +41,8 @@ public class MenuNavigationActivity extends AppCompatActivity
 
     TextView txtHomeToolBar;
     FrameLayout layBadge;
-    ImageView imgLogOut;
     Database database ;
-    LinearLayout ldtSpinner;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,23 +66,8 @@ public class MenuNavigationActivity extends AppCompatActivity
         txtHomeToolBar = (TextView) findViewById(R.id.txtHomeToolBar);
         txtHomeToolBar.setText("Check");
         layBadge = (FrameLayout) findViewById(R.id.layBadge);
-        ldtSpinner = (LinearLayout) findViewById(R.id.ldtSpinner);
-        ldtSpinner.setVisibility(View.GONE);
-        layBadge.setOnClickListener(this);
 
-        imgLogOut = (ImageView) findViewById(R.id.imgLogOut);
-        imgLogOut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SharedPreferences settings = getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE);
-                settings.edit().clear().commit();
-                database = new Database(getApplicationContext());
-                database.deleteAll();
-                Intent intent = new Intent(getApplicationContext(),TableActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
+        layBadge.setOnClickListener(this);
 
     }
 

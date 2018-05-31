@@ -42,4 +42,18 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
+    <string name="order_placed">Your Order Has been placed</string>
+
+    <!-- user type -->
+    <string name="regular_user">Regular User</string>
+    <string name="new_user">New User</string>
+    <string name="existing_user">Existing User</string>
+    <string name="one_time_user">One Time User</string>
+    <string name="question">As our customer, your opinions are very valuable to us. Please take a few minutes to rate the following:</string>
+
+    <!-- rating question -->
+    <string name="ques1">Our Food Taste -</string>
+    <string name="ques2">Our Food Quality - </string>
+    <string name="ques3">Our Service - </string>
+    <string name="ques4">Restaurant Cleanliness -</string>
 </resources>

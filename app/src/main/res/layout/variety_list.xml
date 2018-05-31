@@ -3,12 +3,19 @@
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="10dp"
-    android:id="@+id/mainView">
+    android:id="@+id/mainView"
+   >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_corner">
 <TextView
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:text="@string/update_item"
     android:id="@+id/txtVarityName"
     android:textColor="@color/black_color"
-    android:textSize="@dimen/item_heading_text_size"/>
+    android:textSize="@dimen/item_heading_text_size"
+    android:padding="5dp"/>
+    </LinearLayout>
 </android.support.constraint.ConstraintLayout>

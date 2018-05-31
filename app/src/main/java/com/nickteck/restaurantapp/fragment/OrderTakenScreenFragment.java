@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -47,6 +48,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.nickteck.restaurantapp.model.Constants.CATEGORY_BASE_URL;
 import static com.nickteck.restaurantapp.model.Constants.ITEM_BASE_URL;
 import static com.nickteck.restaurantapp.model.Constants.SUB_CATEGORY_BASE_URL;
 
@@ -54,25 +56,24 @@ import static com.nickteck.restaurantapp.model.Constants.SUB_CATEGORY_BASE_URL;
 public class OrderTakenScreenFragment extends Fragment implements ItemListener{
     View view;
     ApiInterface apiInterface;
-    RecyclerView variety_recycler_view,item_recycler_view;
+    RecyclerView variety_recycler_view,item_recycler_view,sub_cat_recycler_view,cat_recycler_view;
     SwipeRefreshLayout mSwipeRefreshLayout;
-    ArrayList<ItemListRequestAndResponseModel.cat_list> subCatList,tempSubcatList;
-    ArrayList<String>catList,catId;
+    ArrayList<ItemListRequestAndResponseModel.cat_list> subCatList,tempSubcatList,catList;
     ArrayList<ItemListRequestAndResponseModel.Variety_id_list> varietyIdLists;
     TextView txtBrodgeIcon;
-    CatagoryAdapter gridAdapter;
+    CatagoryAdapter gridAdapter,catagoryAdapter;
     CustomSubCatGridViewAdapter customSubCatGridViewAdapter;
     GridView grid_view_image_text;
     VarietyAdapter varietyAdapter;
     ItemAdapter itemAdapter;
     String cat_id;
     HashMap<String,ArrayList<ItemListRequestAndResponseModel.item_list>> getVarityList = new HashMap<>();
+    HashMap<String,ItemListRequestAndResponseModel.Variety_id_list> hashvarityList = new HashMap<>();
     private  ArrayList<ItemListRequestAndResponseModel.item_list> gridImageList,tempItemList;
     public static ArrayList<ItemListRequestAndResponseModel.item_list> itemList = new ArrayList<>();
     ItemModel itemModel = ItemModel.getInstance();
     TextView txtTotalPrice;
-    LinearLayout ldtPlaceOrder,ldtSpinner;
-    Spinner cat_spinner;
+    LinearLayout ldtPlaceOrder,ldtList;
     private boolean isSpinnerTouched = false;
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -120,47 +121,7 @@ public class OrderTakenScreenFragment extends Fragment implements ItemListener{
             txtBrodgeIcon.setText(String.valueOf(itemModel.getListArrayList().size()));
         }
 
-        ldtSpinner = (LinearLayout) toolbar.findViewById(R.id.ldtSpinner);
-        ldtSpinner.setVisibility(View.VISIBLE);
-        cat_spinner = (Spinner)toolbar.findViewById(R.id.cat_spinner);
-        cat_spinner.setVisibility(View.VISIBLE);
-        cat_spinner.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                isSpinnerTouched = true;
-                return false;
-            }
-        });
-        cat_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Log.e("spinner select",catList.get(position));
-                if (isSpinnerTouched) {
-                    if (position == 0) {
-                        getCatagoryData();
-                        getSubCategoryData();
-                        getVarietyData();
-                        getItemList();
-
-                    } else {
-                        subCatList.clear();
-                        subCatList.addAll(tempSubcatList);
-                        gridImageList.clear();
-                        gridImageList.addAll(tempItemList);
-                        searchItemBasedOnCat(catId.get(position));
-                    }
-                }
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                Log.e("spinner select","nothing selected");
-
-            }
-        });
-
-
+        ldtList = (LinearLayout)view.findViewById(R.id.ldtList);
         txtTotalPrice = (TextView) view.findViewById(R.id.txtTotalPrice);
         ldtPlaceOrder = (LinearLayout) view.findViewById(R.id.ldtPlaceOrder);
         ldtPlaceOrder.setOnClickListener(new View.OnClickListener() {
@@ -195,10 +156,10 @@ public class OrderTakenScreenFragment extends Fragment implements ItemListener{
         });
 
         variety_recycler_view = (RecyclerView) view.findViewById(R.id.variety_recycler_view);
-        variety_recycler_view.addOnItemTouchListener(new RecyclerTouchListener(getActivity(), item_recycler_view, new RecyclerTouchListener.ClickListener() {
+        variety_recycler_view.addOnItemTouchListener(new RecyclerTouchListener(getActivity(), variety_recycler_view, new RecyclerTouchListener.ClickListener() {
             @Override
             public void onClick(View view, int position) {
-                if (position != 0) {
+               /* if (position != 0) {
                     ItemListRequestAndResponseModel.Variety_id_list varietyIdList = varietyIdLists.get(position);
 
                     if (getVarityList.size() != 0) {
@@ -216,7 +177,52 @@ public class OrderTakenScreenFragment extends Fragment implements ItemListener{
 
                     getItemView(cat_id);
 
+                }*/
+
+                ItemListRequestAndResponseModel.Variety_id_list varietyIdList = varietyIdLists.get(position);
+
+                if (getVarityList.size() != 0) {
+                    gridImageList.clear();
+                    for (int i = 0; i < getVarityList.get(varietyIdList.getVariety_id()).size(); i++) {
+                        gridImageList.add(getVarityList.get(varietyIdList.getVariety_id()).get(i));
+                    }
+                    itemAdapter.notifyDataSetChanged();
+                } else {
+                    Toast.makeText(getActivity(), "Please select category", Toast.LENGTH_LONG).show();
                 }
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
+        }));
+        sub_cat_recycler_view = (RecyclerView) view.findViewById(R.id.sub_cat_recycler_view);
+        cat_recycler_view = (RecyclerView) view.findViewById(R.id.cat_recycler_view);
+        cat_recycler_view.addOnItemTouchListener(new RecyclerTouchListener(getActivity(), cat_recycler_view, new RecyclerTouchListener.ClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+
+                ItemListRequestAndResponseModel.cat_list  cat_list = catList.get(position);
+                subCatList.clear();
+                subCatList.addAll(tempSubcatList);
+                gridImageList.clear();
+                gridImageList.addAll(tempItemList);
+                searchItemBasedOnCat(cat_list.getCat_id());
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
+        }));
+        sub_cat_recycler_view.addOnItemTouchListener(new RecyclerTouchListener(getActivity(), sub_cat_recycler_view, new RecyclerTouchListener.ClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                ItemListRequestAndResponseModel.cat_list list = subCatList.get(position);
+                getVarityList = new HashMap<>();
+                cat_id = list.getSub_Cat_id();
+                getItemView(list.getSub_Cat_id());
             }
 
             @Override
@@ -226,18 +232,6 @@ public class OrderTakenScreenFragment extends Fragment implements ItemListener{
         }));
         changePrice();
         item_recycler_view = (RecyclerView) view.findViewById(R.id.item_recycler_view);
-
-        grid_view_image_text = (GridView)view.findViewById(R.id.grid_view_image_text);
-        grid_view_image_text.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int i, long id) {
-                ItemListRequestAndResponseModel.cat_list list = subCatList.get(i);
-                getVarityList = new HashMap<>();
-                cat_id = list.getSub_Cat_id();
-                getItemView(list.getSub_Cat_id());            }
-        });
 
         mSwipeRefreshLayout.setRefreshing(true);
         getCatagoryData();
@@ -262,22 +256,27 @@ public class OrderTakenScreenFragment extends Fragment implements ItemListener{
                     if (itemListRequestAndResponseModel.getStatus_code().equals(Constants.Success))
                     {
                         catList = new ArrayList<>();
-                        catId = new ArrayList<>();
-                        catList.add("All");
-                        catId.add("0");
+
                         ArrayList getItemDetils = itemListRequestAndResponseModel.getCat_list();
                         for (int i = 0; i < getItemDetils.size(); i++) {
                             ItemListRequestAndResponseModel.cat_list  categoryList = (ItemListRequestAndResponseModel.cat_list) getItemDetils.get(i);
-                           catList.add(categoryList.getCat_name());
-                           catId.add(categoryList.getCat_id());
+                            categoryList.setCat_name(categoryList.getCat_name());
+                            String url=CATEGORY_BASE_URL+categoryList.getImage();
+                            categoryList.setCat_id(categoryList.getCat_id());
+                            categoryList.setImage(url);
+                            catList.add(categoryList);
 
                         }
+                        catagoryAdapter=new CatagoryAdapter(getActivity(),catList);
+                        cat_recycler_view.setAdapter(catagoryAdapter);
+                        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false);
+                        cat_recycler_view.setLayoutManager(linearLayoutManager);
+                        final LayoutAnimationController controller =
+                                AnimationUtils.loadLayoutAnimation(getActivity(), R.anim.layout_animation_fall_down);
 
-                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
-                                R.layout.spinner_item,catList);
-                        adapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
-                        cat_spinner.setAdapter(adapter);
-
+                        cat_recycler_view.setLayoutAnimation(controller);
+                        cat_recycler_view.getAdapter().notifyDataSetChanged();
+                        cat_recycler_view.scheduleLayoutAnimation();
                     }
                 }
             }
@@ -376,14 +375,15 @@ public class OrderTakenScreenFragment extends Fragment implements ItemListener{
                         varietyIdLists = new ArrayList<>();
                         ArrayList getItemDetils = new ArrayList();
                         getItemDetils = itemListRequestAndResponseModel.getVariety_id_list();
-                        ItemListRequestAndResponseModel.Variety_id_list model = new ItemListRequestAndResponseModel.Variety_id_list();
+                        /*ItemListRequestAndResponseModel.Variety_id_list model = new ItemListRequestAndResponseModel.Variety_id_list();
                         model.setVariety_name("All");
                         model.setVariety_id("0");
-                        varietyIdLists.add(model);
+                        varietyIdLists.add(model);*/
                         for (int i = 0; i < getItemDetils.size(); i++) {
 
                             ItemListRequestAndResponseModel.Variety_id_list categoryList = (ItemListRequestAndResponseModel.Variety_id_list) getItemDetils.get(i);
                             varietyIdLists.add(categoryList);
+                            hashvarityList.put(categoryList.getVariety_id(),categoryList);
 
                             Log.e("variety",categoryList.getVariety_name());
                         }
@@ -442,22 +442,15 @@ public class OrderTakenScreenFragment extends Fragment implements ItemListener{
                         }
                         tempSubcatList.addAll(subCatList);
                          gridAdapter=new CatagoryAdapter(getActivity(),subCatList);
-
-                        customSubCatGridViewAdapter = new CustomSubCatGridViewAdapter(getActivity(),subCatList);
-                        grid_view_image_text.setAdapter(customSubCatGridViewAdapter);
-
-
-//                        subCatagory.setAdapter(gridAdapter);
-//                        catagory.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.HORIZONTAL));
+                        sub_cat_recycler_view.setAdapter(gridAdapter);
                         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false);
-                       /* subCatagory.setLayoutManager(linearLayoutManager);
+                        sub_cat_recycler_view.setLayoutManager(linearLayoutManager);
                         final LayoutAnimationController controller =
                                 AnimationUtils.loadLayoutAnimation(getActivity(), R.anim.layout_animation_fall_down);
 
-                        subCatagory.setLayoutAnimation(controller);
-                        subCatagory.getAdapter().notifyDataSetChanged();
-                        subCatagory.scheduleLayoutAnimation();*/
-                        gridAdapter.notifyDataSetChanged();
+                        sub_cat_recycler_view.setLayoutAnimation(controller);
+                        sub_cat_recycler_view.getAdapter().notifyDataSetChanged();
+                        sub_cat_recycler_view.scheduleLayoutAnimation();
 
 
                     }
@@ -520,9 +513,12 @@ public class OrderTakenScreenFragment extends Fragment implements ItemListener{
                                     ArrayList<ItemListRequestAndResponseModel.Variety_id_list> varityList = items.getVariety_list();
                                     ArrayList<ItemListRequestAndResponseModel.item_list> itemVarityList = new ArrayList<>();
                                     if (varityList.size() != 0) {
-                                        ArrayList varityId = new ArrayList();
+                                        variety_recycler_view.setVisibility(View.VISIBLE);
+                                        ArrayList<String> varityId = new ArrayList();
+
                                         for (int j = 0; j < varityList.size(); j++) {
                                             ItemListRequestAndResponseModel.Variety_id_list variety_id_list = varityList.get(j);
+
                                             varityId.add(variety_id_list.getVarietyid());
                                             itemVarityList.add(items);
                                             if (getVarityList.containsKey(variety_id_list.getVarietyid())) {
@@ -538,6 +534,21 @@ public class OrderTakenScreenFragment extends Fragment implements ItemListener{
                                             }
                                         }
 
+                                        ArrayList<ItemListRequestAndResponseModel.Variety_id_list> tempVarietyList = new ArrayList<>();
+                                        for (int k = 0 ; k < varityId.size() ; k ++)
+                                        {
+                                            String id = varityId.get(k);
+                                            hashvarityList.get(id);
+                                            tempVarietyList.add(hashvarityList.get(id));
+                                        }
+                                        varietyIdLists.clear();
+                                        varietyAdapter.clearView();
+                                        varietyIdLists.addAll(tempVarietyList);
+                                        varietyAdapter.notifyDataSetChanged();
+
+                                    }else
+                                    {
+                                        variety_recycler_view.setVisibility(View.INVISIBLE);
                                     }
                                 }
                                 itemAdapter = new ItemAdapter(gridImageList, getActivity());
@@ -559,6 +570,7 @@ public class OrderTakenScreenFragment extends Fragment implements ItemListener{
                         {
                             gridImageList.clear();
                             itemAdapter.notifyDataSetChanged();
+                            variety_recycler_view.setVisibility(View.GONE);
                             Toast.makeText(getActivity(),"No Item Found",Toast.LENGTH_LONG).show();
                         }
                     }
@@ -664,10 +676,13 @@ public class OrderTakenScreenFragment extends Fragment implements ItemListener{
                     ItemListRequestAndResponseModel itemListRequestAndResponseModel = response.body();
                     if (itemListRequestAndResponseModel.getStatusCode().equals(Constants.Success))
                     {
-                        if (itemListRequestAndResponseModel.getSub_cat_list() != null)
+                        if (itemListRequestAndResponseModel.getSub_cat_list() != null && itemListRequestAndResponseModel.getSub_cat_list().size() != 0)
                         {
+                            ldtList.setVisibility(View.VISIBLE);
+                            sub_cat_recycler_view.setVisibility(View.VISIBLE);
                             ArrayList<ItemListRequestAndResponseModel.cat_list>sub_cat_list = subCatList;
                             ArrayList<ItemListRequestAndResponseModel.cat_list>tempSubCatList = new ArrayList<>();
+
 
                             for (int i = 0 ; i < itemListRequestAndResponseModel.getSub_cat_list().size() ; i ++)
                             {
@@ -684,34 +699,43 @@ public class OrderTakenScreenFragment extends Fragment implements ItemListener{
                             }
 
                             subCatList.clear();
+                            gridAdapter.clearView();
                             subCatList.addAll(tempSubCatList);
                             gridAdapter.notifyDataSetChanged();
 
-                        }
-                        if (itemListRequestAndResponseModel.getItem_list() != null)
-                        {
-                            ArrayList<ItemListRequestAndResponseModel.item_list>item_list = gridImageList;
-                            ArrayList<ItemListRequestAndResponseModel.item_list>tempItemList = new ArrayList<>();
-
-                            for (int i = 0 ; i < itemListRequestAndResponseModel.getItem_list().size() ; i ++)
+                            if (itemListRequestAndResponseModel.getItem_list() != null)
                             {
-                                ItemListRequestAndResponseModel.item_list subCatList = itemListRequestAndResponseModel.getItem_list().get(i);
-                                for (int j = 0 ; j< item_list.size() ; j++)
+                                ArrayList<ItemListRequestAndResponseModel.item_list>item_list = gridImageList;
+                                ArrayList<ItemListRequestAndResponseModel.item_list>tempItemList = new ArrayList<>();
+
+                                for (int i = 0 ; i < itemListRequestAndResponseModel.getItem_list().size() ; i ++)
                                 {
-                                    ItemListRequestAndResponseModel.item_list cat_list = item_list.get(j);
-                                    if (subCatList.getItem_id().equals(cat_list.getItem_id()))
+                                    ItemListRequestAndResponseModel.item_list subCatList = itemListRequestAndResponseModel.getItem_list().get(i);
+                                    for (int j = 0 ; j< item_list.size() ; j++)
                                     {
-                                        tempItemList.add(cat_list);
+                                        ItemListRequestAndResponseModel.item_list cat_list = item_list.get(j);
+                                        if (subCatList.getItem_id().equals(cat_list.getItem_id()))
+                                        {
+                                            tempItemList.add(cat_list);
+                                        }
                                     }
+
                                 }
+
+                                gridImageList.clear();
+                                gridImageList.addAll(tempItemList);
+                                itemAdapter.notifyDataSetChanged();
 
                             }
 
-                            gridImageList.clear();
-                            gridImageList.addAll(tempItemList);
-                            itemAdapter.notifyDataSetChanged();
-
+                        }else
+                        {
+                            ldtList.setVisibility(View.INVISIBLE);
+                            sub_cat_recycler_view.setVisibility(View.INVISIBLE);
+                            variety_recycler_view.setVisibility(View.INVISIBLE);
+                            Toast.makeText(getActivity(),"No Item Found",Toast.LENGTH_LONG).show();
                         }
+
                     }
                 }
             }
