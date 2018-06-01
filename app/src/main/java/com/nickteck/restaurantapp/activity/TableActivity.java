@@ -18,6 +18,7 @@ import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.nickteck.restaurantapp.Adapter.TableAdapter;
 import com.nickteck.restaurantapp.Db.Database;
 import com.nickteck.restaurantapp.R;
+import com.nickteck.restaurantapp.additional_class.AdditionalClass;
 import com.nickteck.restaurantapp.api.ApiClient;
 import com.nickteck.restaurantapp.api.ApiInterface;
 import com.nickteck.restaurantapp.model.AddWhislist;
@@ -25,6 +26,8 @@ import com.nickteck.restaurantapp.model.Constants;
 import com.nickteck.restaurantapp.model.ItemListRequestAndResponseModel;
 import com.nickteck.restaurantapp.model.LoginRequestAndResponse;
 import com.nickteck.restaurantapp.model.TableModel;
+import com.nickteck.restaurantapp.network.ConnectivityReceiver;
+import com.nickteck.restaurantapp.network.MyApplication;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,7 +39,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class TableActivity extends AppCompatActivity  {
+public class TableActivity extends AppCompatActivity implements ConnectivityReceiver.ConnectivityReceiverListener  {
     TableAdapter tableAdapter;
     ApiInterface apiInterface;
     MaterialSpinner spin;
@@ -48,10 +51,18 @@ public class TableActivity extends AppCompatActivity  {
     CheckBox chkA,chkB,chkC,chkD,chkE,chkF;
     String checkStr = "";
     ProgressBar progressTable;
+    boolean isNetworkConnected;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_table);
+        // checking internet connection is exist or not
+        MyApplication.getInstance().setConnectivityListener(this);
+        if (AdditionalClass.isNetworkAvailable(this)) {
+            isNetworkConnected = true;
+        }else {
+            isNetworkConnected = false;
+        }
         database = new Database(getApplicationContext());
         spin = (MaterialSpinner) findViewById(R.id.tableSpinner);
         //button=(Button)findViewById(R.id.button);
@@ -64,17 +75,22 @@ public class TableActivity extends AppCompatActivity  {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (table != null) {
-                    Intent i = new Intent(TableActivity.this, LoginActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putString("id", table.getId());
-                    bundle.putString("table_name", table.getName());
-                    bundle.putString("sub_name", checkStr);
-                    i.putExtras(bundle);
-                    startActivity(i);
-                    overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
-                    finish();
+                if(isNetworkConnected){
+                    if (table != null) {
+                        Intent i = new Intent(TableActivity.this, LoginActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putString("id", table.getId());
+                        bundle.putString("table_name", table.getName());
+                        bundle.putString("sub_name", checkStr);
+                        i.putExtras(bundle);
+                        startActivity(i);
+                        overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
+                        finish();
+                    }
+                }else {
+                    AdditionalClass.showSnackBar(TableActivity.this);
                 }
+
             }
         });
 
@@ -234,5 +250,14 @@ public class TableActivity extends AppCompatActivity  {
         }
 
 
-
+    @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        if (isNetworkConnected != isConnected) {
+            if (isConnected) {
+            } else {
+                AdditionalClass.showSnackBar(TableActivity.this);
+            }
+        }
+        isNetworkConnected = isConnected;
+    }
 }

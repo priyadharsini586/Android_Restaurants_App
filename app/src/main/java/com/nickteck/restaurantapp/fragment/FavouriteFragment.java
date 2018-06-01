@@ -10,9 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.nickteck.restaurantapp.Adapter.FavouriteAdapter;
 import com.nickteck.restaurantapp.R;
+import com.nickteck.restaurantapp.additional_class.AdditionalClass;
+import com.nickteck.restaurantapp.network.ConnectivityReceiver;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,11 +24,12 @@ import java.util.Arrays;
  * Created by admin on 4/7/2018.
  */
 
-public class FavouriteFragment extends Fragment {
+public class FavouriteFragment extends Fragment implements ConnectivityReceiver.ConnectivityReceiverListener {
     View mainView;
     RecyclerView recyclerView;
     FavouriteAdapter favouriteAdapter;
     TextView txtBrodgeIcon;
+    boolean isNetworkConnected;
     // ArrayList for person names
     ArrayList name = new ArrayList<>(Arrays.asList("briyani", "Chicken", "Noodleas", "Prawn"));
     ArrayList image = new ArrayList<>(Arrays.asList(R.drawable.cook3, R.drawable.cook4, R.drawable.cook5, R.drawable.cook6));
@@ -45,5 +49,20 @@ public class FavouriteFragment extends Fragment {
         favouriteAdapter=new FavouriteAdapter(getActivity(),name,image,description,price);
         recyclerView.setAdapter(favouriteAdapter);
         return mainView;
+    }
+
+    @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        if (isNetworkConnected != isConnected) {
+            if (isConnected) {
+                Toast.makeText(getActivity(), "Network Connected", Toast.LENGTH_LONG).show();
+
+            } else {
+                Toast.makeText(getActivity(), "Network not available", Toast.LENGTH_LONG).show();
+                AdditionalClass.showSnackBar(getActivity());
+
+            }
+        }
+        isNetworkConnected = isConnected;
     }
 }

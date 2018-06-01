@@ -12,7 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.nickteck.restaurantapp.Adapter.ViewPagerAdapter;
 import com.nickteck.restaurantapp.R;
@@ -21,6 +23,8 @@ import com.nickteck.restaurantapp.additional_class.AdditionalClass;
 import com.nickteck.restaurantapp.model.Constants;
 import com.nickteck.restaurantapp.model.ItemListRequestAndResponseModel;
 import com.nickteck.restaurantapp.model.ItemModel;
+import com.nickteck.restaurantapp.network.ConnectivityReceiver;
+import com.nickteck.restaurantapp.network.MyApplication;
 import com.viewpagerindicator.CirclePageIndicator;
 
 import java.util.ArrayList;
@@ -34,7 +38,7 @@ import java.util.TimerTask;
  * Use the {@link ContentFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ContentFragment extends Fragment implements View.OnClickListener {
+public class ContentFragment extends Fragment implements View.OnClickListener,ConnectivityReceiver.ConnectivityReceiverListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -52,6 +56,8 @@ public class ContentFragment extends Fragment implements View.OnClickListener {
     View mainView;
     LinearLayout ldtMenuList,ldtMyOrders,ldtHistoryList,ldtFav;
     TextView txtBrodgeIcon;
+    boolean isNetworkConnected;
+    RelativeLayout rldMainView;
     public ContentFragment() {
         // Required empty public constructor
     }
@@ -88,6 +94,15 @@ public class ContentFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mainView = inflater.inflate(R.layout.fragment_content, container, false);
+
+        MyApplication.getInstance().setConnectivityListener(this);
+        if (AdditionalClass.isNetworkAvailable(getActivity())) {
+            isNetworkConnected = true;
+        }else {
+            isNetworkConnected = false;
+        }
+
+
         Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
         TextView tootBarTextViewb = (TextView)toolbar.findViewById(R.id.txtHomeToolBar);
         String content_text = getResources().getString(R.string.content_fragment);
@@ -105,6 +120,7 @@ public class ContentFragment extends Fragment implements View.OnClickListener {
         }
 
         init();
+        rldMainView = (RelativeLayout)mainView.findViewById(R.id.rldMainView);
         return mainView;
     }
 
@@ -189,29 +205,43 @@ public class ContentFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        switch (v.getId())
-        {
-            case R.id.ldtMenuList:
-                OrderTakenScreenFragment catagoryFragment = new OrderTakenScreenFragment();
-               AdditionalClass.replaceFragment(catagoryFragment, Constants.ORDER_TAKEN_FRAGMENT,(AppCompatActivity)getActivity());
-                break;
+        if(isNetworkConnected){
+            switch (v.getId()) {
+                case R.id.ldtMenuList:
+                    OrderTakenScreenFragment catagoryFragment = new OrderTakenScreenFragment();
+                    AdditionalClass.replaceFragment(catagoryFragment, Constants.ORDER_TAKEN_FRAGMENT,(AppCompatActivity)getActivity());
+                    break;
 
-            case R.id.ldtMyOrders:
-                OrderFragment orderFragment = new OrderFragment();
-                AdditionalClass.replaceFragment(orderFragment,Constants.ORDER_FRAGMENT,(AppCompatActivity)getActivity());
-                break;
+                case R.id.ldtMyOrders:
+                    OrderFragment orderFragment = new OrderFragment();
+                    AdditionalClass.replaceFragment(orderFragment,Constants.ORDER_FRAGMENT,(AppCompatActivity)getActivity());
+                    break;
 
-            case R.id.ldtHistoryList:
-                HistoryFragment historyFragment = new HistoryFragment();
-                AdditionalClass.replaceFragment(historyFragment,Constants.HISTORY_FRAGMENT,(AppCompatActivity) getActivity());
-                break;
+                case R.id.ldtHistoryList:
+                    HistoryFragment historyFragment = new HistoryFragment();
+                    AdditionalClass.replaceFragment(historyFragment,Constants.HISTORY_FRAGMENT,(AppCompatActivity) getActivity());
+                    break;
 
-            case R.id.ldtFav:
-                FavouriteFragment favouriteFragment=new FavouriteFragment();
-                AdditionalClass.replaceFragment(favouriteFragment,Constants.FAVOURITE_FRAGMENT,(AppCompatActivity) getActivity());
-                break;
+                case R.id.ldtFav:
+                    FavouriteFragment favouriteFragment=new FavouriteFragment();
+                    AdditionalClass.replaceFragment(favouriteFragment,Constants.FAVOURITE_FRAGMENT,(AppCompatActivity) getActivity());
+                    break;
+            }
+
+        }else {
+            AdditionalClass.showSnackBar1(rldMainView,"Network not connected...");
         }
+
     }
 
 
+    @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        if (isNetworkConnected != isConnected) {
+            if (isConnected) {
+            } else {
+            }
+        }
+        isNetworkConnected = isConnected;
+    }
 }

@@ -28,6 +28,7 @@ import com.nickteck.restaurantapp.Adapter.CustomSubCatGridViewAdapter;
 import com.nickteck.restaurantapp.Adapter.ItemAdapter;
 import com.nickteck.restaurantapp.Adapter.VarietyAdapter;
 import com.nickteck.restaurantapp.R;
+import com.nickteck.restaurantapp.activity.TableActivity;
 import com.nickteck.restaurantapp.additional_class.AdditionalClass;
 import com.nickteck.restaurantapp.additional_class.RecyclerTouchListener;
 import com.nickteck.restaurantapp.api.ApiClient;
@@ -36,6 +37,7 @@ import com.nickteck.restaurantapp.interfaceFol.ItemListener;
 import com.nickteck.restaurantapp.model.Constants;
 import com.nickteck.restaurantapp.model.ItemListRequestAndResponseModel;
 import com.nickteck.restaurantapp.model.ItemModel;
+import com.nickteck.restaurantapp.network.ConnectivityReceiver;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -53,7 +55,7 @@ import static com.nickteck.restaurantapp.model.Constants.ITEM_BASE_URL;
 import static com.nickteck.restaurantapp.model.Constants.SUB_CATEGORY_BASE_URL;
 
 
-public class OrderTakenScreenFragment extends Fragment implements ItemListener{
+public class OrderTakenScreenFragment extends Fragment implements ItemListener,ConnectivityReceiver.ConnectivityReceiverListener{
     View view;
     ApiInterface apiInterface;
     RecyclerView variety_recycler_view,item_recycler_view,sub_cat_recycler_view,cat_recycler_view;
@@ -75,6 +77,7 @@ public class OrderTakenScreenFragment extends Fragment implements ItemListener{
     TextView txtTotalPrice;
     LinearLayout ldtPlaceOrder,ldtList;
     private boolean isSpinnerTouched = false;
+    boolean isNetworkConnected;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -745,5 +748,15 @@ public class OrderTakenScreenFragment extends Fragment implements ItemListener{
 
             }
         });
+    }
+
+    @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        if (isNetworkConnected != isConnected) {
+            if (isConnected) {
+            } else {
+            }
+        }
+        isNetworkConnected = isConnected;
     }
 }

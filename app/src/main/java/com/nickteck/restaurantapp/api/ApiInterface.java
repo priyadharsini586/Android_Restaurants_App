@@ -5,6 +5,7 @@ import com.nickteck.restaurantapp.model.HistoryModel;
 import com.nickteck.restaurantapp.model.ItemListRequestAndResponseModel;
 import com.nickteck.restaurantapp.model.ItemModel;
 import com.nickteck.restaurantapp.model.LoginRequestAndResponse;
+import com.nickteck.restaurantapp.model.RatingResponseModel;
 import com.nickteck.restaurantapp.model.TableModel;
 
 import org.json.JSONObject;
@@ -63,5 +64,9 @@ public interface ApiInterface {
     @FormUrlEncoded
     @POST("cat_subcat_item_list.php")
     Call<ItemListRequestAndResponseModel> getItemBasedOnCat(@Field("x") JSONObject object);
+
+    @FormUrlEncoded
+    @POST("rating_add.php")
+    Call<RatingResponseModel> getRatingResponse(@Field("x") JSONObject object);
 
 }

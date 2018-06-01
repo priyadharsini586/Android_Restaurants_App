@@ -13,6 +13,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
@@ -42,14 +43,14 @@ public class AdditionalClass {
     }
 
 
-    public static void showSnackBar(Activity context)
-    {
+    public static void showSnackBar(Activity context) {
         TSnackbar snackbar = TSnackbar
                 .make(context.findViewById(android.R.id.content), "Network Not Connected", TSnackbar.LENGTH_LONG)
-                .setAction("Retry", new View.OnClickListener() {
+                .setAction("", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Log.e("Action Button", "onClick triggered");
+
                     }
                 });
         snackbar.setActionTextColor(Color.parseColor("#00628f"));
@@ -63,6 +64,23 @@ public class AdditionalClass {
         snackbar.setDuration(60000);
         snackbar.show();
 
+    }
+
+    public static void showSnackBar1(View view,String msg) {
+        TSnackbar snackbar = TSnackbar.make(view, msg, TSnackbar.LENGTH_LONG);
+        snackbar.setActionTextColor(Color.WHITE);
+        View snackbarView = snackbar.getView();
+
+        ViewGroup.LayoutParams params = snackbarView.getLayoutParams();
+        params.width = view.getWidth();
+        snackbarView.setLayoutParams(params);
+
+        snackbar.setActionTextColor(Color.parseColor("#00628f"));
+        snackbarView.setBackgroundColor(Color.parseColor("#f48220"));
+        TextView textView = (TextView) snackbarView.findViewById(com.androidadvance.topsnackbar.R.id.snackbar_text);
+        textView.setTextColor(Color.BLACK);
+        snackbar.setDuration(5000);
+        snackbar.show();
     }
 
     public static void replaceFragment(Fragment fragment, String fragmentTag,AppCompatActivity context) {

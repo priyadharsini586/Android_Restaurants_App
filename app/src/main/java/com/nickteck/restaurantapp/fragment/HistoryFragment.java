@@ -20,11 +20,15 @@ import com.nickteck.restaurantapp.Adapter.ItemAdapter;
 import com.nickteck.restaurantapp.Db.Database;
 import com.nickteck.restaurantapp.R;
 import com.nickteck.restaurantapp.activity.LoginActivity;
+import com.nickteck.restaurantapp.activity.RatingActivity;
+import com.nickteck.restaurantapp.additional_class.AdditionalClass;
 import com.nickteck.restaurantapp.api.ApiClient;
 import com.nickteck.restaurantapp.api.ApiInterface;
 import com.nickteck.restaurantapp.model.Constants;
 import com.nickteck.restaurantapp.model.HistoryModel;
 import com.nickteck.restaurantapp.model.ItemListRequestAndResponseModel;
+import com.nickteck.restaurantapp.network.ConnectivityReceiver;
+import com.nickteck.restaurantapp.network.MyApplication;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,7 +44,7 @@ import retrofit2.Response;
 import static com.nickteck.restaurantapp.model.Constants.ITEM_BASE_URL;
 
 
-public class HistoryFragment extends Fragment {
+public class HistoryFragment extends Fragment implements ConnectivityReceiver.ConnectivityReceiverListener {
 
     View mainView;
     RecyclerView myHistoryRecycleView;
@@ -50,6 +54,7 @@ public class HistoryFragment extends Fragment {
     ArrayList<ItemListRequestAndResponseModel.item_list> historyList;
     HashMap<String, ItemListRequestAndResponseModel.item_list> itemListDetails;
     HistoryAdapter historyAdapter;
+    boolean isNetworkConnected;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,13 +66,27 @@ public class HistoryFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         mainView = inflater.inflate(R.layout.fragment_history, container, false);
+
+        // checking internet connection is exist or not
+        MyApplication.getInstance().setConnectivityListener(this);
+        if (AdditionalClass.isNetworkAvailable(getActivity())) {
+            isNetworkConnected = true;
+        }else {
+            isNetworkConnected = false;
+        }
         myHistoryRecycleView =(RecyclerView) mainView.findViewById(R.id.myHistoryRecycleView);
         myHistoryRecycleView.setVisibility(View.GONE);
         txtNoHostory  = (TextView) mainView.findViewById(R.id.txtNoHostory);
         txtNoHostory.setVisibility(View.GONE);
         progressHistory = (ProgressBar)mainView.findViewById(R.id.progressHistory);
         progressHistory.setVisibility(View.GONE);
-        getItemDetails();
+
+        if(isNetworkConnected){
+            getItemDetails();
+        }else {
+            AdditionalClass.showSnackBar(getActivity());
+        }
+
 
         return mainView;
     }
@@ -125,7 +144,7 @@ public class HistoryFragment extends Fragment {
         JSONObject jsonObject = new JSONObject();
         Database database =new Database(getActivity());
         try {
-            jsonObject.put("customer_id","48");
+            jsonObject.put("customer_id",database.getCustomerId());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -179,4 +198,13 @@ public class HistoryFragment extends Fragment {
     }
 
 
+    @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        if (isNetworkConnected != isConnected) {
+            if (isConnected) {
+            } else {
+            }
+        }
+        isNetworkConnected = isConnected;
+    }
 }

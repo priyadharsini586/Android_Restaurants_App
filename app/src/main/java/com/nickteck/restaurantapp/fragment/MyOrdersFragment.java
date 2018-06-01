@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -28,12 +29,14 @@ import com.nickteck.restaurantapp.Adapter.MyOrdersAdapter;
 import com.nickteck.restaurantapp.Db.Database;
 import com.nickteck.restaurantapp.R;
 import com.nickteck.restaurantapp.activity.MenuNavigationActivity;
+import com.nickteck.restaurantapp.activity.TableActivity;
 import com.nickteck.restaurantapp.additional_class.AdditionalClass;
 import com.nickteck.restaurantapp.chat.GetFromDesktopListener;
 import com.nickteck.restaurantapp.chat.rabbitmq_server.RabbitmqServer;
 import com.nickteck.restaurantapp.model.Constants;
 import com.nickteck.restaurantapp.model.ItemListRequestAndResponseModel;
 import com.nickteck.restaurantapp.model.ItemModel;
+import com.nickteck.restaurantapp.network.ConnectivityReceiver;
 import com.nickteck.restaurantapp.network.MyApplication;
 
 import org.json.JSONArray;
@@ -45,7 +48,7 @@ import java.util.ArrayList;
 import ng.max.slideview.SlideView;
 
 
-public class MyOrdersFragment extends Fragment implements MyOrdersAdapter.Callback,GetFromDesktopListener {
+public class MyOrdersFragment extends Fragment implements MyOrdersAdapter.Callback,GetFromDesktopListener,ConnectivityReceiver.ConnectivityReceiverListener {
 
     View mainView;
     TextView txtBrodgeIcon,txtOrderPlaced;
@@ -57,11 +60,21 @@ public class MyOrdersFragment extends Fragment implements MyOrdersAdapter.Callba
     RabbitmqServer rabbitmqServer;
     ArrayList<ItemListRequestAndResponseModel.item_list>itemLists;
     Database database ;
+    boolean isNetworkConnected;
+    CoordinatorLayout coordinatorLayout;
     public String TAG = MyOrdersFragment.class.getName();
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mainView =  inflater.inflate(R.layout.fragment_my_orders, container, false);
+        MyApplication.getInstance().setConnectivityListener(this);
+        if (AdditionalClass.isNetworkAvailable(getActivity())) {
+            isNetworkConnected = true;
+        }else {
+            isNetworkConnected = false;
+        }
+
+
         // Inflate the layout for this fragment
         Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
         TextView tootBarTextViewb = (TextView)toolbar.findViewById(R.id.txtHomeToolBar);
@@ -87,6 +100,7 @@ public class MyOrdersFragment extends Fragment implements MyOrdersAdapter.Callba
         myOrderRecycleView.setAdapter(myOrdersAdapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         myOrderRecycleView.setLayoutManager(linearLayoutManager);
+        coordinatorLayout = (CoordinatorLayout)getActivity().findViewById(R.id.snackbar_id);
         myOrdersAdapter.notifyDataSetChanged();
 
         myOrdersAdapter.setListener(MyOrdersFragment.this);
@@ -128,10 +142,15 @@ public class MyOrdersFragment extends Fragment implements MyOrdersAdapter.Callba
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
 
-                                sendToDesktop();
-                                itemModel.setAlreadyPlace(true);
-                                txtPlaceItem.setVisibility(View.GONE);
-                                txtUpdateItem.setVisibility(View.VISIBLE);
+                                if(isNetworkConnected){
+                                    sendToDesktop();
+                                    itemModel.setAlreadyPlace(true);
+                                    txtPlaceItem.setVisibility(View.GONE);
+                                    txtUpdateItem.setVisibility(View.VISIBLE);
+                                }else {
+                                    AdditionalClass.showSnackBar1(coordinatorLayout,"Network Not Connected");
+                                }
+
 
                             }
                         })
@@ -177,16 +196,19 @@ public class MyOrdersFragment extends Fragment implements MyOrdersAdapter.Callba
 
 //
                                 Log.e(TAG, "onClick: "+ itemModel.isAlreadyPlace());
-                                if (!itemModel.isAlreadyPlace())
-                                {
+                                if(isNetworkConnected){
+                                if (!itemModel.isAlreadyPlace()) {
                                     sendToDesktop();
                                     itemModel.setAlreadyPlace(true);
                                     txtPlaceItem.setVisibility(View.GONE);
                                     txtUpdateItem.setVisibility(View.VISIBLE);
                                     removeItemFromOrderItem();
-                                }else
-                                {
+                                    }else {
                                     Toast.makeText(getActivity(),"Already send to Desktop",Toast.LENGTH_LONG).show();
+                                    }
+                                }else {
+                                   // Toast.makeText(getActivity(), "Network not available", Toast.LENGTH_SHORT).show();
+                                    AdditionalClass.showSnackBar1(coordinatorLayout,"Network Not Connected");
                                 }
 
 
@@ -286,42 +308,45 @@ public class MyOrdersFragment extends Fragment implements MyOrdersAdapter.Callba
     }
 
 
-    public void sendToDesktop()
-    {
-        String message;
-        JSONObject json = new JSONObject();
+    public void sendToDesktop() {
 
-        try {
-            json.put("table", database.getData());
-            json.put("from", "mobile");
-            json.put("cus_id",database.getCustomerId());
-            JSONArray itemArray = new JSONArray();
-            for (int i=0;i<itemModel.getListArrayList().size();i++)
-            {
-                ItemListRequestAndResponseModel.item_list  item_list = itemModel.getListArrayList().get(i);
-                JSONObject item = new JSONObject();
-                item.put("item_name",item_list.getItem_name());
-                item.put("qty",item_list.getQty());
-                item.put("item_id",item_list.getItem_id());
-                item.put("price",item_list.getPrice());
-                item.put("short_code",item_list.getShort_code());
-                if (item_list.getNotes() == null)
+            String message;
+            JSONObject json = new JSONObject();
+
+            try {
+                json.put("table", database.getData());
+                json.put("from", "mobile");
+                json.put("cus_id",database.getCustomerId());
+                JSONArray itemArray = new JSONArray();
+                for (int i=0;i<itemModel.getListArrayList().size();i++)
                 {
-                    item.put("notes","notes");
-                }else {
-                item.put("notes",item_list.getNotes());
+                    ItemListRequestAndResponseModel.item_list  item_list = itemModel.getListArrayList().get(i);
+                    JSONObject item = new JSONObject();
+                    item.put("item_name",item_list.getItem_name());
+                    item.put("qty",item_list.getQty());
+                    item.put("item_id",item_list.getItem_id());
+                    item.put("price",item_list.getPrice());
+                    item.put("short_code",item_list.getShort_code());
+                    if (item_list.getNotes() == null)
+                    {
+                        item.put("notes","notes");
+                    }else {
+                        item.put("notes",item_list.getNotes());
+                    }
+                    itemArray.put(item);
                 }
-                itemArray.put(item);
+                json.put("Item_list", itemArray);
+
+                message = json.toString();
+                rabbitmqServer = new RabbitmqServer();
+                rabbitmqServer.sendMsg(message);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-            json.put("Item_list", itemArray);
 
-            message = json.toString();
-            rabbitmqServer = new RabbitmqServer();
-            rabbitmqServer.sendMsg(message);
 
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+
 
 
 
@@ -418,5 +443,16 @@ public class MyOrdersFragment extends Fragment implements MyOrdersAdapter.Callba
         }
 
 
+    }
+
+
+    @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        if (isNetworkConnected != isConnected) {
+            if (isConnected) {
+            } else {
+            }
+        }
+        isNetworkConnected = isConnected;
     }
 }

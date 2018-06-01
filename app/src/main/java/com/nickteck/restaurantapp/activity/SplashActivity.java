@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.nickteck.restaurantapp.Db.Database;
 import com.nickteck.restaurantapp.R;
+import com.nickteck.restaurantapp.additional_class.AdditionalClass;
 import com.nickteck.restaurantapp.network.ConnectivityReceiver;
 import com.nickteck.restaurantapp.network.MyApplication;
 
@@ -29,18 +30,27 @@ public class SplashActivity extends AppCompatActivity implements ConnectivityRec
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         MyApplication.getInstance().setConnectivityListener(this);
+        if (AdditionalClass.isNetworkAvailable(this)) {
+            isNetworkConnected = true;
+        }else {
+            isNetworkConnected = false;
+        }
         database = new Database(getApplicationContext());
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
 
+                    if(isNetworkConnected){
+                        Intent i = new Intent(SplashActivity.this,TableActivity.class);
+                        startActivity(i);
+                        overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
+                        finish();
+                    }else {
+                        AdditionalClass.showSnackBar(SplashActivity.this);
+                    }
 
-                    Intent i = new Intent(SplashActivity.this,RatingActivity.class);
-                    startActivity(i);
-                    overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
-                    finish();
                 
-                finish();
+
             }
         }, SPLASH_TIME_OUT);
 

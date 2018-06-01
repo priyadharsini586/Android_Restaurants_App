@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -22,12 +23,12 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.nickteck.restaurantapp.Adapter.OrderAdapter;
 import com.nickteck.restaurantapp.Db.Database;
 import com.nickteck.restaurantapp.R;
 import com.nickteck.restaurantapp.additional_class.AdditionalClass;
-import com.nickteck.restaurantapp.fragment.CatagoryFragment;
 import com.nickteck.restaurantapp.fragment.ContentFragment;
 import com.nickteck.restaurantapp.fragment.FavouriteFragment;
 import com.nickteck.restaurantapp.fragment.HistoryFragment;
@@ -35,22 +36,33 @@ import com.nickteck.restaurantapp.fragment.MyOrdersFragment;
 import com.nickteck.restaurantapp.fragment.OrderFragment;
 import com.nickteck.restaurantapp.fragment.OrderTakenScreenFragment;
 import com.nickteck.restaurantapp.model.Constants;
+import com.nickteck.restaurantapp.network.ConnectivityReceiver;
+import com.nickteck.restaurantapp.network.MyApplication;
 
 public class MenuNavigationActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
+        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener,ConnectivityReceiver.ConnectivityReceiverListener  {
 
     TextView txtHomeToolBar;
     FrameLayout layBadge;
-    Database database ;
+    Database database;
+    boolean isNetworkConnected;
+    CoordinatorLayout coordinatorLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_navigation);
+        // checking internet connection is exist or not
+        MyApplication.getInstance().setConnectivityListener(this);
+        if (AdditionalClass.isNetworkAvailable(this)) {
+            isNetworkConnected = true;
+        }else {
+            isNetworkConnected = false;
+        }
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-
+        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.snackbar_id);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -108,27 +120,42 @@ public class MenuNavigationActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
-        if (id == R.id.nav_menu) {
-            OrderTakenScreenFragment catagoryFragment = new OrderTakenScreenFragment();
-            AdditionalClass.replaceFragment(catagoryFragment,Constants.ORDER_TAKEN_FRAGMENT,MenuNavigationActivity.this);
-
-        } else if (id == R.id.nav_gallery) {
-            FavouriteFragment favouriteFragment=new FavouriteFragment();
-            AdditionalClass.replaceFragment(favouriteFragment,Constants.FAVOURITE_FRAGMENT,MenuNavigationActivity.this);
-
-
-        } else if (id == R.id.nav_my_orders) {
-            OrderFragment orderFragment = new OrderFragment();
-            AdditionalClass.replaceFragment(orderFragment,Constants.ORDER_FRAGMENT,MenuNavigationActivity.this);
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_history) {
-            HistoryFragment myOrdersFragment = new HistoryFragment();
-            AdditionalClass.replaceFragment(myOrdersFragment,Constants.HISTORY_FRAGMENT,MenuNavigationActivity.this);
+        if (AdditionalClass.isNetworkAvailable(this)) {
+            isNetworkConnected = true;
+        }else {
+            isNetworkConnected = false;
         }
+
+        if(isNetworkConnected){
+            if (id == R.id.nav_menu) {
+                OrderTakenScreenFragment catagoryFragment = new OrderTakenScreenFragment();
+                AdditionalClass.replaceFragment(catagoryFragment,Constants.ORDER_TAKEN_FRAGMENT,MenuNavigationActivity.this);
+
+            } else if (id == R.id.nav_gallery) {
+                FavouriteFragment favouriteFragment=new FavouriteFragment();
+                AdditionalClass.replaceFragment(favouriteFragment,Constants.FAVOURITE_FRAGMENT,MenuNavigationActivity.this);
+
+
+            } else if (id == R.id.nav_my_orders) {
+                OrderFragment orderFragment = new OrderFragment();
+                AdditionalClass.replaceFragment(orderFragment,Constants.ORDER_FRAGMENT,MenuNavigationActivity.this);
+            } else if (id == R.id.nav_manage) {
+
+            } else if (id == R.id.nav_share) {
+
+            } else if (id == R.id.nav_history) {
+                HistoryFragment myOrdersFragment = new HistoryFragment();
+                AdditionalClass.replaceFragment(myOrdersFragment,Constants.HISTORY_FRAGMENT,MenuNavigationActivity.this);
+            }else if(id == R.id.nav_about_us){
+                Intent intent = new Intent(this,RatingActivity.class);
+                startActivity(intent);
+            }
+
+        }else {
+            AdditionalClass.showSnackBar1(coordinatorLayout,"Network Not Connected");
+        }
+
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -144,6 +171,17 @@ public class MenuNavigationActivity extends AppCompatActivity
                 AdditionalClass.replaceFragment(myOrdersFragment,Constants.MY_ORDERS_FRAGMENT,MenuNavigationActivity.this);
                 break;
         }
+    }
+
+    @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        if (isNetworkConnected != isConnected) {
+            if (isConnected) {
+            } else {
+            }
+        }
+        isNetworkConnected = isConnected;
+
     }
 
   /*  public void replaceFragment(Fragment fragment, String fragmentTag) {

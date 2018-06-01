@@ -33,6 +33,8 @@
     <string name="update_item">Update Item</string>
     <string name="category">Category List</string>
 
+    <string name="suggestion_hint">Please Enter Your Comments...</string>
+
     <!--toolbar text-->
     <string name="content_fragment">Dashboard</string>
     <string name="category_fragment">Category</string>

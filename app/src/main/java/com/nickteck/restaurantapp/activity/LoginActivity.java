@@ -373,41 +373,45 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
 
-    public void checkNumberLogin()
-    {
-        progressBar.setVisibility(View.VISIBLE);
-        ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("phone",edtPhone.getText().toString().trim());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        Call<LoginRequestAndResponse> loginRequestAndResponseCall = apiInterface.clientDetailsByNum(jsonObject);
-        loginRequestAndResponseCall.enqueue(new Callback<LoginRequestAndResponse>() {
-            @Override
-            public void onResponse(Call<LoginRequestAndResponse> call, Response<LoginRequestAndResponse> response) {
-                if (response.isSuccessful())
-                {
-                    LoginRequestAndResponse loginRequestAndResponse = response.body();
-                    if (loginRequestAndResponse.getStatusCode().equals(Constants.Success))
+    public void checkNumberLogin() {
+        if(isNetworkConnected){
+            progressBar.setVisibility(View.VISIBLE);
+            ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("phone",edtPhone.getText().toString().trim());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            Call<LoginRequestAndResponse> loginRequestAndResponseCall = apiInterface.clientDetailsByNum(jsonObject);
+            loginRequestAndResponseCall.enqueue(new Callback<LoginRequestAndResponse>() {
+                @Override
+                public void onResponse(Call<LoginRequestAndResponse> call, Response<LoginRequestAndResponse> response) {
+                    if (response.isSuccessful())
                     {
-                        edtAddress.setText(loginRequestAndResponse.getAddress());
-                        edtName.setText(loginRequestAndResponse.getName());
-                        edtMailId.setText(loginRequestAndResponse.getEmail());
-                        progressBar.setVisibility(View.GONE);
-                        AdditionalClass.hideKeyboard(LoginActivity.this);
-                    }else
-                    {
-                        Toast.makeText(getApplicationContext(),loginRequestAndResponse.getStatusMessage(),Toast.LENGTH_LONG).show();
+                        LoginRequestAndResponse loginRequestAndResponse = response.body();
+                        if (loginRequestAndResponse.getStatusCode().equals(Constants.Success))
+                        {
+                            edtAddress.setText(loginRequestAndResponse.getAddress());
+                            edtName.setText(loginRequestAndResponse.getName());
+                            edtMailId.setText(loginRequestAndResponse.getEmail());
+                            progressBar.setVisibility(View.GONE);
+                            AdditionalClass.hideKeyboard(LoginActivity.this);
+                        }else
+                        {
+                            Toast.makeText(getApplicationContext(),loginRequestAndResponse.getStatusMessage(),Toast.LENGTH_LONG).show();
+                        }
                     }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<LoginRequestAndResponse> call, Throwable t) {
+                @Override
+                public void onFailure(Call<LoginRequestAndResponse> call, Throwable t) {
 
-            }
-        });
+                }
+            });
+        }else {
+            AdditionalClass.showSnackBar(LoginActivity.this);
+        }
+
     }
 }

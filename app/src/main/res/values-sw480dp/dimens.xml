@@ -14,4 +14,7 @@
     <dimen name="item_heading_text_size">17sp</dimen>
     <dimen name="item_des_text_size">15sp</dimen>
     <dimen name="item_price_text_size">16sp</dimen>
+
+    <dimen name="rating_star_height">50dp</dimen>
+    <dimen name="rating_star_text_header">10sp</dimen>
 </resources>
