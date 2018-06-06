@@ -18,7 +18,9 @@ import android.view.animation.LayoutAnimationController;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,7 +29,9 @@ import com.nickteck.restaurantapp.Adapter.CatagoryAdapter;
 import com.nickteck.restaurantapp.Adapter.CustomSubCatGridViewAdapter;
 import com.nickteck.restaurantapp.Adapter.ItemAdapter;
 import com.nickteck.restaurantapp.Adapter.VarietyAdapter;
+import com.nickteck.restaurantapp.Db.Database;
 import com.nickteck.restaurantapp.R;
+import com.nickteck.restaurantapp.activity.RatingActivity;
 import com.nickteck.restaurantapp.activity.TableActivity;
 import com.nickteck.restaurantapp.additional_class.AdditionalClass;
 import com.nickteck.restaurantapp.additional_class.RecyclerTouchListener;
@@ -35,8 +39,11 @@ import com.nickteck.restaurantapp.api.ApiClient;
 import com.nickteck.restaurantapp.api.ApiInterface;
 import com.nickteck.restaurantapp.interfaceFol.ItemListener;
 import com.nickteck.restaurantapp.model.Constants;
+import com.nickteck.restaurantapp.model.FavouriteListData;
 import com.nickteck.restaurantapp.model.ItemListRequestAndResponseModel;
 import com.nickteck.restaurantapp.model.ItemModel;
+import com.nickteck.restaurantapp.model.LoginRequestAndResponse;
+import com.nickteck.restaurantapp.model.RatingResponseModel;
 import com.nickteck.restaurantapp.network.ConnectivityReceiver;
 
 import org.json.JSONException;
@@ -78,6 +85,13 @@ public class OrderTakenScreenFragment extends Fragment implements ItemListener,C
     LinearLayout ldtPlaceOrder,ldtList;
     private boolean isSpinnerTouched = false;
     boolean isNetworkConnected;
+    Database database;
+    ArrayList<FavouriteListData.FavouriteListDetails> favouriteListDetails_adapter;
+    private ProgressBar progress_ratings;
+    private ArrayList<String> itemIdList = new ArrayList();
+    private String localItemId;
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -127,6 +141,7 @@ public class OrderTakenScreenFragment extends Fragment implements ItemListener,C
         ldtList = (LinearLayout)view.findViewById(R.id.ldtList);
         txtTotalPrice = (TextView) view.findViewById(R.id.txtTotalPrice);
         ldtPlaceOrder = (LinearLayout) view.findViewById(R.id.ldtPlaceOrder);
+        progress_ratings = (ProgressBar) view.findViewById(R.id.progress_ratings);
         ldtPlaceOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -240,9 +255,13 @@ public class OrderTakenScreenFragment extends Fragment implements ItemListener,C
         getCatagoryData();
         getSubCategoryData();
         getVarietyData();
-        getItemList();
+        // get Favourite list for to check the item id in adapter
+        getFavouriteListApi();
         return view;
     }
+
+
+
 
     private void getCatagoryData() {
 
@@ -312,12 +331,13 @@ public class OrderTakenScreenFragment extends Fragment implements ItemListener,C
                             items.setDescription(items.getDescription());
                             items.setPrice(items.getPrice());
                             items.setImage(items.getImage());
+                            if (itemIdList.contains(items.getItem_id()))
+                                items.setFavorite(true);
                             String url=ITEM_BASE_URL+items.getImage();
                             Log.e("sub catagory url",url);
                             items.setFavourite("0");
                             items.setImage(url);
-                            for (int j = 0 ; j < itemModel.getListArrayList().size();j++)
-                            {
+                            for (int j = 0 ; j < itemModel.getListArrayList().size();j++) {
                                 ItemListRequestAndResponseModel.item_list item_list = itemModel.getListArrayList().get(j);
                                 if (item_list.getItem_id().equals(items.getItem_id()))
                                 {
@@ -334,7 +354,7 @@ public class OrderTakenScreenFragment extends Fragment implements ItemListener,C
 
                         }
                         tempItemList.addAll(gridImageList);
-                        itemAdapter=new ItemAdapter(gridImageList,getActivity());
+                        itemAdapter=new ItemAdapter(gridImageList,favouriteListDetails_adapter,getActivity(),getActivity(),OrderTakenScreenFragment.this );
                         itemAdapter.setListener(OrderTakenScreenFragment.this);
                         item_recycler_view.setAdapter(itemAdapter);
                         final LayoutAnimationController controller =
@@ -496,6 +516,8 @@ public class OrderTakenScreenFragment extends Fragment implements ItemListener,C
                                     items.setDescription(items.getDescription());
                                     items.setPrice(items.getPrice());
                                     items.setImage(items.getImage());
+                                    if (itemIdList.contains(items.getItem_id()))
+                                        items.setFavorite(true);
                                     String url = ITEM_BASE_URL + items.getImage();
                                     Log.e("url", url);
                                     items.setFavourite("0");
@@ -554,7 +576,7 @@ public class OrderTakenScreenFragment extends Fragment implements ItemListener,C
                                         variety_recycler_view.setVisibility(View.INVISIBLE);
                                     }
                                 }
-                                itemAdapter = new ItemAdapter(gridImageList, getActivity());
+                                itemAdapter = new ItemAdapter(gridImageList,favouriteListDetails_adapter,getActivity(),getActivity(),OrderTakenScreenFragment.this);
                                 itemAdapter.setListener(OrderTakenScreenFragment.this);
                                 item_recycler_view.setAdapter(itemAdapter);
                                 final LayoutAnimationController controller =
@@ -731,8 +753,7 @@ public class OrderTakenScreenFragment extends Fragment implements ItemListener,C
 
                             }
 
-                        }else
-                        {
+                        }else{
                             ldtList.setVisibility(View.INVISIBLE);
                             sub_cat_recycler_view.setVisibility(View.INVISIBLE);
                             variety_recycler_view.setVisibility(View.INVISIBLE);
@@ -759,4 +780,101 @@ public class OrderTakenScreenFragment extends Fragment implements ItemListener,C
         }
         isNetworkConnected = isConnected;
     }
+
+    public void addFavouriteApi(String getSpecificItemId, final int pos) {
+        localItemId = getSpecificItemId;
+        database = new Database(getActivity());
+        // api call for the add favourite list
+        apiInterface = ApiClient.getClient().create(ApiInterface.class);
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("customer_id", database.getCustomerId());
+            jsonObject.put("item_id", getSpecificItemId);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Call<LoginRequestAndResponse> ratingResponseModelCall = apiInterface.addFavouriteList(jsonObject);
+        ratingResponseModelCall.enqueue(new Callback<LoginRequestAndResponse>() {
+            @Override
+            public void onResponse(Call<LoginRequestAndResponse> call, Response<LoginRequestAndResponse> response) {
+                if (response.isSuccessful()){
+                    if(response.body().getStatusCode().equals("1")){
+                        Toast.makeText(getActivity(), "Favourite Added Successfully", Toast.LENGTH_SHORT).show();
+                        ItemListRequestAndResponseModel.item_list item_list = gridImageList.get(pos);
+                        item_list.setFavorite(true);
+                        itemAdapter.notifyDataSetChanged();
+                        itemAdapter.currentChangeFavouriteIcon();
+                    }else {
+                        Toast.makeText(getActivity(), "Favorite Already Exists.", Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+            }
+            @Override
+            public void onFailure(Call<LoginRequestAndResponse> call, Throwable t) {
+                Toast.makeText(getActivity(), "Server Error", Toast.LENGTH_SHORT).show();
+                progress_ratings.setVisibility(View.GONE);
+
+            }
+        });
+
+
+    }
+
+
+    private void getFavouriteListApi() {
+        database = new Database(getActivity());
+        favouriteListDetails_adapter = new ArrayList<>();
+        apiInterface = ApiClient.getClient().create(ApiInterface.class);
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("customer_id", database.getCustomerId());
+
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+
+        final Call<FavouriteListData> favouriteListDataCall = apiInterface.FavouriteListDetails(jsonObject);
+        favouriteListDataCall.enqueue(new Callback<FavouriteListData>() {
+
+
+            @Override
+            public void onResponse(Call<FavouriteListData> call, Response<FavouriteListData> response) {
+                if (response.isSuccessful()) {
+                    if (response.body().getStatus_code().equals("1")) {
+                        FavouriteListData favouriteListData = response.body();
+                        itemIdList = new ArrayList<>();
+                        for (int i = 0; i < favouriteListData.getList().size(); i++) {
+                            favouriteListData.getList().get(i).getSno();
+                            favouriteListData.getList().get(i).getItem_id();
+                            String itemId = favouriteListData.getList().get(i).getItem_id();
+                            itemIdList.add(itemId);
+                          /*  FavouriteListData.FavouriteListDetails favouriteListDetails = favouriteListData.getList().get(i);
+                            favouriteListDetails_adapter.add(favouriteListDetails);*/
+                        }
+
+                      //  itemAdapter.currentChangeFavouriteIcon();
+
+
+                        //itemAdapter.ItemAdapterCall();
+
+                        getItemList();
+
+                    }else if (response.body().getStatus_code().equals(Constants.Failure)) {
+                        getItemList();
+                    }
+                }
+            }
+
+
+            @Override
+            public void onFailure(Call<FavouriteListData> call, Throwable t) {
+
+            }
+        });
+
+
+
+    }
+
 }

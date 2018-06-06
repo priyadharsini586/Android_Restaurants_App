@@ -6,7 +6,20 @@ package com.nickteck.restaurantapp.model;
 
 public class LoginRequestAndResponse {
 
-    public String status_code,status_message,no_of_visit,success,customer_id,Status_code,current_ip,Email,Address,Name,Status_message;
+    public String
+            status_code,
+            status_message,
+            success,
+            no_of_visit,
+            customer_id,
+            current_ip,
+            Email,
+            Address,
+            Name,
+            Status_code,
+            Status_message;
+
+
 
     public String getEmail() {
         return Email;

@@ -246,6 +246,15 @@ public class ItemListRequestAndResponseModel {
         int qty;
         ArrayList<Variety_id_list>variety_list  = new ArrayList();
         String notes,date;
+        boolean isFavorite =false;
+
+        public boolean isFavorite() {
+            return isFavorite;
+        }
+
+        public void setFavorite(boolean favorite) {
+            isFavorite = favorite;
+        }
 
         public String getDate() {
             return date;

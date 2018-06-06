@@ -9,4 +9,6 @@
     <color name="purple">#008ccd</color>
     <color name="green_color">#00b200</color>
     <color name="brown_color">#785853</color>
+
+    <color name="item_background_color">#e8eaea</color>
 </resources>

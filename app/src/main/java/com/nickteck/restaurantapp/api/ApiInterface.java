@@ -1,6 +1,7 @@
 package com.nickteck.restaurantapp.api;
 
 import com.nickteck.restaurantapp.model.AddWhislist;
+import com.nickteck.restaurantapp.model.FavouriteListData;
 import com.nickteck.restaurantapp.model.HistoryModel;
 import com.nickteck.restaurantapp.model.ItemListRequestAndResponseModel;
 import com.nickteck.restaurantapp.model.ItemModel;
@@ -68,5 +69,18 @@ public interface ApiInterface {
     @FormUrlEncoded
     @POST("rating_add.php")
     Call<RatingResponseModel> getRatingResponse(@Field("x") JSONObject object);
+
+
+    @FormUrlEncoded
+    @POST("favourite_add.php")
+    Call<LoginRequestAndResponse> addFavouriteList(@Field("x") JSONObject object);
+
+    @FormUrlEncoded
+    @POST("favourite_list.php")
+    Call<FavouriteListData> FavouriteListDetails(@Field("x") JSONObject object);
+
+    @FormUrlEncoded
+    @POST("favourite_delete.php")
+    Call<LoginRequestAndResponse> FavouriteDelete(@Field("x") JSONObject object);
 
 }
