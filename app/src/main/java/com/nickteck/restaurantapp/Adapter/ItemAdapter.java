@@ -199,8 +199,8 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
                 .load(holder.list.getImage()) // image url goes here
                 .placeholder(R.drawable.cook8)
                 .into(imageView_selected_image);
-        description.setText(" Description : "+ holder.list.getDescription());
-        selected_food_price.setText(" RS : "+ holder.list.getPrice());
+        description.setText(holder.list.getDescription());
+        selected_food_price.setText(holder.list.getPrice());
 
         alertbox.setView(alertLayout);
         final AlertDialog alert = alertbox.create();
@@ -222,9 +222,9 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
 
         ItemListRequestAndResponseModel.item_list item_list = gridImageList.get(position);
         if (item_list.isFavorite()) {
-            favouriate_iamge.setImageResource(R.mipmap.ic_like_heart);
+            favouriate_iamge.setImageResource(R.mipmap.t1_filled_heart);
         }else {
-            favouriate_iamge.setImageResource(R.mipmap.ic_unclick_heart);
+            favouriate_iamge.setImageResource(R.mipmap.ic_ic_unclickheart);
         }
 
         imageClose.setOnClickListener(new View.OnClickListener() {
@@ -245,7 +245,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
     }
 
     public void currentChangeFavouriteIcon(){
-        favouriate_iamge.setImageResource(R.mipmap.ic_like_heart);
+        favouriate_iamge.setImageResource(R.mipmap.t1_filled_heart);
     }
 
     @Override

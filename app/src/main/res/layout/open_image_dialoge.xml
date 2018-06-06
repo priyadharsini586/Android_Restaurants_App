@@ -14,6 +14,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:padding="10dp"
             android:src="@mipmap/ic_cancel_image"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
@@ -29,7 +30,7 @@
             <ImageView
                 android:id="@+id/selected_image_dialoge"
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
+                android:layout_height="@dimen/favourite_image_height"
                 android:layout_gravity="center"
                 android:src="@drawable/cook2" />
         </LinearLayout>
@@ -44,48 +45,76 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_gravity="center"
                 android:layout_weight="0.5">
 
-                <TextView
-                    android:id="@+id/image_description"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="20sp"
-                    android:text="This food is my favouriate "
-                    android:layout_margin="10dp" />
+                    android:layout_marginLeft="10dp">
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="15dp"
+                        android:textSize="@dimen/favourite_image_item_description"
+                        android:text="Description :"
+                        android:textStyle="bold"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center">
+                    <TextView
+                        android:id="@+id/image_description"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="5dp"
+                        android:textSize="@dimen/favourite_image_item_description"
+                        android:text="This foodfghg " />
+
+                </LinearLayout>
             </LinearLayout>
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="0.5">
+                android:layout_weight="0.5"
+                android:orientation="horizontal">
 
                 <ImageView
                     android:id="@+id/favorite_image_click"
-                    android:layout_marginLeft="20dp"
-                    android:layout_gravity="center"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@mipmap/ic_unclick_heart" />
+                    android:layout_gravity="center" />
 
-                <TextView
-                    android:id="@+id/selected_item_price"
-                    android:layout_width="match_parent"
+                <LinearLayout
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:textSize="20sp"
-                    android:textAlignment="center"
-                    android:text="1378"
-                    />
+                    android:layout_marginLeft="@dimen/layout_margin_left"
+                    android:layout_gravity="center">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/favourite_image_item_price"
+                        android:text="Rs :"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/selected_item_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/favourite_image_item_price"
+                        android:layout_gravity="center"
+                        android:paddingLeft="10dp"
+                        android:text="1378" />
+                </LinearLayout>
 
 
             </LinearLayout>
-
-
-
         </LinearLayout>
-
     </LinearLayout>
 
 

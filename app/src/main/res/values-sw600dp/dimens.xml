@@ -18,4 +18,14 @@
 
     <dimen name="rating_star_height">300dp</dimen>
     <dimen name="rating_star_text_header">22sp</dimen>
+
+    <!-- favourite image alert- dialoge  xml-->
+    <dimen name="favourite_image_height">250dp</dimen>
+    <dimen name="favourite_image_item_name">17sp</dimen>
+    <dimen name="favourite_image_item_description">22sp</dimen>
+    <dimen name="favourite_image_item_price">22sp</dimen>
+
+    <!--margin left for favourite dialoge -->
+    <dimen name="margin_left_heart">20dp</dimen>
+    <dimen name="layout_margin_left">20dp</dimen>
 </resources>

@@ -66,6 +66,8 @@
                             android:id="@+id/favorite_cancel_button"
                             android:layout_width="wrap_content"
                             android:layout_alignParentEnd="true"
+                            android:paddingLeft="15dp"
+                            android:paddingBottom="15dp"
                             android:layout_height="wrap_content"
                             android:src="@drawable/ic_close_icon"
                             android:layout_alignParentRight="true" />
