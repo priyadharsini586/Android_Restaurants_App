@@ -48,6 +48,7 @@ public class MenuNavigationActivity extends AppCompatActivity
     boolean isNetworkConnected;
     CoordinatorLayout coordinatorLayout;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,6 +79,7 @@ public class MenuNavigationActivity extends AppCompatActivity
         txtHomeToolBar = (TextView) findViewById(R.id.txtHomeToolBar);
         txtHomeToolBar.setText("Check");
         layBadge = (FrameLayout) findViewById(R.id.layBadge);
+
 
         layBadge.setOnClickListener(this);
 
@@ -149,6 +151,13 @@ public class MenuNavigationActivity extends AppCompatActivity
             }else if(id == R.id.nav_about_us){
                 Intent intent = new Intent(this,RatingActivity.class);
                 startActivity(intent);
+            }else if(id == R.id.nav_logout){
+                SharedPreferences settings = getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE);
+                settings.edit().clear().commit();
+                database = new Database(getApplicationContext());
+                database.deleteAll();
+                finish();
+                goToLoginActivity();
             }
 
         }else {
@@ -160,6 +169,11 @@ public class MenuNavigationActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void goToLoginActivity() {
+        Intent intent = new Intent(this,TableActivity.class);
+        startActivity(intent);
     }
 
     @Override
