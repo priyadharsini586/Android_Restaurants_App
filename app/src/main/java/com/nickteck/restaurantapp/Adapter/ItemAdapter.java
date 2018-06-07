@@ -76,7 +76,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         holder.list = gridImageList.get(position);
         holder.mName.setText(holder.list.getItem_name());
         holder.mDescription.setText(holder.list.getDescription());
-        holder.mPrice.setText("$" + holder.list.getPrice());
+        holder.mPrice.setText("Rs " + holder.list.getPrice());
         Picasso.with(context)
                 .load(holder.list.getImage()) // thumbnail url goes here
                 .placeholder(R.drawable.cook8)

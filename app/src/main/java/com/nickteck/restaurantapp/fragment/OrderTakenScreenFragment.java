@@ -90,6 +90,7 @@ public class OrderTakenScreenFragment extends Fragment implements ItemListener,C
     private ProgressBar progress_ratings;
     private ArrayList<String> itemIdList = new ArrayList();
     private String localItemId;
+    LayoutAnimationController controller;
 
 
     @Override
@@ -293,8 +294,7 @@ public class OrderTakenScreenFragment extends Fragment implements ItemListener,C
                         cat_recycler_view.setAdapter(catagoryAdapter);
                         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false);
                         cat_recycler_view.setLayoutManager(linearLayoutManager);
-                        final LayoutAnimationController controller =
-                                AnimationUtils.loadLayoutAnimation(getActivity(), R.anim.layout_animation_fall_down);
+
 
                         cat_recycler_view.setLayoutAnimation(controller);
                         cat_recycler_view.getAdapter().notifyDataSetChanged();
@@ -357,8 +357,13 @@ public class OrderTakenScreenFragment extends Fragment implements ItemListener,C
                         itemAdapter=new ItemAdapter(gridImageList,favouriteListDetails_adapter,getActivity(),getActivity(),OrderTakenScreenFragment.this );
                         itemAdapter.setListener(OrderTakenScreenFragment.this);
                         item_recycler_view.setAdapter(itemAdapter);
-                        final LayoutAnimationController controller =
-                                AnimationUtils.loadLayoutAnimation(getActivity(), R.anim.layout_animation_fall_down);
+                        try {
+                            controller =
+                                    AnimationUtils.loadLayoutAnimation(getActivity(), R.anim.layout_animation_fall_down);
+
+                        }catch (Exception e){
+                            Log.d("ResourcesException","");
+                        }
                         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
                         item_recycler_view.setLayoutManager(linearLayoutManager);
                         item_recycler_view.setLayoutAnimation(controller);
@@ -413,13 +418,17 @@ public class OrderTakenScreenFragment extends Fragment implements ItemListener,C
 
 
                         varietyAdapter=new VarietyAdapter(getActivity(),varietyIdLists);
-
                         variety_recycler_view.setAdapter(varietyAdapter);
 //                        catagory.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.HORIZONTAL));
                         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
                         variety_recycler_view.setLayoutManager(linearLayoutManager);
-                        final LayoutAnimationController controller =
-                                AnimationUtils.loadLayoutAnimation(getActivity(), R.anim.layout_animation_fall_down);
+                        try {
+                            controller =
+                                    AnimationUtils.loadLayoutAnimation(getActivity(), R.anim.layout_animation_fall_down);
+
+                        }catch (Exception e){
+                            Log.d("ResourcesException","");
+                        }
 
                         variety_recycler_view.setLayoutAnimation(controller);
                         variety_recycler_view.getAdapter().notifyDataSetChanged();
